@@ -1,0 +1,95 @@
+const mongoose = require('mongoose')
+const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken");
+
+
+
+
+const userSchema = new mongoose.Schema({
+    name: {
+      type: String,
+      maxlength: 30,
+      trim: true
+    },
+    email: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    password: {
+      type: String,
+    },
+    phone: {
+      type: Number,
+    },
+    about: {
+      type: String
+    },
+    isVerified:{
+      type:Boolean,
+      default:false
+    },
+    image: {
+      type: String
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false
+    },
+    isMentor: {
+      type: Boolean
+    },
+    followers: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }],
+    interests: [{
+      type: String
+    }],
+    blogsPublished: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Blog'
+    }],
+    following: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }],
+    googleId: {
+      type: String
+    }
+  });
+
+
+  userSchema.pre("save", function (next) {
+    const user = this
+    if (this.isModified("password") || this.isNew) {
+        bcrypt.genSalt(10, function (saltError, salt) {
+            if (saltError) {
+                return next(saltError)
+            } else {
+                bcrypt.hash(user.password, salt, function (hashError, hash) {
+                    if (hashError) {
+                        return next(hashError)
+                    }
+                    user.password = hash
+                    next()
+                })
+            }
+        })
+    } else {
+        return next()
+    }
+})
+
+userSchema.methods.generateAuthToken = function () {
+	const token = jwt.sign({ _id: this._id }, process.env.JWTPRIVATEKEY, {
+		expiresIn: "7d",
+	});
+	return token;
+};
+  
+
+
+
+
+module.exports = mongoose.model('User',userSchema)
