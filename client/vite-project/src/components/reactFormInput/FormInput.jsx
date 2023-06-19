@@ -39,8 +39,7 @@ const FormInput = ({ formatName, submitForm }) => {
                                         required: true,
                                         minLength: 4
                                     })}
-                                >
-                                </input>
+                                />
                                 {errors.name && errors.name.type === 'required' && (
                                     <p className='errorMsg'>Please enter your name</p>
                                 )}

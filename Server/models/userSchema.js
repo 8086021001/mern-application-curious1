@@ -9,7 +9,6 @@ const userSchema = new mongoose.Schema({
     name: {
       type: String,
       maxlength: 30,
-      trim: true
     },
     email: {
       type: String,
@@ -44,7 +43,8 @@ const userSchema = new mongoose.Schema({
       ref: 'User'
     }],
     interests: [{
-      type: String
+      type: mongoose.Schema.Types.ObjectId,
+      ref:'interests'
     }],
     blogsPublished: [{
       type: mongoose.Schema.Types.ObjectId,
@@ -56,12 +56,21 @@ const userSchema = new mongoose.Schema({
     }],
     googleId: {
       type: String
+    },
+    createdAt:{
+      type: Date,
+      default: Date.now
     }
   });
 
 
+
   userSchema.pre("save", function (next) {
+
     const user = this
+    if(user.googleId){
+      next()
+    }
     if (this.isModified("password") || this.isNew) {
         bcrypt.genSalt(10, function (saltError, salt) {
             if (saltError) {

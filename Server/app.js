@@ -15,8 +15,9 @@ const url = process.env.MongoDB_URL
 const corsOptions = {
     origin: "*",
     credentials: true,
+    methods: ['GET', 'POST', 'PATCH','DELETE'],
     optionSuccessStatus: 200,
-    allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'x-access-token']
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'x-access-token','Cookie']
 }
 app.use(cors(corsOptions));
 
@@ -30,6 +31,8 @@ app.use(express.static(path.join(__dirname, ('./public'))))
 app.use(cookieParser());
 
 app.use('/user',userRoutes)
+
+
 
 const appEndPoint = async(url)=>{
     try {

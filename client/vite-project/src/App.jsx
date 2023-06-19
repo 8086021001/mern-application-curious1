@@ -2,9 +2,16 @@ import React from 'react'
 import './App.css'
 import { Route, Routes } from 'react-router-dom';
 
-import Signup from './pages/Signup'
 import Login from './pages/Login'
 import Notfound from './pages/Notfound';
+import Home from './pages/Home';
+import Interests from './pages/Interests';
+import Signup from './pages/Signup.jsX';
+
+import Landing from './pages/Landing';
+import UserPublicRoutes from './utils/UserPublicRoutes';
+import UserProtected from './utils/UserProtected';
+
 
 import.meta.env
 
@@ -13,10 +20,23 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path='/signup' element={<Signup />} />
-        <Route path='/signin' element={<Login />} />
+
+        <Route path='/*' element={<UserPublicRoutes />}>
+          < Route index element={<Landing />} />
+          <Route exact path='signup' element={<Signup />} />
+
+          <Route exact path='login' element={<Login />} />
+          <Route exact path='interests' element={<Interests />} />
+
+        </Route>
+
+
+        <Route path='/user/*' element={<UserProtected />}>
+          < Route exact path='home' element={<Home />} />
+        </Route >
+
         <Route path='*' element={<Notfound />} />
-      </Routes>
+      </Routes >
 
     </>
   )
