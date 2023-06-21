@@ -3,6 +3,7 @@ import React from 'react'
 import { clearAuth } from '../features/auth/userAuth'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import MyAppBar from '../components/AppBar/MyAppBar'
 
 const Home = () => {
     const navigate = useNavigate()
@@ -12,14 +13,10 @@ const Home = () => {
     })
 
     console.log(loginState)
-    const handleLogout = () => {
-        localStorage.removeItem('user');
-        dispatch(clearAuth())
-        navigate('/signup')
-    }
+
     return (
         <div>
-            <Button onClick={handleLogout}>Logout</Button>
+            <MyAppBar />
         </div>
     )
 }

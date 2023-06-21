@@ -1,8 +1,15 @@
 import React, { useEffect } from 'react'
 import axiosCall from './googlecall';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { setAuth } from '../../features/auth/userAuth';
+import { logginUserReset } from '../../features/user/userSlice';
 
 const GoogleBut = () => {
     const { handleGoogle } = axiosCall();
+    const userState = useSelector(state => state.user)
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     useEffect(() => {
         if (window.google) {
@@ -19,10 +26,28 @@ const GoogleBut = () => {
                 shape: "pill",
                 width: 300,
             });
+            if (userState?.user) {
+                console.log("goog", userState)
+                const interest = userState?.user?.interests
+                console.log("goog", interest)
+
+
+                if (interest?.length === 0) {
+                    dispatch(logginUserReset())
+                    navigate('/interests')
+                } else if (interest?.length > 0) {
+                    localStorage.setItem("user", JSON.stringify(userState?.user));
+                    dispatch(setAuth())
+                    dispatch(logginUserReset())
+                    window.location.reload()
+                }
+            }
 
             // google.accounts.id.prompt()
         }
-    }, [handleGoogle])
+
+
+    }, [handleGoogle, userState])
     return (
         <>
             <div id="signUpDiv" data-text="signup_with"></div>

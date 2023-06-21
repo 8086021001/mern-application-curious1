@@ -11,12 +11,13 @@ import store from './appStore/store.js'
 
 ReactDOM.render(
   <React.StrictMode>
+    <Provider store={store}>
+      <BrowserRouter>
 
-    <BrowserRouter>
-      <Provider store={store}>
         <App />
-      </Provider>
-    </BrowserRouter>
+
+      </BrowserRouter>
+    </Provider>
 
   </React.StrictMode>
   ,

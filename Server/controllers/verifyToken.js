@@ -11,16 +11,22 @@ const {OAuth2Client} = require('google-auth-library')
 const verifyToken = (req, res, next) => {
     const cookies = req.headers.cookie;
     console.log('first cookie is here',cookies)
-    const tokenRegex = /(?<=g_state={.*?}; )\w+=(\w+\..*)/;
-      const tokenMatch = cookies.match(tokenRegex);
-      console.log("matching",tokenMatch)
+    let tokenMatch
+    let tok = null;
 
-      let tok = null;
+    if (cookies.indexOf('g_state={"i_l":0};') !== -1) {
+      console.log("The string 'g_state={\"i_l\":0};' is present in the token.");
+      const tokenRegex = /(?<=g_state={.*?}; )\w+=(\w+\..*)/;
+      let tokenMatch = cookies.match(tokenRegex);
       if (tokenMatch) {
-          tok = tokenMatch[1];
-        }
+        tok = tokenMatch[1];
+      }
+    } else {
+      const tokenMatch = cookies.split("=")[1]
+      tok  = tokenMatch
+    }
+
     // const token = cookies.split("=")[1];
-    console.log(tok)
     const token  = tok
     if (!token) {
       res.status(404).json({ message: "No token found" });

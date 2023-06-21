@@ -44,9 +44,13 @@ export const updateUserInterests = createAsyncThunk('user/fieldUpdate',async(fie
 
 export const userGoogleSignup = createAsyncThunk('user/google',async(resp,{rejectWithValue})=>{
     try {
+        console.log(resp )
+
         const credential =  resp.credential 
+
         const response = await axiosInstance.post("user/googleSignup",{credential:credential})
         const data = response.data
+        console.log(data)
         return data
     } catch (error) {
         return rejectWithValue(error.response.data);
