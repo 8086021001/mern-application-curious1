@@ -31,6 +31,19 @@ const modules = {
         ['width', 'height', 'float'],
     ],
 }
+const formats = [
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "blockquote",
+    "list",
+    "bullet",
+    "indent",
+    "link",
+    "image"
+];
 
 
 const Editor = () => {
@@ -41,6 +54,7 @@ const Editor = () => {
 
 
     const handleProcedureContentChange = (content, delta, source, editor) => {
+        console.log("content in editor", content)
         dispatch(setContent(content))
     };
 
@@ -49,7 +63,8 @@ const Editor = () => {
             <ReactQuill
                 value={BlogContState?.content}
                 modules={{ ...modules, imageResize: {} }}
-                onChange={handleProcedureContentChange}
+                formats={formats}
+                onChange={(e) => { handleProcedureContentChange(e) }}
             >
             </ReactQuill>
         </div>

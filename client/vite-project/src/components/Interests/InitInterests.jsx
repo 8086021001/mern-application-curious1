@@ -19,9 +19,7 @@ const Interests = ({ handleInterestSubmit }) => {
         }
     };
 
-    useEffect(() => {
-        fetchInterests();
-    }, []);
+
 
     const handleInterestSelect = (interest) => {
         setSelectedInterest((prevInterest) => {
@@ -48,6 +46,10 @@ const Interests = ({ handleInterestSubmit }) => {
         console.log('Selected interest:', selectedInterest);
         handleInterestSubmit(selectedInterest)
     };
+
+    useEffect(() => {
+        fetchInterests();
+    }, []);
 
     return (
         <Container maxWidth="sm" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>

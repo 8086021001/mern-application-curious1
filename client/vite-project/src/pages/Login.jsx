@@ -103,12 +103,12 @@ const Login = () => {
                         width: '100%',
                         textAlign: 'center'
                     }}>
-                        {/* <GoogleBut /> */}
                     </Box>
                 </Stack>
             }
         </>
     )
 }
+
 
 export default Login

@@ -128,10 +128,10 @@ const userSlice = createSlice({
             state.loading=false
         })
         builder.addCase(userGoogleSignup.fulfilled,(state,action)=>{
-            state.loading=false,
-            state.success = false,
-            state.error = "",
-            state.user = action.payload?.user,
+            state.loading=false
+            state.success = false
+            state.error = ""
+            state.user = action.payload?.user
             state.message = action.payload?.message
         })
         builder.addCase(userGoogleSignup.rejected,(state,action)=>{

@@ -1,12 +1,16 @@
 const mongoose = require('mongoose')
+const { GridFSBucket } = require('mongodb');
+const mongoURL = process.env.MongoDB_URL
 
 
-const connectDb = (url)=>{
-    return mongoose.connect(url, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    })
-}
+let gridFSBucket;
 
 
-module.exports = {connectDb}
+const connectDb = (url) => {
+  return mongoose.connect(url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+
+})};
+
+module.exports =  {connectDb}

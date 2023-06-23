@@ -33,7 +33,6 @@ function MyAppBar() {
   };
 
   const handleCloseNavMenu = () => {
-    console.log("in but")
     navigate('/user/CreateBlog')
     setAnchorElNav(null);
   };

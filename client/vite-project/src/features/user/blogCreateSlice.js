@@ -1,23 +1,48 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axiosInstance from "../../baseAPI/axiosBaseURL";
+import { registerUser } from "./userSlice";
 
 
 const initialState = {
-    creatingBlog: false,
+    creatingBlog: JSON.parse(localStorage.getItem('blog')) ? JSON.parse(localStorage.getItem('blog')) : null,
     Title: '',
     summary: '',
     coverImage:{},
     content: '',
     tags: [],
+    loading:false,
+    success:false,
+    user:{},
+    message:'',
+    error:'',
+
+    
 }
 
+
+
+
+export const createBlog = createAsyncThunk('/user/createBlog',async(blogDat,{rejectWithValue})=>{
+    try {
+        const response = await axiosInstance.post('/user/createBlog', blogDat, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+        const data = response.data
+        return data
+        
+    } catch (error) {
+        return rejectWithValue(error.response.data);
+
+    }
+
+})
 
 const blogCreateSlice = createSlice({
     name:'blogCreate',
     initialState,
     reducers:{
-        setCreatingBlog: (state, action) => {
-            state.creatingBlog = action.payload;
-        },
         setTitle: (state, action) => {
             state.Title = action.payload;
         },
@@ -33,14 +58,44 @@ const blogCreateSlice = createSlice({
         setTags: (state, action) => {
             state.tags = action.payload;
         },
+        setBlog:(state)=>{
+            state.creatingBlog = JSON.parse(localStorage.getItem('blog'))
+        },
+        clearBlog:(state)=>{
+            state.creatingBlog = null
+            localStorage.removeItem('blog')
+        },
         resetBlogState:(state)=>{
-            state.creatingBlog = false
+            state.creatingBlog = null
             state.Title = ''
             state.summary = ''
             state.coverImage = {}
             state.content = ''
             state.tags = []
-        }
+            state.loading = false
+            state.success = false
+            state.message = ''
+            state.error = ''
+        },
+
+
+    },
+    extraReducers:builder=>{
+        builder.addCase(createBlog.pending,state=>{
+            state.loading = true
+        })
+        builder.addCase(createBlog.fulfilled,(state,action)=>{
+            state.loading = false;
+            state.success = true;
+            state.user = action.payload?.user;
+            state.message = action.payload?.message
+        })
+        builder.addCase(createBlog.rejected,(state,action)=>{
+            state.loading = false
+            state.error = action.error
+            state.message = action.payload?.message
+        })
+
 
     }
 })
@@ -52,7 +107,7 @@ export const {
     setCoverImage,
     setContent,
     setTags,
-    resetBlogState,
+    resetBlogState,clearBlog,setBlog
 } = blogCreateSlice.actions;
 
 export default blogCreateSlice.reducer
