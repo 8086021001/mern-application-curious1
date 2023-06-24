@@ -24,16 +24,26 @@ function MyAppBar() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const dispatch = useDispatch()
   const navigate = useNavigate()
+
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
+    console.log("nav", anchorElNav)
   };
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
+    console.log(anchorElUser)
+
   };
 
-  const handleCloseNavMenu = () => {
-    navigate('/user/CreateBlog')
+  const handleCloseNavMenu = (pages) => {
+    console.log("nabv", pages)
+    if (pages === 'create Blog') {
+      navigate('/user/CreateBlog')
+    }
+    if (pages === 'Home') {
+      navigate('/user/home')
+    }
     setAnchorElNav(null);
   };
 
@@ -43,8 +53,12 @@ function MyAppBar() {
       localStorage.removeItem('user');
       dispatch(clearAuth())
     }
+    if (setting === 'Profile') {
+      navigate('/user/profile')
+    }
     setAnchorElUser(null);
   };
+
 
   return (
     <AppBar position="static">
@@ -100,8 +114,8 @@ function MyAppBar() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}  >
-                  <Typography textAlign="center" >{page}</Typography>
+                <MenuItem key={page} onClick={() => handleCloseNavMenu(page)}  >
+                  <Typography textAlign="center"  >{page}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -129,7 +143,7 @@ function MyAppBar() {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                onClick={() => handleCloseNavMenu(page)}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 {page}

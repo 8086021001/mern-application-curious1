@@ -12,6 +12,7 @@ import Landing from './pages/Landing';
 import UserPublicRoutes from './utils/UserPublicRoutes';
 import UserProtected from './utils/UserProtected';
 import CreateBlog from './components/createBlog/CreateBlog';
+import Profile from './pages/Profile';
 
 
 
@@ -36,6 +37,7 @@ function App() {
         <Route path='/user/*' element={<UserProtected />}>
           < Route exact path='home' element={<Home />} />
           <Route path='CreateBlog' element={<CreateBlog />} />
+          <Route path='profile' element={<Profile />} />
         </Route >
 
         <Route path='*' element={<Notfound />} />

@@ -30,6 +30,7 @@ function CreateBlog() {
     };
 
 
+    console.log(BlogState)
 
 
 
@@ -77,6 +78,10 @@ function CreateBlog() {
             isValid = false;
             errors.summary = 'Summary is required';
         }
+        if (!BlogState.tags || BlogState.tags.length === 0) {
+            isValid = false;
+            errors.tags = 'please tag a related field!'
+        }
 
 
         if (!BlogState.content) {
@@ -101,6 +106,7 @@ function CreateBlog() {
         blogData.append('title', BlogState.Title);
         blogData.append('summary', BlogState.summary);
         blogData.append('content', BlogState.content);
+        blogData.append('tags', BlogState.tags)
 
         const file = fileInput.current.files[0];
         if (file) {
@@ -110,17 +116,6 @@ function CreateBlog() {
         dispatch(createBlog(blogData))
     }
 
-    // const fetchInterests = async () => {
-    //     try {
-    //         const response = await axiosInstance.get('/user/interests');
-    //         const datas = response.data;
-    //         setInterests(datas.fileds)
-    //         console.log("my interests", intersets)
-
-    //     } catch (error) {
-    //         console.error('Error fetching interests:', error);
-    //     }
-    // };
 
 
     console.log(tags)
@@ -131,12 +126,11 @@ function CreateBlog() {
             try {
                 const response = await axiosInstance.get('/user/interests');
                 const data = response.data;
-                console.log(data.fileds)
+                setInterests(data.fileds)
                 const names = data.fileds?.map((field) => {
                     const nam = field.name
                     return nam
                 }) || [];
-                console.log("fieldss", names)
 
                 setTagings((tags) => [...new Set([...tags, ...names])]);
                 console.log(tags)
@@ -144,8 +138,6 @@ function CreateBlog() {
                 console.error('Error fetching interests:', error);
             }
         };
-
-        fetchInterests();
 
         fetchInterests();
 

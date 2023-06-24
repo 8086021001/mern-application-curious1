@@ -41,9 +41,11 @@ export default function TransModal({ open, handleClose, message, heading }) {
                         <Typography id="transition-modal-title" variant="h6" component="h2">
                             {heading}
                         </Typography>
-                        <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-                            {message}
-                        </Typography>
+                        {message &&
+                            <Typography id="transition-modal-description" sx={{ mt: 2 }}>
+                                {message}
+                            </Typography>
+                        }
                     </Box>
                 </Fade>
             </Modal>

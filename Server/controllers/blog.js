@@ -8,6 +8,7 @@ const BlogPost = require('../models/blogSchema')
 const cloudinary = require('cloudinary').v2;
 const { Readable } = require('stream');
 const User = require('../models/userSchema')
+const interests = require('../models/interests')
 
 
 
@@ -23,46 +24,56 @@ cloudinary.config({
 
 
 const PostBlog = async(req,res)=>{
-   console.log(req.id);
-  //  console.log(req);
   try {
-    const userId = req.id
-    console.log(userId)
-
-    const paths = req.file.path.slice(7)
-    const filepath = `http://localhost:5000/${paths}`
-    console.log(filepath)
-
-  const {title,summary,tags} = req.body
-
-
-    const  htmlContent = req.body.content
-
-
-    const processedContent = await processAndSaveImages(htmlContent);
-
-      console.log(processedContent)
- 
+    console.log(req.id);
+    //  console.log(req);
+   
+      const userId = req.id
+      console.log(userId)
+      console.log(req.body)
+      const paths = req.file.path.slice(7)
+      const filepath = `http://localhost:5000/${paths}`
+      console.log(filepath)
   
-const newBlogPost = new BlogPost({
-  title:title,
-  summary:summary,
-  tags:tags,
-  coverImage:filepath,
-  content: processedContent,
-  author:userId
-});
-
-const blogCreated = await newBlogPost.save()
-const blogId = blogCreated._id
-const user = await User.findByIdAndUpdate(userId,{ $push: { blogsPublished: blogId } }, { new: true })
-
-res.status(200).json({message:"Blog created, and updated", user:user})
+    const {title,summary,tags} = req.body
+  
+  
+      const  htmlContent = req.body.content
+  
+  
+      const processedContent = await processAndSaveImages(htmlContent);
+  
+        console.log(processedContent)
+        
+        let interestIds
+        const taggings = await interests.find({ name: { $in: tags } })
+        .then((interests)=>{
+           interestIds = interests.map(interest => interest._id);
+        })
+  
+        const newBlogPost = new BlogPost({
+          title:title,
+          summary:summary,
+          tags:interestIds,
+          coverImage:filepath,
+          content: processedContent,
+          author:userId
+        });
+        const blogCreated = newBlogPost.save()
+   
+    
+  
+  console.log(blogCreated)
+  const blogId = blogCreated._id
+  const user = await User.findByIdAndUpdate(userId,{ $push: { blogsPublished: blogId } }, { new: true })
+  console.log(user)
+  
+  res.status(200).json({message:"Blog created, and updated", user:user})
     
   } catch (error) {
-    res.status(400).json({message:"failed to create, please try again!"})
-    
+    res.status(400).json({message:"Failed to create Blog, please try again!"})
   }
+
 }
 
 

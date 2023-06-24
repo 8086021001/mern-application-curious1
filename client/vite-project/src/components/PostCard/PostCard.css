@@ -1,0 +1,15 @@
+.FavIcon{
+    border: solid red 1px !important;
+    width: 20px !important;
+    padding: 0;
+}
+.LikeIcon{
+    width: 60px !important;
+    padding: 0;
+}
+.commentIc{
+    width: 40px !important;
+}
+.commentxt{
+    width: 90px !important;
+}

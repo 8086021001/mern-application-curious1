@@ -1,0 +1,31 @@
+/* UserProfileStyles.css */
+
+.ProfileHeader {
+    background: #f4f4f4;
+    padding: 32px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .ProfilePicture {
+
+    width: 100px !important;
+    height: 100px !important;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #ffffff;
+  }
+  
+  .UserName {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 20px !important;
+  }
+  
+  .UserBio {
+    font-size: 16px;
+    margin-top: 30px !important;
+  }
+  
