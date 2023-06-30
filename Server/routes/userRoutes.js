@@ -1,9 +1,10 @@
 const express = require("express")
 const router = express.Router()
 const {googleAuth} = require('../controllers/googleroute')
-const {Signup,verifyEmail,login,getUser,logout,setFields,googelSignup}= require('../controllers/user')
+const {Signup,verifyEmail,login,getUser,logout,setFields,googelSignup,updateProfile,userFieldUpdate}= require('../controllers/user')
 const {verifyToken,refreshToken} = require("../controllers/verifyToken")
-const {getInterests} = require('../controllers/interest')
+const {getInterests,addNewInterests} = require('../controllers/interest')
+const {upload}= require('../utils/multerConfig')
  
 router.post('/api/v1/auth/google',googleAuth) // signup using google
 
@@ -23,6 +24,15 @@ router.get('/interests',getInterests)
 
 //updating interest fields if not any
 router.put('/setfield',verifyToken,setFields)
+
+//updating user profile with image
+
+router.put('/profileUpdate',upload.single('image'),verifyToken,updateProfile)
+
+router.put('/ProfilefieldUpdate',upload.none(),verifyToken,userFieldUpdate)
+//adding new interests
+
+router.post('/addNewUserInterests',verifyToken,addNewInterests)
 
 
 

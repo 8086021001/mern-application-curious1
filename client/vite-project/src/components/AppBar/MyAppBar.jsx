@@ -12,7 +12,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { clearAuth } from '../../features/auth/userAuth';
 import { useNavigate } from 'react-router-dom';
 
@@ -24,6 +24,7 @@ function MyAppBar() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const userState = useSelector(state => state.authUser)
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -38,6 +39,7 @@ function MyAppBar() {
 
   const handleCloseNavMenu = (pages) => {
     console.log("nabv", pages)
+
     if (pages === 'create Blog') {
       navigate('/user/CreateBlog')
     }
@@ -155,7 +157,7 @@ function MyAppBar() {
 
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="A" src={userState.authState.image} />
               </IconButton>
             </Tooltip>
             <Menu

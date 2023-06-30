@@ -3,6 +3,7 @@ import { createAsyncThunk,createSlice } from "@reduxjs/toolkit";
 
 
 
+
 const initialState = {
     loading: false,
     success: false,
@@ -57,6 +58,39 @@ export const userGoogleSignup = createAsyncThunk('user/google',async(resp,{rejec
     }
 })
 
+export const userProfileUpdate = createAsyncThunk('user/profileUpdate',async(formData,{rejectWithValue})=>{
+    try {
+        // console.log("formdata in axios",formData)
+        // for (let entry of formData.entries()) {
+        //     console.log(`this is ::::::;${entry[0]}: ${entry[1]}`);
+        //   }
+        const response = await axiosInstance.put("user/profileUpdate",formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+        )
+        const data = response.data
+        return data
+    } catch (error) {
+        return rejectWithValue(error.response.data);
+    }
+})
+export const userProfUpdateWithoutImage = createAsyncThunk('user/profilefieldUpdate',async(formData,{rejectWithValue})=>{
+    try {
+        const response = await axiosInstance.put("user/ProfilefieldUpdate",formData,{
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          })
+        const data = response.data
+        return data
+    } catch (error) {
+        return rejectWithValue(error.response.data);
+    }
+})
+
+
 
 
 const userSlice = createSlice({
@@ -75,6 +109,9 @@ const userSlice = createSlice({
             state.errorStatus = false
             state.user = {};
             state.error = '';
+        },
+        userMessgeReset:(state)=>{
+            state.message =""
         }
     },
     extraReducers:builder =>{
@@ -140,11 +177,43 @@ const userSlice = createSlice({
             state.error = action.error
             state.message = action.payload?.message
         })
+        builder.addCase(userProfileUpdate.pending,(state)=>{
+            state.loading = true
+        })
+        builder.addCase(userProfileUpdate.fulfilled,(state,action)=>{
+            state.loading = false,
+            state.success = true,
+            state.error = "",
+            state.user = action.payload?.user,
+            state.message = action.payload.message
+        })
+        builder.addCase(userProfileUpdate.rejected,(state,action)=>{
+            state.loading = false
+            state.errorStatus = true
+            state.error = action.error
+            state.message = action.payload?.message
+        })
+        builder.addCase(userProfUpdateWithoutImage.pending,(state)=>{
+            state.loading = true
+        })
+        builder.addCase(userProfUpdateWithoutImage.fulfilled,(state,action)=>{
+            state.loading = false,
+            state.success = true,
+            state.error = "",
+            state.user = action.payload?.user,
+            state.message = action.payload.message
+        })
+        builder.addCase(userProfUpdateWithoutImage.rejected,(state,action)=>{
+            state.loading = false
+            state.errorStatus = true
+            state.error = action.error
+            state.message = action.payload?.message
+        })
     }
-
+    
 })
 
 
 
 export default userSlice.reducer
-export const {registerUserReset, logginUserReset} = userSlice.actions;
+export const {registerUserReset, logginUserReset,userMessgeReset} = userSlice.actions;

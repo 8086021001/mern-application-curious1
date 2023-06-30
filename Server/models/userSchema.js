@@ -66,12 +66,14 @@ const userSchema = new mongoose.Schema({
 
 
   userSchema.pre("save", function (next) {
-
     const user = this
     if(user.googleId){
-      next()
+      console.log('here in google')
+
+     return next()
     }
     if (this.isModified("password") || this.isNew) {
+      console.log('bcrypting password here in schema')
         bcrypt.genSalt(10, function (saltError, salt) {
             if (saltError) {
                 return next(saltError)

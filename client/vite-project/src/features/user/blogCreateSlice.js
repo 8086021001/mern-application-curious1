@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../../baseAPI/axiosBaseURL";
-import { registerUser } from "./userSlice";
 
 
 const initialState = {
@@ -15,9 +14,11 @@ const initialState = {
     user:{},
     message:'',
     error:'',
-
-    
+    blogData:{},
+    blog:{},
+    useBlogs:{}
 }
+
 
 
 
@@ -37,6 +38,37 @@ export const createBlog = createAsyncThunk('/user/createBlog',async(blogDat,{rej
 
     }
 
+})
+
+
+export const getAllBlog = createAsyncThunk('/getAllBlog',async(_,{rejectWithValue})=>{
+    try {
+        const response = await axiosInstance.get('/user/getAllBlog')
+        const data = response.data
+        return data
+    } catch (error) {
+        return rejectWithValue(error.response.data);
+    }
+})
+export const getBlog =createAsyncThunk('/getBlog',async(_id,{rejectWithValue})=>{
+    try {
+        const response = await axiosInstance.get(`/user/getBlog/${_id}`)
+        const data = response.data
+        return data
+    } catch (error) {
+        return rejectWithValue(error.response.data);
+    }
+})
+export const getUserBlogs = createAsyncThunk('/getUserBlogs',async(_,{rejectWithValue})=>{
+    try {
+        const response = await axiosInstance.get('/user/getUserBlogs')
+        const data = response.data
+        return data
+
+    } catch (error) {
+        return rejectWithValue(error.response.data);
+
+    }
 })
 
 const blogCreateSlice = createSlice({
@@ -77,6 +109,11 @@ const blogCreateSlice = createSlice({
             state.message = ''
             state.error = ''
         },
+        resetSateAfterFetch:(state)=>{
+            state.success = false
+            state.message = ''
+            state.error = ''
+        },
 
 
     },
@@ -95,6 +132,48 @@ const blogCreateSlice = createSlice({
             state.error = action.error
             state.message = action.payload?.message
         })
+        builder.addCase(getAllBlog.pending,state=>{
+            state.loading = true
+        })
+        builder.addCase(getAllBlog.fulfilled,(state,action)=>{
+            state.loading = false;
+            state.success = true;
+            state.blogData = action.payload?.blogs;
+            state.message = action.payload?.message
+        })
+        builder.addCase(getAllBlog.rejected,(state,action)=>{
+            state.loading = false
+            state.error = action.error
+            state.message = action.payload?.message
+        })
+        builder.addCase(getBlog.pending,state=>{
+            state.loading = true
+        })
+        builder.addCase(getBlog.fulfilled,(state,action)=>{
+            state.loading = false;
+            state.success = true;
+            state.blog = action.payload?.blogCont;
+            state.message = action.payload?.message??"success"
+        })
+        builder.addCase(getBlog.rejected,(state,action)=>{
+            state.loading = false
+            state.error = action.error
+            state.message = action.payload?.message??"failed"
+        })
+        builder.addCase(getUserBlogs.pending,state=>{
+            state.loading = true
+        })
+        builder.addCase(getUserBlogs.fulfilled,(state,action)=>{
+            state.loading = false;
+            state.success = true;
+            state.useBlogs = action.payload?.userBlogs;
+            state.message = action.payload?.message??"success"
+        })
+        builder.addCase(getUserBlogs.rejected,(state,action)=>{
+            state.loading = false
+            state.error = action.error
+            state.message = action.payload?.message??"failed"
+        })
 
 
     }
@@ -107,7 +186,7 @@ export const {
     setCoverImage,
     setContent,
     setTags,
-    resetBlogState,clearBlog,setBlog
+    resetBlogState,clearBlog,setBlog,resetSateAfterFetch
 } = blogCreateSlice.actions;
 
 export default blogCreateSlice.reducer

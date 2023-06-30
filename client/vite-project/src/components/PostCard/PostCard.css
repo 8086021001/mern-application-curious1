@@ -1,5 +1,4 @@
 .FavIcon{
-    border: solid red 1px !important;
     width: 20px !important;
     padding: 0;
 }
@@ -12,4 +11,15 @@
 }
 .commentxt{
     width: 90px !important;
+}
+.cancelComment{
+    border: solid red 1px !important;
+    border-radius: 0 !important;
+    width: 45px !important;
+    height: auto !important;
+    color: rgb(255, 255, 255) !important;
+    font-size: x-small !important;
+    background-color: black !important;
+    margin: 0 5px !important;
+
 }

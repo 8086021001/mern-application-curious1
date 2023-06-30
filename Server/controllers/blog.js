@@ -8,7 +8,7 @@ const BlogPost = require('../models/blogSchema')
 const cloudinary = require('cloudinary').v2;
 const { Readable } = require('stream');
 const User = require('../models/userSchema')
-const interests = require('../models/interests')
+const InterestSchema = require('../models/interests')
 
 
 
@@ -26,14 +26,11 @@ cloudinary.config({
 const PostBlog = async(req,res)=>{
   try {
     console.log(req.id);
-    //  console.log(req);
    
       const userId = req.id
       console.log(userId)
-      console.log(req.body)
       const paths = req.file.path.slice(7)
       const filepath = `http://localhost:5000/${paths}`
-      console.log(filepath)
   
     const {title,summary,tags} = req.body
   
@@ -43,13 +40,12 @@ const PostBlog = async(req,res)=>{
   
       const processedContent = await processAndSaveImages(htmlContent);
   
-        console.log(processedContent)
         
-        let interestIds
-        const taggings = await interests.find({ name: { $in: tags } })
-        .then((interests)=>{
-           interestIds = interests.map(interest => interest._id);
-        })
+        const tagArray = tags.split(',')
+        const taggings = await InterestSchema.find({ name: { $in: tagArray } })
+
+        const interestIds = taggings.map(interest => interest._id);
+
   
         const newBlogPost = new BlogPost({
           title:title,
@@ -63,10 +59,12 @@ const PostBlog = async(req,res)=>{
    
     
   
-  console.log(blogCreated)
   const blogId = blogCreated._id
   const user = await User.findByIdAndUpdate(userId,{ $push: { blogsPublished: blogId } }, { new: true })
-  console.log(user)
+  const updatedInterstSchema = await InterestSchema.updateMany(
+    { _id: { $in: interestIds } },
+    { $push: { blogs: newBlogPost._id } }
+  )  
   
   res.status(200).json({message:"Blog created, and updated", user:user})
     
@@ -106,22 +104,67 @@ async function processAndSaveImages(content) {
 
 
 
-  const getBlog = (req, res) => {
-    const postId = req.params.id;
-  
-    BlogPost.findById(postId)
-      .then((post) => {
-        if (!post) {
-          return res.status(404).json({ message: 'Blog post not found' });
-        }
-  
-        res.send(post.content);
-      })
-      .catch((err) => {
-        console.error('Error retrieving blog post:', err);
-        res.status(500).send('Error retrieving blog post');
-      });
+  const getBlog =async(req, res) => {
+    try {
+      const postId = req.params._id;
+      const blogDat = await BlogPost.findById(postId)
+      res.status(200).send({blogCont:blogDat});
+      
+    } catch (error) {
+      res.status(500).send('Error retrieving blog post');
+
+    }
+
   }
+
+  const getALLBlogs = async (req,res)=>{
+    try {
+      const userId = req.id
+      const userDat = await User.findById(userId)
+      const userIntersts = userDat.interests
+  
+      const documents = await InterestSchema.find({ _id: { $in: userIntersts } }).exec()
+      const interestIds = documents.map(doc => doc._id);
+      const pipeline = [
+        {
+          $lookup: {
+            from: 'blogschemas',
+            localField: 'blogs',
+            foreignField: '_id',
+            as: 'blogings'
+          }
+        },
+        {
+          $unwind: '$blogings'
+        },
+        {
+          $sort: {
+            'blogings.createdAt': -1
+          }
+        },
+        {
+          $group: {
+            _id: '$blogings'
+          }
+        }
+      ];
+  
+      const result = await InterestSchema.aggregate(pipeline);
+      res.status(200).json({blogs:result})
+  
+      
+    } catch (error) {
+      res.status(400).json({message:"Failed to fetch blogs!"})
+
+    }
+
+
+
+  }
+
+
+
+
   async function saveImage(base64ImageData, objectId) {
     try {
       const imageBuffer = Buffer.from(base64ImageData, 'base64');
@@ -145,7 +188,6 @@ async function processAndSaveImages(content) {
             }
     
             const imageUrl = result.secure_url;
-            // Handle the uploaded image URL
             console.log('Image uploaded to Cloudinary:', imageUrl);
             resolve(imageUrl);
           }
@@ -164,7 +206,7 @@ async function processAndSaveImages(content) {
   
 
 
-  module.exports = {PostBlog}
+  module.exports = {PostBlog,getBlog,getALLBlogs}
 
 
 
@@ -172,23 +214,3 @@ async function processAndSaveImages(content) {
 
 
 
-
-  
-
-// $('img').each(function() {
-//     const img = $(this);
-//     const base64ImageData = img.attr('src');
-  
-//     const imageBuffer = Buffer.from(base64ImageData, 'base64');
-//     const filename = generateUniqueFilename();
-//     const savePath = path.join('E:', 'Curious1', 'Server', 'public', 'blogImages', filename);
-
-//     // const savePath = path.join(__dirname, 'public', 'blogImages', filename);
-//     // `http://localhost:5000/public/blogImages/${filename}`;
-//     // path.join(__dirname, 'public/blogImages', filename);
-
-//     fs.writeFileSync(savePath, imageBuffer);
-
-//     const fileUrl = `http://localhost:5000/public/blogImages/${filename}`;
-//     img.attr('src', fileUrl);
-//   });

@@ -20,22 +20,24 @@ const verifyToken = (req, res, next) => {
       let tokenMatch = cookies.match(tokenRegex);
       if (tokenMatch) {
         tok = tokenMatch[1];
+        console.log('tokid',tokenMatch[0])
+
       }
     } else {
       const tokenMatch = cookies.split("=")[1]
       tok  = tokenMatch
     }
 
-    // const token = cookies.split("=")[1];
     const token  = tok
     if (!token) {
       res.status(404).json({ message: "No token found" });
     }
     jwt.verify(String(token), process.env.JWT_SECRET_KEY, (err, user) => {
+      console.log(user)
       if (err) {
-        return res.status(400).json({ message: "Invalid TOken" });
+         res.status(400).json({ message: "Invalid TOken" });
       }
-      console.log("VERIFYING TOKEN WITH :",user.id);
+      console.log("VERIFYING TOKEN WITH :",user);
       req.id = user.id;
     });
     next();

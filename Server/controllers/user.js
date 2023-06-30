@@ -8,6 +8,17 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose')
 const InterestModal = require('../models/interests')
 const {verifyGoogletoken} = require('../controllers/verifyToken')
+const cloudinary = require('cloudinary').v2;
+
+
+
+
+cloudinary.config({ 
+  cloud_name: process.env.CLOUD_NAME, 
+  api_key: process.env.API_KEY, 
+  api_secret: process.env.API_SECRET 
+});
+
 
 //SIGNUP
 
@@ -208,6 +219,8 @@ const getUser = async (req, res, next) => {
         let userID = req.id
         let userInterests = []
         let fieldArray = req.body
+        console.log(fieldArray)
+
         fieldArray.forEach((field)=>{
           userInterests.push(field._id)
         })
@@ -216,6 +229,12 @@ const getUser = async (req, res, next) => {
 
         const interests = await InterestModal.find({ _id: { $in: userInterestsId } });
         if(interests){
+          const userData = await User.findById(userID)
+          const newInterestsId = userInterestsId.filter((interestId) => !User.interests.includes(interestId));
+          console.log(newInterestsId)
+          if(newInterestsId.length>0){
+
+            
           const result = await User.findByIdAndUpdate(
             userID ,
             { $push: { interests: { $each: userInterestsId } } },
@@ -224,15 +243,92 @@ const getUser = async (req, res, next) => {
           if (result) {
             return res.status(200).json({ message: "Fields added successfully" , user:result});
           } else {
-            return res.status(400 ).json({ message: "Failed to add fields" });
+            return res.status(400 ).json({ message: "Please check, you may be already entrolled!" });
           }
+          }
+          return res.status(400 ).json({ message: "Please check, you may be already entrolled!" });
+
         }
     } catch (error) {
         return res.status(500).json({ message: "Failed to add fields" });
-        
     }
   }
 
+  const updateProfile = async(req,res)=>{
+    try {
+      const userId = req.id
+      if(!req.file){
+        res.status(500).json({message:'unable to upload data'})
+      }
+      const file = req.file
+      const filePath = file.path
+      const uniqueFilename = `${Date.now()}-${file.originalname}`; // Generate a unique file name
 
-module.exports = {Signup,verifyEmail,login,getUser,logout,setFields,googelSignup}
+      let imageURL
+  
+      const uploadOptions = {
+        folder: 'userProfile',
+        public_id: uniqueFilename
+      };
+      await cloudinary.uploader.upload(filePath, uploadOptions, (error, result) => {
+        if (error) {
+          // Handle upload error
+          res.status(500).json({ error: 'Failed to upload image' });
+          return;
+        }
+          console.log("this is my url",result.secure_url);
+          imageURL = result.secure_url
+      });
+  
+      const userUpdate = await User.findByIdAndUpdate(userId,req.body, { new: true })
+
+      if (imageURL) {
+        userUpdate.image = imageURL;
+      }
+      
+      if (req.body.password) {
+        userUpdate.password = req.body.password;
+        await userUpdate.save();
+        res.status(200).json({user:userUpdate,message:"updated succesfully"})
+
+      }
+      await userUpdate.save();
+      console.log("updated user",userUpdate)
+      res.status(200).json({user:userUpdate,message:"updated succesfully"})
+      
+    } catch (error) {
+      res.status(500).json({ message: 'Failed to update' });
+    }
+
+
+  }
+
+
+  const userFieldUpdate = async(req,res)=>{
+    try {
+      console.log("just for form",req.body)
+      const userId = req.id
+      const userUpdate = await User.findByIdAndUpdate(userId,req.body, { new: true })
+      if (req.body.password) {
+                userUpdate.password = req.body.password;
+                await userUpdate.save();
+                console.log('saving pass',userUpdate)
+                return res.status(200).json({user:userUpdate,message:"updated succesfully"})
+
+            }else{
+              await userUpdate.save();
+              res.status(200).json({user:userUpdate,message:"updated succesfully"})
+
+            }
+
+
+    } catch (error) {
+      res.status(500).json({message:"upload failed"})
+    }
+
+  }
+
+
+module.exports = {Signup,verifyEmail,login,getUser,logout,setFields,googelSignup,updateProfile,userFieldUpdate}
+
 

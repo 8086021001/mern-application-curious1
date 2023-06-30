@@ -1,5 +1,5 @@
 import { Button } from '@mui/material'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { clearAuth } from '../features/auth/userAuth'
 import { useNavigate } from 'react-router-dom'
 
@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import MyAppBar from '../components/AppBar/MyAppBar'
 import SideBar from '../components/sideBar/SideBar'
 import PostCard from '../components/PostCard/PostCard'
+import SearchBar from '../components/SearchBar/SearchBar'
+import { resetSateAfterFetch } from '../features/user/blogCreateSlice'
 
 const Home = () => {
 
@@ -15,6 +17,7 @@ const Home = () => {
     const loginState = useSelector((state) => {
         return state.authUser
     })
+
 
     console.log(loginState)
 

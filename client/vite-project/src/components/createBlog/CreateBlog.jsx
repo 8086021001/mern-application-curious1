@@ -4,7 +4,7 @@ import { Box, Button, FormControl, Grid, InputLabel, Paper, TextField } from '@m
 import Editor from '../ReactQuill/Editor';
 import SearchBar from '../SearchBar/SearchBar';
 import { useDispatch, useSelector } from 'react-redux';
-import { setSummary, setTags, setTitle, setBlog, resetBlogState, createBlog } from '../../features/user/blogCreateSlice';
+import { setSummary, setTags, setTitle, setBlog, resetBlogState, createBlog, resetSateAfterFetch } from '../../features/user/blogCreateSlice';
 import { toast } from 'react-toastify'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -27,6 +27,7 @@ function CreateBlog() {
     const toastStyle = {
         background: 'white',
         color: 'red',
+        width: 'auto',
     };
 
 
@@ -140,12 +141,12 @@ function CreateBlog() {
         };
 
         fetchInterests();
-
+        console.log(BlogState.success)
         if (BlogState.success) {
             console.log(BlogState.user)
             localStorage.setItem('user', JSON.stringify(BlogState.user))
             dispatch(resetBlogState())
-            toast.success('Hurray!Blog publishe!')
+            toast.success('Hurray!Blog published!')
         }
 
     }, [BlogState.success])

@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logginUserReset, loginUser } from '../features/user/userSlice';
 import Loader from '../components/Loader/Loader';
 import { setAuth } from '../features/auth/userAuth';
+import GoogleBut from '../components/googleAuth/GoogleBut';
 
 
 
@@ -103,6 +104,9 @@ const Login = () => {
                         width: '100%',
                         textAlign: 'center'
                     }}>
+                    </Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <GoogleBut />
                     </Box>
                 </Stack>
             }

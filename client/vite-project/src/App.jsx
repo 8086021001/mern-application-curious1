@@ -13,6 +13,7 @@ import UserPublicRoutes from './utils/UserPublicRoutes';
 import UserProtected from './utils/UserProtected';
 import CreateBlog from './components/createBlog/CreateBlog';
 import Profile from './pages/Profile';
+import BlogViePage from './pages/BlogViePage';
 
 
 
@@ -38,6 +39,7 @@ function App() {
           < Route exact path='home' element={<Home />} />
           <Route path='CreateBlog' element={<CreateBlog />} />
           <Route path='profile' element={<Profile />} />
+          <Route path='viewBlog/:_id' element={<BlogViePage />} />
         </Route >
 
         <Route path='*' element={<Notfound />} />

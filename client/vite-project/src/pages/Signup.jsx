@@ -29,6 +29,9 @@ const Signup = () => {
   const handleModalOpen = () => {
     setModalOpen(true)
   }
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
 
   useEffect(() => {
     if (SignupState.success) {
@@ -52,9 +55,7 @@ const Signup = () => {
     }
 
   }, [SignupState.success, SignupState.loading])
-  const handleModalClose = () => {
-    setModalOpen(false);
-  };
+
   return (
     <>
       {loader ? <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>

@@ -1,10 +1,12 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { useDispatch, useSelector } from 'react-redux';
+
 
 const style = {
     position: 'absolute',
@@ -17,6 +19,8 @@ const style = {
     boxShadow: 24,
     p: 4,
 };
+
+
 
 export default function TransModal({ open, handleClose, message, heading }) {
 
@@ -37,7 +41,8 @@ export default function TransModal({ open, handleClose, message, heading }) {
                 }}
             >
                 <Fade in={open}>
-                    <Box sx={style}>
+
+                    <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', border: '2px solid #000', boxShadow: 24, p: 4, }}>
                         <Typography id="transition-modal-title" variant="h6" component="h2">
                             {heading}
                         </Typography>
@@ -47,6 +52,7 @@ export default function TransModal({ open, handleClose, message, heading }) {
                             </Typography>
                         }
                     </Box>
+
                 </Fade>
             </Modal>
         </div>
