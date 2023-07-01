@@ -11,6 +11,8 @@ import { getUserInterest, setNewUserInterests } from '../../features/user/intere
 import { logginUserReset, updateUserInterests, userMessgeReset } from '../../features/user/userSlice';
 import { setAuth } from '../../features/auth/userAuth';
 import SnackBar from '../SnackBar/SnackBar';
+import BlogCards from '../PostCard/BlogCards';
+import { getUserBlogs } from '../../features/user/blogCreateSlice';
 
 
 
@@ -23,7 +25,8 @@ const UserProfile = () => {
     const [modalOpen, setModalOpen] = useState(false)
     const dispatch = useDispatch()
     const interestState = useSelector(state => state.interests)
-    console.log("user interests available", interestState)
+    const blogState = useSelector(state => state.blogCreateState)
+    console.log('getting all blog states', blogState)
 
     // console.log(userState)
     const [userSelctedInterests, setUserInterests] = useState(null)
@@ -42,12 +45,10 @@ const UserProfile = () => {
     const handleInterestInput = (interests) => {
         if (interests) {
             setUserInterests(interests)
-            console.log('here at interest state', userSelctedInterests)
         }
     }
     const handleAddNewInterests = () => {
         if (addNewInterestValue) {
-            console.log('user added intrst', addNewInterestValue)
 
             dispatch(setNewUserInterests(addNewInterestValue))
         }
@@ -57,6 +58,8 @@ const UserProfile = () => {
             dispatch(userMessgeReset())
         }
         dispatch(getUserInterest())
+        dispatch(getUserBlogs())
+
 
     }, [interestState.success])
 
@@ -136,7 +139,10 @@ const UserProfile = () => {
             </Grid>
 
             <Grid item xs={12}>
-                <Grid container spacing={2} justifyContent="center">
+                <Grid container spacing={2} justifyContent="center" sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                    <Typography variant="h4" sx={{ margin: 3 }}>Your Blogs</Typography>
+                    {blogState?.useBlogs && blogState?.useBlogs.length > 0 ? <BlogCards Blogs={blogState?.useBlogs} /> : <div>No posts</div>}
+
 
                 </Grid>
             </Grid>

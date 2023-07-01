@@ -29,9 +29,9 @@ const addNewInterests = async(req,res)=>{
             //     { $push: { interests: newInterestField._id } },
             //     { new: true }
             //   ); 
-                res.status(200).json({message:'Fields Added succesfully'})
+               return res.status(200).json({message:'Fields Added succesfully'})
             }
-            res.status(409).json({message:"Field already available"})
+           return res.status(409).json({message:"Field already available"})
 
     } catch (error) {
         res.status(500).json({message:"Ivalid response"})

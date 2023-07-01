@@ -25,15 +25,13 @@ cloudinary.config({
 
 const PostBlog = async(req,res)=>{
   try {
-    console.log(req.id);
-   
+
       const userId = req.id
       console.log(userId)
       const paths = req.file.path.slice(7)
       const filepath = `http://localhost:5000/${paths}`
   
     const {title,summary,tags} = req.body
-  
   
       const  htmlContent = req.body.content
   
@@ -43,11 +41,12 @@ const PostBlog = async(req,res)=>{
         
         const tagArray = tags.split(',')
         const taggings = await InterestSchema.find({ name: { $in: tagArray } })
+        console.log("my taggings in blog",taggings)
 
         const interestIds = taggings.map(interest => interest._id);
 
   
-        const newBlogPost = new BlogPost({
+        const newBlogPost =  new BlogPost({
           title:title,
           summary:summary,
           tags:interestIds,
@@ -55,7 +54,7 @@ const PostBlog = async(req,res)=>{
           content: processedContent,
           author:userId
         });
-        const blogCreated = newBlogPost.save()
+        const blogCreated = await newBlogPost.save()
    
     
   
@@ -162,6 +161,30 @@ async function processAndSaveImages(content) {
 
   }
 
+  const getUserBlogs = async (req,res)=>{
+    try {
+
+      const userId = req.id
+      console.log(req.id)
+      const userData = await User.findById(userId)
+      console.log("userdata in getting blog",userData)
+      const blogIds = userData?.blogsPublished
+      if(blogIds.length>0){
+
+        console.log("blogs published",blogIds)
+        const userPublishedBlogs = await BlogPost.find({_id:{$in:blogIds}})
+
+        return res.status(200).json({userBlogs:userPublishedBlogs})
+      }else{
+        return res.status(200).json({message:"No blogs published yet!!"})
+      }
+
+    } catch (error) {
+      res.status(500).json({message:"Failed to fetch Blog data!"})
+
+    }
+  }
+
 
 
 
@@ -206,7 +229,7 @@ async function processAndSaveImages(content) {
   
 
 
-  module.exports = {PostBlog,getBlog,getALLBlogs}
+  module.exports = {PostBlog,getBlog,getALLBlogs,getUserBlogs}
 
 
 
