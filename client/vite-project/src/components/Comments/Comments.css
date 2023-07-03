@@ -1,0 +1,15 @@
+
+.icon {
+    height: 40px;
+    width: 40px;
+  }
+  
+  .iconButton {
+    background: black;
+    outline: none;
+    border: 1px solid black;
+    width: 5%;
+    height: auto;
+    padding: 5px;
+    margin: 10px;
+  }

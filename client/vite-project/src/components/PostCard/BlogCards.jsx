@@ -1,12 +1,13 @@
 import React from 'react'
 import { Card, CardActionArea, CardContent, CardMedia, Grid, Typography } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 
 const BlogCards = ({ Blogs }) => {
+    const navigate = useNavigate()
 
-    const handleShowBlog = (id) => {
-        console.log(id)
-
-
+    const handleShowBlog = (blog) => {
+        console.log(blog)
+        navigate('/user/myBlogs', { state: { blog } })
     }
 
     return (
@@ -23,7 +24,7 @@ const BlogCards = ({ Blogs }) => {
 
                         <CardActionArea sx={{ margin: 3 }}>
 
-                            <Card sx={{ display: 'flex' }} onClick={() => handleShowBlog(blog?._id)}>
+                            <Card sx={{ display: 'flex' }} onClick={() => handleShowBlog(blog)}>
                                 <CardContent sx={{ flex: 1 }} >
                                     <Typography component="h2" variant='h5'>
                                         {blog?.title}

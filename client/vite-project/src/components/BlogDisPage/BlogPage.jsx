@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom'
 import { getBlog } from '../../features/user/blogCreateSlice';
 import { Padding } from '@mui/icons-material';
 import './display.css'
+import BlogHeader from './BlogHeader';
 
 const BlogPage = () => {
     const { _id } = useParams();
@@ -14,7 +15,7 @@ const BlogPage = () => {
     useEffect(() => {
         dispatch(getBlog(_id))
     }, [])
-    console.log(blogstate.blog)
+    console.log("this is my sigle blog state", blogstate.blog)
 
 
 
@@ -26,27 +27,25 @@ const BlogPage = () => {
                 <Grid item xs={12} md={8} lg={7}>
                     {
                         blogstate.blog &&
-                        <Box sx={{ m: 5 }}>
-                            <Paper sx={{ marginTop: 2, marginRight: 3, marginBottom: 4, marginLeft: 5 }}>
-                                <Box sx={{ marginTop: 8, marginRight: 3, marginBottom: 4, marginLeft: 5 }}>
-                                    <Typography variant="h6" component="h1" className="post-card-title" sx={{ fontWeight: 'bold', marginBottom: '8px' }}>
-                                        {blogstate.blog.title}
-                                    </Typography>
-                                    <Typography variant="body1" color="textSecondary" className="post-card-summary" sx={{ color: 'rgba(0, 0, 0, 0.6)' }}>
-                                        {blogstate.blog.summary}
-                                    </Typography>
+                        <div>
+                            <BlogHeader blog={blogstate?.blog} />
+                            <Box sx={{ m: 5 }}>
+                                <Paper sx={{ marginTop: 2, marginRight: 3, marginBottom: 4, marginLeft: 5 }}>
+                                    <Box sx={{ marginTop: 8, marginRight: 3, marginBottom: 4, marginLeft: 5 }}>
 
 
-                                    <Stack xs={12} md={8} lg={7}>
+
+                                        <Stack xs={12} md={8} lg={7}>
 
 
-                                        <Box sx={{ padding: 1 }}>
-                                            <div id='mycontent' dangerouslySetInnerHTML={{ __html: blogstate.blog.content }}></div>
-                                        </Box>
-                                    </Stack>
-                                </Box>
-                            </Paper>
-                        </Box>
+                                            <Box sx={{ padding: 1 }}>
+                                                <div id='mycontent' dangerouslySetInnerHTML={{ __html: blogstate.blog.content }}></div>
+                                            </Box>
+                                        </Stack>
+                                    </Box>
+                                </Paper>
+                            </Box>
+                        </div>
                     }
                 </Grid>
             </Grid>

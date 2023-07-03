@@ -14,6 +14,7 @@ import UserProtected from './utils/UserProtected';
 import CreateBlog from './components/createBlog/CreateBlog';
 import Profile from './pages/Profile';
 import BlogViePage from './pages/BlogViePage';
+import MyBlogViewPage from './pages/MyBlogViewPage';
 
 
 
@@ -40,6 +41,7 @@ function App() {
           <Route path='CreateBlog' element={<CreateBlog />} />
           <Route path='profile' element={<Profile />} />
           <Route path='viewBlog/:_id' element={<BlogViePage />} />
+          <Route path='myBlogs' element={<MyBlogViewPage />} />
         </Route >
 
         <Route path='*' element={<Notfound />} />

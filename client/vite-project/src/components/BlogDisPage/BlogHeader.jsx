@@ -2,7 +2,8 @@ import { Grid, Paper, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import React from 'react'
 
-const BlogHeader = () => {
+const BlogHeader = ({ blog }) => {
+    console.log("Blog in titile", blog)
     return (
         <>
             <Paper
@@ -14,10 +15,11 @@ const BlogHeader = () => {
                     backgroundSize: 'cover',
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center',
-                    backgroundImage: '/src'
+                    marginTop: 4,
+                    // backgroundImage: `url(${blog.coverImage.replace('\\', '/').replace(' ', '%20')})`
                 }}
             >
-                {<img style={{ display: 'none' }} src={'img'} alt='/ser' />}
+                {/* <img src={blog.coverImage} alt='/ser' /> */}
                 <Box
                     sx={{
                         position: 'absolute',
@@ -36,17 +38,17 @@ const BlogHeader = () => {
                             pr: { md: 0 },
                         }}>
                             <Typography component="h1" variant="h3" color="inherit" gutterBottom>
-                                Title
+                                {blog.title}
                             </Typography>
                             <Typography variant="h5" color="inherit" paragraph>
-                                Description
+                                {blog.summary}
                             </Typography>
                         </Box>
                     </Grid>
 
                 </Grid>
 
-            </Paper>
+            </Paper >
         </>
     )
 }
