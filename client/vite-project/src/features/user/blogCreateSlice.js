@@ -16,7 +16,8 @@ const initialState = {
     error:'',
     blogData:{},
     blog:{},
-    useBlogs:{}
+    useBlogs:{},
+    comments:[]
 }
 
 
@@ -70,6 +71,28 @@ export const getUserBlogs = createAsyncThunk('/getUserBlogs',async(_,{rejectWith
 
     }
 })
+
+
+export const MakeBlogComment = createAsyncThunk('/user/setuserComment',async(content,{rejectWithValue})=>{
+    try {
+        const response = await axiosInstance.post('/user/MakeBlogComment',{content:content})
+        const data = response.data
+        return data 
+    } catch (error) {
+        return rejectWithValue(error.response.data)
+    }
+})
+
+export const GetBlogComment = createAsyncThunk('/user/getuserComment',async(blogId,{rejectWithValue})=>{
+    try {
+        const response = await axiosInstance.get(`/user/getBlogComment/${blogId}`)
+        const data = response.data
+        return data 
+    } catch (error) {
+        return rejectWithValue(error.response.data)
+    }
+})
+
 
 const blogCreateSlice = createSlice({
     name:'blogCreate',
@@ -174,6 +197,34 @@ const blogCreateSlice = createSlice({
             state.error = action.error
             state.message = action.payload?.message??"failed"
         })
+        builder.addCase(MakeBlogComment.pending,state=>{
+            state.loading = true
+        })
+        builder.addCase(MakeBlogComment.fulfilled,(state,action)=>{
+            state.loading = false;
+            state.success = true;
+            state.comments = action.payload?.comments;
+            state.message = action.payload?.message??"success"
+        })
+        builder.addCase(MakeBlogComment.rejected,(state,action)=>{
+            state.loading = false
+            state.error = action.error
+            state.message = action.payload?.message??"failed"
+        })
+        builder.addCase(GetBlogComment.pending,state=>{
+            state.loading = true
+        })
+        builder.addCase(GetBlogComment.fulfilled,(state,action)=>{
+            state.loading = false;
+            state.success = true;
+            state.comments = action.payload?.comments;
+            state.message = action.payload?.message??"success"
+        })
+        builder.addCase(GetBlogComment.rejected,(state,action)=>{
+            state.loading = false
+            state.error = action.error
+            state.message = action.payload?.message??"failed"
+        })
 
 
     }
@@ -186,7 +237,10 @@ export const {
     setCoverImage,
     setContent,
     setTags,
-    resetBlogState,clearBlog,setBlog,resetSateAfterFetch
+    resetBlogState,
+    clearBlog,
+    setBlog,
+    resetSateAfterFetch
 } = blogCreateSlice.actions;
 
 export default blogCreateSlice.reducer

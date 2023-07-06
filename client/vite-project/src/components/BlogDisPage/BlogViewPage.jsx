@@ -24,7 +24,7 @@ const BlogViewPage = () => {
                             </Box>
 
                         </Stack>
-                        <CommentBox />
+                        <CommentBox blog={blog} />
                     </Paper>
                 </Box>
             </Grid>

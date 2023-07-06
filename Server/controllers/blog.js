@@ -185,6 +185,45 @@ async function processAndSaveImages(content) {
     }
   }
 
+  const MakeBlogComment = async (req,res)=>{
+    try {
+      const blogId = req.body.content.blogId
+      const comment = req.body.content.comment
+      const userId = req.id
+      console.log(blogId,comment,userId)
+
+      const blogData = await BlogPost.findById(blogId)
+      // const userData =await User
+
+      if(blogData){
+        const newComment = {
+          user: userId,
+          comment:comment ,
+          createdAt: new Date(),
+        };
+        blogData.comments.push(newComment)
+        await blogData.save()
+        console.log(blogData)
+        res.status(200).json({comments:blogData.comments})
+      }
+      res.status(400).json({message:"Failed to update"})
+      
+    } catch (error) {
+
+
+    }
+  }
+
+  const getBlogComment = (req,res)=>{
+    try {
+      console.log('hi')
+      console.log("here is the blog idddd",req.params)
+
+    } catch (error) {
+      
+    }
+  }
+
 
 
 
@@ -229,7 +268,7 @@ async function processAndSaveImages(content) {
   
 
 
-  module.exports = {PostBlog,getBlog,getALLBlogs,getUserBlogs}
+  module.exports = {PostBlog,getBlog,getALLBlogs,getUserBlogs,MakeBlogComment,getBlogComment}
 
 
 
