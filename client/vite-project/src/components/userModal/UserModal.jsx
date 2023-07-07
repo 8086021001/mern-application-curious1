@@ -23,7 +23,6 @@ const UserModal = ({ open, onClose }) => {
     const file = event.target.files[0];
     if (file) {
       setImageFile(file)
-      console.log("state1", imageFile)
 
     }
   };
@@ -56,7 +55,6 @@ const UserModal = ({ open, onClose }) => {
 
       dispatch(userProfileUpdate(formData))
     } else if (hasChanges && !imageFile) {
-      console.log('i am here')
       dispatch(userProfUpdateWithoutImage(formData))
     }
 

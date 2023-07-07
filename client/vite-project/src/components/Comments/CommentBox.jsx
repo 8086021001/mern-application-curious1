@@ -12,8 +12,6 @@ const CommentBox = ({ blog }) => {
     const [showEmojis, setShowEmojis] = useState(false);
     const dispatch = useDispatch()
     const blogCommentState = useSelector(state => state.blogCreateState)
-    console.log(blogCommentState)
-    console.log("ist comments", blogCommentState.comments)
 
 
     const handleCommentPost = () => {
@@ -24,11 +22,11 @@ const CommentBox = ({ blog }) => {
                 comment: commentState
             }
             dispatch(MakeBlogComment(content))
+            setCommentState('')
         }
     }
 
 
-    console.log("in blog comments", blog)
     const addEmoji = (e) => {
         let sym = e.unified.split("-");
         let codesArray = [];
@@ -38,15 +36,18 @@ const CommentBox = ({ blog }) => {
     };
 
     useEffect(() => {
-        dispatch(GetBlogComment(blog._id))
-    }, [blogCommentState.success])
+        if (blog?._id) {
+            dispatch(GetBlogComment(blog?._id))
+
+        }
+    }, [blogCommentState.comments.length, blog._id])
     return (
         <>
             <Box
                 display="flex"
                 flexDirection="column"
                 gap={4}
-                height="100vh"
+                // height="100vh"
                 width="50vw"
                 p={4}
             >
@@ -96,8 +97,8 @@ const CommentBox = ({ blog }) => {
 
                     }
                 </Box>
-            </Box>{blogCommentState.comments.length > 0 &&
-                <CommentsDisplayBox comments={blogCommentState.comments} />
+            </Box>{blogCommentState?.comments.length > 0 &&
+                <CommentsDisplayBox comments={blogCommentState?.comments} />
             }
         </>
     )

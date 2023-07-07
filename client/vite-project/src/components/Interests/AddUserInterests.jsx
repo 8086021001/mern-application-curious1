@@ -7,7 +7,6 @@ import { getUserInterest } from '../../features/user/interestSlice'
 const AddUserInterests = ({ handleInterestchange }) => {
     const dispatch = useDispatch()
     const interestsState = useSelector(state => state.interests)
-    console.log("my int", interestsState)
 
 
 

@@ -23,7 +23,6 @@ const Interests = ({ handleInterestSubmit }) => {
 
     const handleInterestSelect = (interest) => {
         setSelectedInterest((prevInterest) => {
-            console.log(prevInterest)
             if (prevInterest.some((item) => item._id === interest._id)) {
                 return prevInterest.filter((item) => item._id !== interest._id);
             } else {
@@ -43,7 +42,6 @@ const Interests = ({ handleInterestSubmit }) => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log('Selected interest:', selectedInterest);
         handleInterestSubmit(selectedInterest)
     };
 

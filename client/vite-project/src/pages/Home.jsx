@@ -8,7 +8,7 @@ import MyAppBar from '../components/AppBar/MyAppBar'
 import SideBar from '../components/sideBar/SideBar'
 import PostCard from '../components/PostCard/PostCard'
 import SearchBar from '../components/SearchBar/SearchBar'
-import { resetSateAfterFetch } from '../features/user/blogCreateSlice'
+import { resetComments, resetSateAfterFetch } from '../features/user/blogCreateSlice'
 
 const Home = () => {
 
@@ -20,6 +20,9 @@ const Home = () => {
 
 
     console.log(loginState)
+    useEffect(() => {
+        dispatch(resetComments())
+    }, [])
 
     return (
         <div>

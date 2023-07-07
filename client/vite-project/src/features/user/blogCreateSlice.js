@@ -137,6 +137,11 @@ const blogCreateSlice = createSlice({
             state.message = ''
             state.error = ''
         },
+        resetComments:(state)=>{
+            state.success = false
+            state.message = ''
+            state.comments = []
+        }
 
 
     },
@@ -240,7 +245,8 @@ export const {
     resetBlogState,
     clearBlog,
     setBlog,
-    resetSateAfterFetch
+    resetSateAfterFetch,
+    resetComments
 } = blogCreateSlice.actions;
 
 export default blogCreateSlice.reducer

@@ -46,13 +46,11 @@ const PostCard = () => {
     useEffect(() => {
         const fetchData = () => {
             dispatch(getAllBlog());
-            console.log('this is my blofg data', BlogState.blogData)
         };
 
         fetchData();
 
     }, [])
-    console.log('this is my blofg data now', BlogState.blogData)
 
 
 

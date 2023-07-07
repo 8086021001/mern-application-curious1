@@ -171,8 +171,8 @@ async function processAndSaveImages(content) {
       const blogIds = userData?.blogsPublished
       if(blogIds.length>0){
 
-        console.log("blogs published",blogIds)
         const userPublishedBlogs = await BlogPost.find({_id:{$in:blogIds}})
+        console.log("blogs published",userPublishedBlogs)
 
         return res.status(200).json({userBlogs:userPublishedBlogs})
       }else{
@@ -214,14 +214,72 @@ async function processAndSaveImages(content) {
     }
   }
 
-  const getBlogComment = (req,res)=>{
-    try {
-      console.log('hi')
+  const getBlogComment = async(req,res)=>{
+   
       console.log("here is the blog idddd",req.params)
-
-    } catch (error) {
+      const blogID = req.params.blogId
+      const pipeline = [
+        {
+          $match: { _id: new ObjectId(blogID) },
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'comments.user',
+            foreignField: '_id',
+            as: 'users',
+          },
+        },
+        {
+          $unwind: '$comments',
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'comments.user',
+            foreignField: '_id',
+            as: 'comments.user',
+          },
+        },
+        {
+          $unwind: '$comments.user',
+        },
+        {
+          $sort: { 'comments.createdAt': -1 },
+        },
+        {
+          $group: {
+            _id: 0,
+            comments: {
+              $push: {
+                BlogId:{$toString:'$_id'},
+                comment: '$comments.comment',
+                commentId:{$toString:'$comments._id'},
+                userID:{$toString:'$comments.user._id'},
+                authorId:{$toString:'$author'},
+                username: '$comments.user.name',
+                userProfile: '$comments.user.image',
+              },
+            },
+          },
+        },
+      ]
       
-    }
+
+      const commentData = await BlogPost.aggregate(pipeline)
+      console.log("here is the comment dataa",commentData)
+
+
+      if(commentData.length>0){
+        const dataComments = commentData[0].comments
+
+        console.log("here is the comment data",dataComments)
+        res.status(200).json({comments:dataComments})
+      }else{
+        res.status(400).json({message:"Failed! please refresh"})
+      }
+
+
   }
 
 

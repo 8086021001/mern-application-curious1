@@ -31,7 +31,6 @@ function CreateBlog() {
     };
 
 
-    console.log(BlogState)
 
 
 
@@ -52,8 +51,6 @@ function CreateBlog() {
             dispatch(setBlog())
         }
 
-        console.log("file", fileInput.current.files[0])
-        console.log("bbb", BlogState?.creatingBlog?.content)
         dispatch(resetBlogState())
         SetPrevState(true)
         setHtmlContent(BlogState?.creatingBlog?.content)
@@ -134,16 +131,13 @@ function CreateBlog() {
                 }) || [];
 
                 setTagings((tags) => [...new Set([...tags, ...names])]);
-                console.log(tags)
             } catch (error) {
                 console.error('Error fetching interests:', error);
             }
         };
 
         fetchInterests();
-        console.log(BlogState.success)
         if (BlogState.success) {
-            console.log(BlogState.user)
             localStorage.setItem('user', JSON.stringify(BlogState.user))
             dispatch(resetBlogState())
             toast.success('Hurray!Blog published!')

@@ -28,7 +28,6 @@ function MyAppBar() {
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
-    console.log("nav", anchorElNav)
   };
 
   const handleOpenUserMenu = (event) => {
@@ -38,7 +37,6 @@ function MyAppBar() {
   };
 
   const handleCloseNavMenu = (pages) => {
-    console.log("nabv", pages)
 
     if (pages === 'create Blog') {
       navigate('/user/CreateBlog')
@@ -50,7 +48,6 @@ function MyAppBar() {
   };
 
   const handleCloseUserMenu = (setting) => {
-    console.log("setting", setting)
     if (setting === 'Logout') {
       localStorage.removeItem('user');
       dispatch(clearAuth())

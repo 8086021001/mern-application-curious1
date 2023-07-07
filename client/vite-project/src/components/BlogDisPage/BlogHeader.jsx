@@ -3,7 +3,6 @@ import { Box } from '@mui/system'
 import React from 'react'
 
 const BlogHeader = ({ blog }) => {
-    console.log("Blog in titile", blog)
     return (
         <>
             <Paper
