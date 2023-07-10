@@ -17,6 +17,9 @@ const initialState = {
     blogData:{},
     blog:{},
     useBlogs:{},
+    searchBlogs:[],
+    searchSuccess:false,
+    searchLoading:false,
     comments:[]
 }
 
@@ -93,6 +96,17 @@ export const GetBlogComment = createAsyncThunk('/user/getuserComment',async(blog
     }
 })
 
+export const getSearchContent = createAsyncThunk('/user/getSearchContent',async(searchText,{rejectWithValue})=>{
+    try {
+        const response = await axiosInstance.get(`/user/getSearchContent/:${searchText}`)
+        const data = response.data
+        return data 
+    } catch (error) {
+        return rejectWithValue(error.response.data)
+    }
+}) 
+
+
 
 const blogCreateSlice = createSlice({
     name:'blogCreate',
@@ -141,6 +155,11 @@ const blogCreateSlice = createSlice({
             state.success = false
             state.message = ''
             state.comments = []
+        },
+        resetSearch:(state)=>{
+            state.searchSuccess = false
+            state.searchBlogs = []
+            state.searchLoading = false
         }
 
 
@@ -230,6 +249,20 @@ const blogCreateSlice = createSlice({
             state.error = action.error
             state.message = action.payload?.message??"failed"
         })
+        builder.addCase(getSearchContent.pending,state=>{
+            state.searchLoading = true
+        })
+        builder.addCase(getSearchContent.fulfilled,(state,action)=>{
+            state.searchLoading = false;
+            state.searchSuccess = true;
+            state.searchBlogs = action.payload?.blogs;
+            state.message = action.payload?.message??"success"
+        })
+        builder.addCase(getSearchContent.rejected,(state,action)=>{
+            state.searchLoading = false
+            state.error = action.error
+            state.message = action.payload?.message??"failed"
+        })
 
 
     }
@@ -246,7 +279,8 @@ export const {
     clearBlog,
     setBlog,
     resetSateAfterFetch,
-    resetComments
+    resetComments,
+    resetSearch
 } = blogCreateSlice.actions;
 
 export default blogCreateSlice.reducer

@@ -23,7 +23,7 @@ const UserModal = ({ open, onClose }) => {
     const file = event.target.files[0];
     if (file) {
       setImageFile(file)
-
+      console.log(imageFile)
     }
   };
   const handleSubmit = () => {

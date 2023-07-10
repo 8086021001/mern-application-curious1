@@ -328,7 +328,34 @@ const getUser = async (req, res, next) => {
 
   }
 
+  const setBlogAsDraft = async(req,res)=>{
+    try {
+      const userId = req.id
+      console.log(req.body,userId)
+      const blogId = req.body.blogId
+      let message
+      const userSchema= await User.findById(userId)
+      if(userSchema.savedBlogs.includes(blogId)){
+        userSchema.savedBlogs.pull(blogId)
+        message = "Blog removed from list"
+      }else{
+        userSchema.savedBlogs.addToSet(blogId)
+        message = "Blog added to list"
+      }
+      await userSchema.save()
+      console.log(userSchema)
+      res.status(200).json({user:userSchema,message:message})
 
-module.exports = {Signup,verifyEmail,login,getUser,logout,setFields,googelSignup,updateProfile,userFieldUpdate}
+      
+    } catch (error) {
+      
+      res.status(500).json({message:"failed"})
+
+    }
+
+  }
+
+
+module.exports = {Signup,verifyEmail,login,getUser,logout,setFields,googelSignup,updateProfile,userFieldUpdate,setBlogAsDraft}
 
 

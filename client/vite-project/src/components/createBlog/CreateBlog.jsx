@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import MyAppBar from '../AppBar/MyAppBar'
-import { Box, Button, FormControl, Grid, InputLabel, Paper, TextField } from '@mui/material'
+import { Box, Button, Divider, FormControl, Grid, Icon, IconButton, InputLabel, Paper, TextField, Typography } from '@mui/material'
 import Editor from '../ReactQuill/Editor';
 import SearchBar from '../SearchBar/SearchBar';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,6 +9,10 @@ import { toast } from 'react-toastify'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axiosInstance from '../../baseAPI/axiosBaseURL';
+import BlogDraftPages from './BlogDraftPages';
+import ChevronRightOutlinedIcon from '@mui/icons-material/ChevronRightOutlined';
+import { useNavigate } from 'react-router-dom';
+import EditEditor from '../ReactQuill/EditEditor';
 
 
 
@@ -22,6 +26,8 @@ function CreateBlog() {
     const [htmlContent, setHtmlContent] = useState('');
     const [intersets, setInterests] = useState([]);
     const [tags, setTagings] = useState([]);
+    const navigate = useNavigate()
+    const [EditDraftblog, setEDitDraftState] = useState(false)
 
 
     const toastStyle = {
@@ -41,19 +47,37 @@ function CreateBlog() {
     const handlePreview = () => {
         if (BlogState.Title || BlogState.summary || BlogState.content && BlogState.creatingBlog === null) {
             const blogDat = {
-                title: BlogState.Title,
-                summary: BlogState.summary,
-                content: BlogState.content,
-                tags: BlogState.tags,
-                covImg: BlogState.coverImage
+                title: BlogState?.Title,
+                summary: BlogState?.summary,
+                content: BlogState?.content,
+                tags: BlogState?.tags,
+                covImg: BlogState?.coverImage
             }
             localStorage.setItem('blog', JSON.stringify(blogDat))
             dispatch(setBlog())
         }
-
         dispatch(resetBlogState())
         SetPrevState(true)
         setHtmlContent(BlogState?.creatingBlog?.content)
+
+    }
+
+
+    const savingBlogAsDraft = () => {
+        if (BlogState.Title || BlogState.summary || BlogState.content && BlogState.creatingBlog === null) {
+            const blogDat = {
+                title: BlogState?.Title,
+                summary: BlogState?.summary,
+                content: BlogState?.content,
+                tags: BlogState?.tags,
+                covImg: BlogState?.coverImage
+            }
+            localStorage.setItem('blog', JSON.stringify(blogDat))
+            dispatch(setBlog())
+            toast.success('Saved to drafts!')
+
+        }
+        dispatch(resetBlogState())
 
     }
 
@@ -114,9 +138,14 @@ function CreateBlog() {
         dispatch(createBlog(blogData))
     }
 
+    const handleResumeEditingDraft = () => {
+        console.log(BlogState.creatingBlog)
+        if (BlogState.creatingBlog) {
+            setEDitDraftState(true)
+        }
+    }
 
 
-    console.log(tags)
 
 
     useEffect(() => {
@@ -137,7 +166,14 @@ function CreateBlog() {
         };
 
         fetchInterests();
-        if (BlogState.success) {
+        const userObject = BlogState?.user
+        function isObjectNotEmpty(userObject) {
+            return Object.keys(userObject).length > 0;
+        }
+        const isuserObjectEmpty = isObjectNotEmpty(userObject)
+        console.log("is it empty", isuserObjectEmpty)
+
+        if (BlogState.success && isuserObjectEmpty) {
             localStorage.setItem('user', JSON.stringify(BlogState.user))
             dispatch(resetBlogState())
             toast.success('Hurray!Blog published!')
@@ -152,78 +188,109 @@ function CreateBlog() {
         <>
             <Grid container spacing={2}>
                 <MyAppBar />
-                <Grid item xs={12} sm={10} md={8} lg={7} sx={{ mx: 'auto', mt: 6 }}>
+                <Grid item xs={12} sm={10} md={7} lg={6} sx={{ mx: 'auto', mt: 6 }}>
                     {prevState ? <div><div className='preview' dangerouslySetInnerHTML={{ __html: htmlContent }}>
 
                     </div><Button onClick={() => SetPrevState(false)}>Edit</Button></div> :
-
-                        <Paper>
-                            <form onSubmit={handleSubmit}>
-                                <Box sx={{ m: 5 }}>
-                                    <FormControl fullWidth>
-                                        <TextField
-                                            fullWidth
-                                            value={BlogState.Title}
-                                            InputProps={{
-                                                style: {
-                                                    fontSize: '2rem',
-                                                    fontWeight: 'bold',
-                                                }
-                                            }}
-                                            label="Title"
-                                            id="title"
-                                            multiline
-                                            onChange={(e) => dispatch(setTitle(e.target.value))}
-                                            sx={{ m: 2 }}
-                                        />
-                                    </FormControl>
-
-                                    <FormControl fullWidth>
-                                        <TextField
-                                            fullWidth
-                                            value={BlogState.summary}
-                                            label="Summary"
-                                            id="Summary"
-                                            multiline
-                                            onChange={(e) => dispatch(setSummary(e.target.value))}
-                                            sx={{ m: 2 }}
-                                        />
-                                    </FormControl>
-
-                                    <FormControl fullWidth>
-                                        <TextField
-                                            type="file"
-                                            inputRef={fileInput}
-                                            id="file"
-                                            sx={{ m: 2, maxWidth: 250 }}
-                                        />
-                                        <InputLabel htmlFor="file" shrink>
-                                            Cover Image
-                                        </InputLabel>
-
-                                        <SearchBar tags={tags} handleTagValues={HandleTags} ></SearchBar>
-
-                                    </FormControl>
-                                    <FormControl fullWidth sx={{ m: 2 }}>
-                                        <Editor />
-                                    </FormControl>
-
-
-                                    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                        <Button type="button" variant="contained" color="primary" onClick={handlePreview} sx={{ ml: 2 }}>
-                                            Preview
-                                        </Button>
-                                        <Button type="submit" variant="contained" color="primary" sx={{ ml: 2 }}>
-                                            Submit
-                                        </Button>
+                        <Box >
+                            <Box display={'flex'} justifyContent={'space-between'} >
+                                <Box display={'flex'} alignItems={'flex-start'} gap={2}>
+                                    <Box   >
+                                        <IconButton onClick={handleResumeEditingDraft}>
+                                            <Typography  >Drafts</Typography>
+                                            <ChevronRightOutlinedIcon />
+                                        </IconButton>
                                     </Box>
-
+                                    <Box >
+                                        <IconButton>
+                                            <Typography>Published</Typography>
+                                        </IconButton>
+                                    </Box>
                                 </Box>
-                            </form>
-                        </Paper>
+                                <Box display={'flex'} alignItems={'flex-end'} >
+                                    <Box >
+                                        <Button onClick={savingBlogAsDraft} sx={{ border: '1px solid black' }}>Save Chnages</Button>
+                                    </Box>
+                                </Box>
+                            </Box>
+                            <Divider sx={{ padding: 2, marginBottom: 2 }} />
+                            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                                <Typography variant='h4'>Start writing</Typography>
+
+                            </Box>
+
+
+                            <Paper>
+
+                                <form onSubmit={handleSubmit}>
+                                    <Box sx={{ m: 5 }}>
+                                        <FormControl fullWidth>
+                                            <TextField
+                                                fullWidth
+                                                value={BlogState.Title}
+                                                InputProps={{
+                                                    style: {
+                                                        fontSize: '2rem',
+                                                        fontWeight: 'bold',
+                                                    }
+                                                }}
+                                                label="Title"
+                                                id="title"
+                                                multiline
+                                                onChange={(e) => dispatch(setTitle(e.target.value))}
+                                                sx={{ m: 2 }}
+                                            />
+                                        </FormControl>
+
+                                        <FormControl fullWidth>
+                                            <TextField
+                                                fullWidth
+                                                value={BlogState.summary}
+                                                label="Summary"
+                                                id="Summary"
+                                                multiline
+                                                onChange={(e) => dispatch(setSummary(e.target.value))}
+                                                sx={{ m: 2 }}
+                                            />
+                                        </FormControl>
+
+                                        <FormControl fullWidth>
+                                            <TextField
+                                                type="file"
+                                                inputRef={fileInput}
+                                                id="file"
+                                                sx={{ m: 2, maxWidth: 250 }}
+                                            />
+                                            <InputLabel htmlFor="file" shrink>
+                                                Cover Image
+                                            </InputLabel>
+
+                                            <SearchBar tags={tags} handleTagValues={HandleTags} ></SearchBar>
+
+                                        </FormControl>
+                                        <FormControl fullWidth sx={{ m: 2 }}>
+                                            {!EditDraftblog ? <Editor /> : <EditEditor />}
+
+                                        </FormControl>
+
+
+                                        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                            <Button type="button" variant="contained" color="primary" onClick={handlePreview} sx={{ ml: 2 }}>
+                                                Preview
+                                            </Button>
+                                            <Button type="submit" variant="contained" color="primary" sx={{ ml: 2 }}>
+                                                Submit
+                                            </Button>
+                                        </Box>
+
+                                    </Box>
+                                </form>
+                            </Paper>
+                        </Box>
                     }
                 </Grid>
                 <ToastContainer toastStyle={toastStyle} />
+                <BlogDraftPages onClick={handleResumeEditingDraft} />
             </Grid >
 
         </>

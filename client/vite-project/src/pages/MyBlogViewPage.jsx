@@ -6,7 +6,6 @@ const MyBlogViewPage = ({ blog }) => {
     return (
         <>
             <div>
-                {console.log(blog)}
                 <MyAppBar />
                 <BlogViewPage blog={blog} />
             </div>

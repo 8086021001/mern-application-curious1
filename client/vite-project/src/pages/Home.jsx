@@ -9,6 +9,7 @@ import SideBar from '../components/sideBar/SideBar'
 import PostCard from '../components/PostCard/PostCard'
 import SearchBar from '../components/SearchBar/SearchBar'
 import { resetComments, resetSateAfterFetch } from '../features/user/blogCreateSlice'
+import TextSearchBar from '../components/SearchBar/TextSearchBar'
 
 const Home = () => {
 

@@ -72,4 +72,9 @@ const blogSchema = new mongoose.Schema({
       },
 })
 
+// MyModel.find({$text: {$search: searchString}})
+//        .skip(20)
+//        .limit(10)
+//        .exec(function(err, docs) { ... });
+
 module.exports = mongoose.model('blogSchema',blogSchema)

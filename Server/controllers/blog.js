@@ -282,6 +282,43 @@ async function processAndSaveImages(content) {
 
   }
 
+  const getSearchContent = async(req,res)=>{
+    try {
+      const userId = req.id
+      console.log("hello",req.params.searchText)
+      await BlogPost.createIndexes({ title: 'text',summary:'text' });
+
+      const blogdata = await BlogPost.aggregate([
+        {
+          $match: {
+            $text: { $search: req.params.searchText }
+          }
+        },
+        {
+          $addFields: {
+            metaValue: { $meta: "textScore" } 
+          }
+        },
+        {
+          $sort: {
+            metaValue: -1 
+          }
+        }
+      ]);    
+      
+      if (blogdata.length === 0) {
+        return res.status(200).json({ message: "No search results found." });
+      }
+      
+      
+      res.status(200).json({blogs:blogdata})
+
+    } catch (error) {
+      res.status(500).json({message:"Failed!"})
+
+    }
+  }
+
 
 
 
@@ -326,7 +363,7 @@ async function processAndSaveImages(content) {
   
 
 
-  module.exports = {PostBlog,getBlog,getALLBlogs,getUserBlogs,MakeBlogComment,getBlogComment}
+  module.exports = {PostBlog,getBlog,getALLBlogs,getUserBlogs,MakeBlogComment,getBlogComment,getSearchContent}
 
 
 

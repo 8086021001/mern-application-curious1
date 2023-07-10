@@ -90,6 +90,17 @@ export const userProfUpdateWithoutImage = createAsyncThunk('user/profilefieldUpd
     }
 })
 
+export const setBlogAsDraft = createAsyncThunk('/user/setBlogAsDraft',async(blogId,{rejectWithValue})=>{
+    try {
+        const response = await axiosInstance.post('/user/setBlogAsDraft',blogId)
+        const data = response.data
+        return data
+    } catch (error) {
+        return rejectWithValue(error.response.data)
+    }
+})
+
+
 
 
 
@@ -204,6 +215,22 @@ const userSlice = createSlice({
             state.message = action.payload.message
         })
         builder.addCase(userProfUpdateWithoutImage.rejected,(state,action)=>{
+            state.loading = false
+            state.errorStatus = true
+            state.error = action.error
+            state.message = action.payload?.message
+        })
+        builder.addCase(setBlogAsDraft.pending,(state)=>{
+            state.loading = true
+        })
+        builder.addCase(setBlogAsDraft.fulfilled,(state,action)=>{
+            state.loading = false,
+            state.success = true,
+            state.error = "",
+            state.user = action.payload?.user,
+            state.message = action.payload.message
+        })
+        builder.addCase(setBlogAsDraft.rejected,(state,action)=>{
             state.loading = false
             state.errorStatus = true
             state.error = action.error
