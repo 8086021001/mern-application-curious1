@@ -165,14 +165,11 @@ async function processAndSaveImages(content) {
     try {
 
       const userId = req.id
-      console.log(req.id)
       const userData = await User.findById(userId)
-      console.log("userdata in getting blog",userData)
       const blogIds = userData?.blogsPublished
       if(blogIds.length>0){
 
         const userPublishedBlogs = await BlogPost.find({_id:{$in:blogIds}})
-        console.log("blogs published",userPublishedBlogs)
 
         return res.status(200).json({userBlogs:userPublishedBlogs})
       }else{
@@ -318,6 +315,27 @@ async function processAndSaveImages(content) {
 
     }
   }
+  const getSavedBlogs = async(req,res)=>{
+    try {
+      console.log(req.id)
+      const userId = req.id
+      const userData = await User.findById(userId)
+      const savedBlogId = userData.savedBlogs
+
+      if(savedBlogId.length>0){
+        const BlogsData = await BlogPost.find({_id:{$in:savedBlogId}})
+        res.status(200).json({blogs:BlogsData})
+
+      }else{
+        res.status(200).json({message:"No Blogs available"})
+      }
+
+
+      
+    } catch (error) {
+      
+    }
+  }
 
 
 
@@ -363,7 +381,7 @@ async function processAndSaveImages(content) {
   
 
 
-  module.exports = {PostBlog,getBlog,getALLBlogs,getUserBlogs,MakeBlogComment,getBlogComment,getSearchContent}
+  module.exports = {PostBlog,getBlog,getALLBlogs,getUserBlogs,MakeBlogComment,getBlogComment,getSearchContent,getSavedBlogs}
 
 
 

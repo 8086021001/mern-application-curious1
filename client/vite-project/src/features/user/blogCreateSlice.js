@@ -20,7 +20,9 @@ const initialState = {
     searchBlogs:[],
     searchSuccess:false,
     searchLoading:false,
-    comments:[]
+    comments:[],
+    savedBlogs:[],
+    saveBlogSuccess:false
 }
 
 
@@ -106,6 +108,17 @@ export const getSearchContent = createAsyncThunk('/user/getSearchContent',async(
     }
 }) 
 
+export const getSavedBlogs = createAsyncThunk('/getSavedBlogs',async(_,{rejectWithValue})=>{
+    try {
+        const response = await axiosInstance.get('/user/getSavedBlogs')
+        const data = response.data
+        return data
+
+    } catch (error) {
+        return rejectWithValue(error.response.data);
+
+    }
+})
 
 
 const blogCreateSlice = createSlice({
@@ -259,6 +272,20 @@ const blogCreateSlice = createSlice({
             state.message = action.payload?.message??"success"
         })
         builder.addCase(getSearchContent.rejected,(state,action)=>{
+            state.searchLoading = false
+            state.error = action.error
+            state.message = action.payload?.message??"failed"
+        })
+        builder.addCase(getSavedBlogs.pending,state=>{
+            state.searchLoading = true
+        })
+        builder.addCase(getSavedBlogs.fulfilled,(state,action)=>{
+            state.searchLoading = false;
+            state.saveBlogSuccess = true;
+            state.savedBlogs = action.payload?.blogs;
+            state.message = action.payload?.message??"success"
+        })
+        builder.addCase(getSavedBlogs.rejected,(state,action)=>{
             state.searchLoading = false
             state.error = action.error
             state.message = action.payload?.message??"failed"

@@ -15,6 +15,10 @@ import CreateBlog from './components/createBlog/CreateBlog';
 import Profile from './pages/Profile';
 import BlogViePage from './pages/BlogViePage';
 import MyBlogViewPage from './pages/MyBlogViewPage';
+import YourStories from './pages/YourStories';
+import UserProfileView from './components/OtherUserprofile/UserProfileView';
+import FriendsListPage from './components/OtherUserprofile/FriendsListPage';
+import UserConnections from './pages/UserConnections';
 
 
 
@@ -42,6 +46,9 @@ function App() {
           <Route path='profile' element={<Profile />} />
           <Route path='viewBlog/:_id' element={<BlogViePage />} />
           <Route path='myBlogs' element={<MyBlogViewPage />} />
+          <Route path='stories' element={<YourStories />} />
+          <Route path='profileView' element={<UserProfileView />} />
+          <Route path='connections' element={<UserConnections />} />
         </Route >
 
         <Route path='*' element={<Notfound />} />

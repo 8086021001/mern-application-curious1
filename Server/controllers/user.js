@@ -219,7 +219,6 @@ const getUser = async (req, res, next) => {
         let userID = req.id
         let userInterests = []
         let fieldArray = req.body
-        console.log(fieldArray)
 
         fieldArray.forEach((field)=>{
           userInterests.push(field._id)
@@ -230,9 +229,13 @@ const getUser = async (req, res, next) => {
         const interests = await InterestModal.find({ _id: { $in: userInterestsId } });
         if(interests){
           const userData = await User.findById(userID)
-          const newInterestsId = userInterestsId.filter((interestId) => !User.interests.includes(interestId));
-          console.log(newInterestsId)
-          if(newInterestsId.length>0){
+          console.log("userData ",userData)
+
+          const newInterestsId = await userInterestsId.filter((interestId) => !userData.interests.includes(interestId));
+          console.log("userData ",newInterestsId)
+
+          if(newInterestsId.length>=0){
+            console.log("userData ",newInterestsId)
 
             
           const result = await User.findByIdAndUpdate(
@@ -240,6 +243,8 @@ const getUser = async (req, res, next) => {
             { $push: { interests: { $each: userInterestsId } } },
             { new: true }
           );
+          console.log("result being ",result)
+
           if (result) {
             return res.status(200).json({ message: "Fields added successfully" , user:result});
           } else {
@@ -355,7 +360,32 @@ const getUser = async (req, res, next) => {
 
   }
 
+const getAllConnections = async(req,res)=>{
+try {
+  const userId = req.id
+  console.log("user being requesting for friends",userId)
+  const userData = await User.findById(userId)
+  const interestsId = userData.interests
+  const userWithsimilarInterests = await User.find({
+    interests: { $in: interestsId },
+    _id: { $ne: userId },
+  },
+  {
+    password: 0, 
+  }
+  )
+  console.log(userWithsimilarInterests)
 
-module.exports = {Signup,verifyEmail,login,getUser,logout,setFields,googelSignup,updateProfile,userFieldUpdate,setBlogAsDraft}
+  res.status(200).json({users:userWithsimilarInterests})
+  
+} catch (error) {
+  res.status(500).json({message:"failed"})
+
+}
+  }
+
+
+module.exports = {Signup,verifyEmail,login,getUser,logout,setFields,googelSignup,updateProfile,
+  userFieldUpdate,setBlogAsDraft,getAllConnections}
 
 

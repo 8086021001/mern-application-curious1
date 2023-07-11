@@ -44,6 +44,9 @@ function MyAppBar() {
     if (pages === 'Home') {
       navigate('/user/home')
     }
+    if (pages === 'My connections') {
+      navigate('/user/connections')
+    }
     setAnchorElNav(null);
   };
 

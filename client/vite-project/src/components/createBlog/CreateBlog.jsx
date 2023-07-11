@@ -142,7 +142,14 @@ function CreateBlog() {
         console.log(BlogState.creatingBlog)
         if (BlogState.creatingBlog) {
             setEDitDraftState(true)
+        } else {
+            toast.warning('No Drafts!!')
+
         }
+    }
+
+    const handleNavigatePagetoStories = () => {
+        navigate('/user/stories')
     }
 
 
@@ -202,8 +209,8 @@ function CreateBlog() {
                                         </IconButton>
                                     </Box>
                                     <Box >
-                                        <IconButton>
-                                            <Typography>Published</Typography>
+                                        <IconButton onClick={handleNavigatePagetoStories}>
+                                            <Typography>Stories</Typography>
                                         </IconButton>
                                     </Box>
                                 </Box>

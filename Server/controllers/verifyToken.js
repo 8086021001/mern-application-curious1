@@ -29,6 +29,8 @@ const verifyToken = (req, res, next) => {
     }
 
     const token  = tok
+    console.log("token matched",token)
+
     if (!token) {
       res.status(404).json({ message: "No token found" });
     }
