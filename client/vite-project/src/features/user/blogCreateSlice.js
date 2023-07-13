@@ -22,7 +22,9 @@ const initialState = {
     searchLoading:false,
     comments:[],
     savedBlogs:[],
-    saveBlogSuccess:false
+    saveBlogSuccess:false,
+    likeSuccess:false,
+    likeLoading:false,
 }
 
 
@@ -41,9 +43,7 @@ export const createBlog = createAsyncThunk('/user/createBlog',async(blogDat,{rej
         
     } catch (error) {
         return rejectWithValue(error.response.data);
-
     }
-
 })
 
 
@@ -121,6 +121,18 @@ export const getSavedBlogs = createAsyncThunk('/getSavedBlogs',async(_,{rejectWi
 })
 
 
+export const MakeLikeSuccess = createAsyncThunk('/user/MakeLikeSuccess',async(content,{rejectWithValue})=>{
+    try {
+        const response = await axiosInstance.post('/user/MakeLikeSuccess',{content:content})
+        const data = response.data
+        return data 
+    } catch (error) {
+        return rejectWithValue(error.response.data)
+    }
+})
+
+
+
 const blogCreateSlice = createSlice({
     name:'blogCreate',
     initialState,
@@ -174,8 +186,6 @@ const blogCreateSlice = createSlice({
             state.searchBlogs = []
             state.searchLoading = false
         }
-
-
     },
     extraReducers:builder=>{
         builder.addCase(createBlog.pending,state=>{
@@ -290,7 +300,19 @@ const blogCreateSlice = createSlice({
             state.error = action.error
             state.message = action.payload?.message??"failed"
         })
-
+        builder.addCase(MakeLikeSuccess.pending,state=>{
+            state.likeLoading = true
+        })
+        builder.addCase(MakeLikeSuccess.fulfilled,(state,action)=>{
+            state.likeLoading = false;
+            state.likeSuccess = true;
+            state.message = action.payload?.message
+        })
+        builder.addCase(MakeLikeSuccess.rejected,(state,action)=>{
+            state.likeLoading = false
+            state.error = action.error
+            state.message = action.payload?.message
+        })
 
     }
 })

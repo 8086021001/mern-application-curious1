@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardMedia, CardContent, Typography, Grid, IconButton, Box, TextField, Stack } from '@mui/material';
 import './PostCard.css'
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllBlog, getSearchContent, resetSateAfterFetch } from '../../features/user/blogCreateSlice';
+import { MakeLikeSuccess, getAllBlog, getSearchContent, resetSateAfterFetch } from '../../features/user/blogCreateSlice';
 import { useNavigate } from 'react-router-dom';
 import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlined';
 import BookmarkOutlinedIcon from '@mui/icons-material/BookmarkOutlined';
@@ -10,6 +10,9 @@ import { logginUserReset, setBlogAsDraft } from '../../features/user/userSlice';
 import { setAuth } from '../../features/auth/userAuth';
 import SnackBar from '../SnackBar/SnackBar';
 import TextSearchBar from '../SearchBar/TextSearchBar';
+import ThumbUpOffAltOutlinedIcon from '@mui/icons-material/ThumbUpOffAltOutlined';
+import ThumbUpOffAltRoundedIcon from '@mui/icons-material/ThumbUpOffAltRounded';
+import { grid } from '@mui/system';
 
 const PostCard = () => {
 
@@ -24,8 +27,6 @@ const PostCard = () => {
     }
     let success
     const savedDrafts = userAuthstate?.authState?.savedBlogs
-    console.log("This is my saved blogs Isd", savedDrafts)
-    console.log("is is my userstate", userState)
 
     const handleBookmarkSave = (BlogId) => {
         const data = {
@@ -36,14 +37,21 @@ const PostCard = () => {
 
     const handleSearchReq = (value) => {
 
-        console.log("value in parent", value)
-
         dispatch(getSearchContent(value))
+    }
+    const handleLikeButton = (userId, blogId) => {
+        console.log(userId, blogId)
+        const data = {
+            userId: userId,
+            blogId: blogId
+        }
+        dispatch(MakeLikeSuccess(data))
     }
 
 
 
     useEffect(() => {
+        dispatch(resetSateAfterFetch())
         const fetchData = () => {
             dispatch(getAllBlog());
         };
@@ -56,7 +64,7 @@ const PostCard = () => {
             dispatch(logginUserReset())
         }
 
-    }, [userState.success, BlogState.searchSuccess])
+    }, [userState.success, BlogState.searchSuccess, MakeLikeSuccess])
 
 
 
@@ -86,8 +94,16 @@ const PostCard = () => {
                                             <Typography variant="body2" onClick={() => handleViewBlog(blog._id._id)} color="textSecondary" className="post-card-summary" sx={{ color: 'rgba(0, 0, 0, 0.6)' }}>
                                                 {blog._id.summary}
                                             </Typography>
-                                        </Box>
+                                            <Box sx={{ display: 'flex', justifyContent: 'left', width: '30%', margin: '2rem ' }} >
 
+                                                <IconButton sx={{ '&:hover': { backgroundColor: 'transparent' } }}>
+                                                    {blog?._id?.likes?.includes(userAuthstate.authState._id) ? <ThumbUpOffAltRoundedIcon onClick={() => handleLikeButton(userAuthstate?.authState?._id, blog?._id?._id)} sx={{ margin: '1 rem' }} /> : <ThumbUpOffAltOutlinedIcon onClick={() => handleLikeButton(userAuthstate?.authState?._id, blog?._id?._id)} sx={{ margin: '1rem' }} />}
+
+
+                                                    <Typography>{blog?._id?.likes?.length} Likes</Typography>
+                                                </IconButton>
+                                            </Box>
+                                        </Box>
                                     </CardContent>
                                 </Card>
                             </div>
@@ -112,6 +128,20 @@ const PostCard = () => {
                                             <Typography variant="body2" onClick={() => handleViewBlog(blog._id)} color="textSecondary" className="post-card-summary" sx={{ color: 'rgba(0, 0, 0, 0.6)' }}>
                                                 {blog.summary}
                                             </Typography>
+                                        </Box>
+                                        <Box sx={{ display: 'flex', justifyContent: 'left', width: '10%', margin: '2rem ' }} >
+
+                                            <IconButton sx={{ '&:hover': { backgroundColor: 'transparent' } }}>
+                                                <Box sx={{ margin: '1rem' }}>
+                                                    <ThumbUpOffAltOutlinedIcon />
+                                                    <ThumbUpOffAltRoundedIcon  ></ThumbUpOffAltRoundedIcon>
+                                                </Box>
+
+
+
+                                                <Typography>Likes</Typography>
+                                            </IconButton>
+
                                         </Box>
 
                                     </CardContent>

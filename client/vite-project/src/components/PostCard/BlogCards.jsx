@@ -1,6 +1,8 @@
 import React from 'react'
-import { Card, CardActionArea, CardContent, CardMedia, Grid, Typography } from '@mui/material'
+import { Card, CardActionArea, CardContent, CardMedia, Grid, IconButton, Typography } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
+import { Box } from '@mui/system'
+
 
 const BlogCards = ({ Blogs }) => {
     const navigate = useNavigate()
@@ -43,7 +45,6 @@ const BlogCards = ({ Blogs }) => {
                                     component="img"
                                     sx={{ width: 160, display: { xs: 'none', sm: 'block' }, padding: 2 }}
                                     image={blog.coverImage}
-
                                     alt='/coverImage'
                                 />
 
