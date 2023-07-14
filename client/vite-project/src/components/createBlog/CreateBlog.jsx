@@ -124,6 +124,9 @@ function CreateBlog() {
 
             return;
         }
+        if (EditDraftblog) {
+            localStorage.removeItem('blog')
+        }
         const blogData = new FormData();
         blogData.append('title', BlogState.Title);
         blogData.append('summary', BlogState.summary);
@@ -142,9 +145,14 @@ function CreateBlog() {
         console.log(BlogState.creatingBlog)
         if (BlogState.creatingBlog) {
             setEDitDraftState(true)
+            if (BlogState.creatingBlog?.title) {
+                dispatch(setTitle(BlogState.creatingBlog?.title))
+            }
+            if (BlogState.creatingBlog?.summary) {
+                dispatch(setSummary(BlogState.creatingBlog?.summary))
+            }
         } else {
             toast.warning('No Drafts!!')
-
         }
     }
 
@@ -195,7 +203,7 @@ function CreateBlog() {
         <>
             <Grid container spacing={2}>
                 <MyAppBar />
-                <Grid item xs={12} sm={10} md={7} lg={6} sx={{ mx: 'auto', mt: 6 }}>
+                <Grid item xs={12} sm={10} md={7} lg={8} sx={{ mx: 'auto', mt: 6 }}>
                     {prevState ? <div><div className='preview' dangerouslySetInnerHTML={{ __html: htmlContent }}>
 
                     </div><Button onClick={() => SetPrevState(false)}>Edit</Button></div> :
@@ -297,7 +305,13 @@ function CreateBlog() {
                     }
                 </Grid>
                 <ToastContainer toastStyle={toastStyle} />
-                <BlogDraftPages onClick={handleResumeEditingDraft} />
+                {BlogState?.creatingBlog &&
+                    <Box onClick={handleResumeEditingDraft}>
+                        <BlogDraftPages blogDraft={BlogState?.creatingBlog} />
+
+                    </Box>
+                }
+
             </Grid >
 
         </>

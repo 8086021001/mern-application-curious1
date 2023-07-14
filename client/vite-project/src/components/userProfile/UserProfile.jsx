@@ -141,7 +141,7 @@ const UserProfile = () => {
             <Grid item xs={12}>
                 <Grid container spacing={2} justifyContent="center" sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                     <Typography variant="h4" sx={{ margin: 3 }}>Your Blogs</Typography>
-                    {blogState?.useBlogs && blogState?.useBlogs.length > 0 ? <BlogCards Blogs={blogState?.useBlogs} /> : <div>No posts</div>}
+                    {blogState?.useBlogs && blogState?.useBlogs.length > 0 ? <BlogCards Blogs={blogState?.useBlogs} savedBlogs={false} myBlogs={true} /> : <div>No posts</div>}
 
 
                 </Grid>

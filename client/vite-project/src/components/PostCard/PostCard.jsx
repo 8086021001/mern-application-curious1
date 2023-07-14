@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardMedia, CardContent, Typography, Grid, IconButton, Box, TextField, Stack } from '@mui/material';
 import './PostCard.css'
 import { useDispatch, useSelector } from 'react-redux';
-import { MakeLikeSuccess, getAllBlog, getSearchContent, resetSateAfterFetch } from '../../features/user/blogCreateSlice';
+import { MakeLikeSuccess, getAllBlog, getSearchContent, resetLikeState, resetSateAfterFetch } from '../../features/user/blogCreateSlice';
 import { useNavigate } from 'react-router-dom';
 import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlined';
 import BookmarkOutlinedIcon from '@mui/icons-material/BookmarkOutlined';
@@ -52,6 +52,7 @@ const PostCard = () => {
 
     useEffect(() => {
         dispatch(resetSateAfterFetch())
+        dispatch(resetLikeState())
         const fetchData = () => {
             dispatch(getAllBlog());
         };
@@ -64,7 +65,7 @@ const PostCard = () => {
             dispatch(logginUserReset())
         }
 
-    }, [userState.success, BlogState.searchSuccess, MakeLikeSuccess])
+    }, [userState.success, BlogState.searchSuccess, BlogState.likeSuccess])
 
 
 
@@ -97,9 +98,7 @@ const PostCard = () => {
                                             <Box sx={{ display: 'flex', justifyContent: 'left', width: '30%', margin: '2rem ' }} >
 
                                                 <IconButton sx={{ '&:hover': { backgroundColor: 'transparent' } }}>
-                                                    {blog?._id?.likes?.includes(userAuthstate.authState._id) ? <ThumbUpOffAltRoundedIcon onClick={() => handleLikeButton(userAuthstate?.authState?._id, blog?._id?._id)} sx={{ margin: '1 rem' }} /> : <ThumbUpOffAltOutlinedIcon onClick={() => handleLikeButton(userAuthstate?.authState?._id, blog?._id?._id)} sx={{ margin: '1rem' }} />}
-
-
+                                                    {blog?._id?.likes?.some(like => like.user === userAuthstate.authState._id) ? <ThumbUpOffAltRoundedIcon onClick={() => handleLikeButton(userAuthstate?.authState?._id, blog?._id?._id)} sx={{ margin: '1 rem' }} /> : <ThumbUpOffAltOutlinedIcon onClick={() => handleLikeButton(userAuthstate?.authState?._id, blog?._id?._id)} sx={{ margin: '1rem' }} />}
                                                     <Typography>{blog?._id?.likes?.length} Likes</Typography>
                                                 </IconButton>
                                             </Box>
@@ -129,19 +128,12 @@ const PostCard = () => {
                                                 {blog.summary}
                                             </Typography>
                                         </Box>
-                                        <Box sx={{ display: 'flex', justifyContent: 'left', width: '10%', margin: '2rem ' }} >
+                                        <Box sx={{ display: 'flex', justifyContent: 'left', width: '30%', margin: '2rem ' }} >
 
                                             <IconButton sx={{ '&:hover': { backgroundColor: 'transparent' } }}>
-                                                <Box sx={{ margin: '1rem' }}>
-                                                    <ThumbUpOffAltOutlinedIcon />
-                                                    <ThumbUpOffAltRoundedIcon  ></ThumbUpOffAltRoundedIcon>
-                                                </Box>
-
-
-
-                                                <Typography>Likes</Typography>
+                                                {blog?.likes?.some(like => like.user === userAuthstate.authState._id) ? <ThumbUpOffAltRoundedIcon onClick={() => handleLikeButton(userAuthstate?.authState?._id, blog?._id?._id)} sx={{ margin: '1 rem' }} /> : <ThumbUpOffAltOutlinedIcon onClick={() => handleLikeButton(userAuthstate?.authState?._id, blog?._id?._id)} sx={{ margin: '1rem' }} />}
+                                                <Typography>{blog.likes?.length} Likes</Typography>
                                             </IconButton>
-
                                         </Box>
 
                                     </CardContent>

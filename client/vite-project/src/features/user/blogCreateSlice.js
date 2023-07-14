@@ -185,6 +185,10 @@ const blogCreateSlice = createSlice({
             state.searchSuccess = false
             state.searchBlogs = []
             state.searchLoading = false
+        },
+        resetLikeState:(state)=>{
+            state.likeSuccess = false
+            state.likeLoading = false
         }
     },
     extraReducers:builder=>{
@@ -329,7 +333,8 @@ export const {
     setBlog,
     resetSateAfterFetch,
     resetComments,
-    resetSearch
+    resetSearch,
+    resetLikeState
 } = blogCreateSlice.actions;
 
 export default blogCreateSlice.reducer

@@ -1,15 +1,47 @@
-import React from 'react'
-import { Card, CardActionArea, CardContent, CardMedia, Grid, IconButton, Typography } from '@mui/material'
+import React, { useState } from 'react'
+import { Card, CardActionArea, CardContent, CardMedia, Grid, IconButton, Menu, MenuItem, Typography } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { Box } from '@mui/system'
+import DeleteIcon from '@mui/icons-material/Delete';
+import MoreVertSharpIcon from '@mui/icons-material/MoreVertSharp';
+import { useDispatch } from 'react-redux';
+import { setBlogAsDraft } from '../../features/user/userSlice';
+import EditIcon from '@mui/icons-material/Edit';
 
 
-const BlogCards = ({ Blogs }) => {
+const BlogCards = ({ Blogs, savedBlogs, myBlogs }) => {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const [anchorEl, setAnchorEl] = useState(null);
+
+    const handleOptionsClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleOptionsClose = () => {
+        setAnchorEl(null);
+    };
+    const handleDelete = () => {
+        // Handle the delete action
+        // ...
+        handleOptionsClose();
+    };
+
+    const handleEdit = () => {
+        // Handle the edit action
+        // ...
+        handleOptionsClose();
+    };
 
     const handleShowBlog = (blog) => {
         console.log(blog)
         navigate('/user/myBlogs', { state: { blog } })
+    }
+    const removeSavedBlog = (BlogId) => {
+        const data = {
+            blogId: BlogId
+        }
+        dispatch(setBlogAsDraft(data))
     }
 
     return (
@@ -26,8 +58,8 @@ const BlogCards = ({ Blogs }) => {
 
                         <CardActionArea sx={{ margin: 3 }}>
 
-                            <Card sx={{ display: 'flex' }} onClick={() => handleShowBlog(blog)}>
-                                <CardContent sx={{ flex: 1 }} >
+                            <Card sx={{ display: 'flex' }} >
+                                <CardContent sx={{ flex: 1 }} onClick={() => handleShowBlog(blog)} >
                                     <Typography component="h2" variant='h5'>
                                         {blog?.title}
                                     </Typography>
@@ -46,7 +78,34 @@ const BlogCards = ({ Blogs }) => {
                                     sx={{ width: 160, display: { xs: 'none', sm: 'block' }, padding: 2 }}
                                     image={blog.coverImage}
                                     alt='/coverImage'
+                                    onClick={() => handleShowBlog(blog)}
                                 />
+                                <Box>
+                                    {savedBlogs && <IconButton sx={{ '&:hover': { backgroundColor: 'transparent' } }}>
+                                        <DeleteIcon onClick={() => removeSavedBlog(blog._id)} />
+                                    </IconButton>}
+                                    {myBlogs && <Box> <IconButton sx={{ '&:hover': { backgroundColor: 'transparent' } }} onClick={handleOptionsClick}>
+                                        <MoreVertSharpIcon />
+                                    </IconButton>
+                                        <Menu
+                                            anchorEl={anchorEl}
+                                            open={Boolean(anchorEl)}
+                                            onClose={handleOptionsClose}
+                                        >
+                                            <MenuItem onClick={handleDelete}>
+                                                <DeleteIcon sx={{ marginRight: 1 }} />
+                                                Delete
+                                            </MenuItem>
+                                            <MenuItem onClick={handleEdit}>
+                                                <EditIcon sx={{ marginRight: 1 }} />
+                                                Edit
+                                            </MenuItem>
+                                        </Menu>
+                                    </Box>
+                                    }
+                                </Box>
+
+
 
                             </Card>
 

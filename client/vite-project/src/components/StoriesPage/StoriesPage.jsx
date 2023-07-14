@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getSavedBlogs, getUserBlogs } from '../../features/user/blogCreateSlice';
 
 const StoriesPage = () => {
-    const [activeTab, setActiveTab] = useState('drafts');
+    const [activeTab, setActiveTab] = useState('published');
     const blogState = useSelector(state => state.blogCreateState)
     const useAuthState = useSelector(state => state.authUser)
     const dispatch = useDispatch()
@@ -14,9 +14,7 @@ const StoriesPage = () => {
 
     const handleTabClick = (tab) => {
         setActiveTab(tab);
-        if (activeTab === 'drafts') {
-
-        } else if (activeTab === 'published') {
+        if (activeTab === 'published') {
             dispatch(getUserBlogs())
         } else if (activeTab === 'saved') {
             if (useAuthState?.authState?.savedBlogs.length > 0) {
@@ -76,22 +74,11 @@ const StoriesPage = () => {
                                 alignItems: 'center',
                                 borderBottom: '2px solid #000',
                                 cursor: 'pointer',
-                                width: '80%',
+                                width: '40%',
                             }}
                         >
 
-                            <Typography
-                                variant="h6"
-                                onClick={() => handleTabClick('drafts')}
-                                style={{
-                                    padding: '10px 15px',
-                                    borderBottom: `2px solid ${activeTab === 'drafts' ? '#000' : 'transparent'}`,
-                                    transition: 'border-bottom-color 0.3s ease',
-                                    fontWeight: activeTab === 'drafts' ? 'bold' : 'normal',
-                                }}
-                            >
-                                Drafts
-                            </Typography>
+
                             <Typography
                                 variant="h6"
                                 onClick={() => handleTabClick('published')}
@@ -123,10 +110,10 @@ const StoriesPage = () => {
                 <Container>
                     <Box>
                         <Box>
-                            {blogState?.useBlogs && blogState?.useBlogs.length > 0 && activeTab === "published" ? <BlogCards Blogs={blogState?.useBlogs} /> : <div>No posts yet</div>}
+                            {activeTab === "published" && (blogState?.useBlogs && blogState?.useBlogs.length > 0 ? <BlogCards Blogs={blogState?.useBlogs} savedBlogs={false} myBlogs={true} /> : <div>No posts yet</div>)}
                         </Box>
                         <Box>
-                            {activeTab === "saved" && blogState?.savedBlogs && blogState?.savedBlogs.length > 0 ? <BlogCards Blogs={blogState?.savedBlogs} /> : <div>No saved posts yet</div>}
+                            {activeTab === "saved" && (blogState?.savedBlogs && blogState?.savedBlogs.length > 0 ? <BlogCards Blogs={blogState?.savedBlogs} savedBlogs={true} myBlogs={false} /> : <div>No saved posts yet</div>)}
                         </Box>
 
                     </Box>

@@ -5,7 +5,7 @@ import 'react-quill/dist/quill.snow.css'
 import ImageResize from 'quill-image-resize';
 import Quill from 'quill';
 import { useDispatch, useSelector } from 'react-redux';
-import { setContent } from '../../features/user/blogCreateSlice';
+import { setBlog, setContent } from '../../features/user/blogCreateSlice';
 
 
 Quill.register('modules/imageResize', ImageResize);
@@ -51,14 +51,19 @@ const EditEditor = () => {
 
     // const [code, setContent] = useState('')
     const [quillContent, setQuillContent] = useState('');
-
-
     const BlogContState = useSelector(state => state.blogCreateState)
+
+    const [editContent, setEditContent] = useState(BlogContState?.creatingBlog?.content)
+
+
     const dispatch = useDispatch()
 
 
-    const handleProcedureContentChange = (content, delta, source, editor) => {
+    const handleProcedureContentChange = (content) => {
+        console.log("this is my content", content)
+        setEditContent(content)
         dispatch(setContent(content))
+        console.log("in m state the blog conte t", BlogContState.content)
     };
 
 
@@ -67,10 +72,10 @@ const EditEditor = () => {
     return (
         <div>
             <ReactQuill
-                value={BlogContState?.creatingBlog?.content}
+                value={editContent}
                 modules={{ ...modules, imageResize: {} }}
                 formats={formats}
-                onChange={(e) => { handleProcedureContentChange(e) }}
+                onChange={handleProcedureContentChange}
             >
             </ReactQuill>
         </div>

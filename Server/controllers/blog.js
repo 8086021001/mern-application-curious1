@@ -377,23 +377,34 @@ async function processAndSaveImages(content) {
 
   }
   const MakeLikeSuccess = async(req,res)=>{
-
     try {
       console.log(req.body.content)
       const {blogId} = req.body.content
       const userId = req.id
-      const blogData = await BlogPost.findByIdAndUpdate(blogId,{
-        $addToSet: { likes: { user: userId } },
-        $push:{likes:{user:userId}}}, {new:true});
-      res.status(200).json({message:"success"})
+      const blogDetails = await BlogPost.findById(blogId)
+      // console.log("checking with the likes",blogDetails.likes.some(like=>like.user.equals(new ObjectId(userId))))
+      if(!blogDetails.likes.some(like=>like.user.equals(new ObjectId(userId)))){
+              const blogData = await BlogPost.findByIdAndUpdate(blogId, {
+        $push: { likes: { user: userId } },
+      },
+      { new: true }
+    );
+    res.status(200).json({message:"success"})
+      }else{
+        const blogData = await BlogPost.findByIdAndUpdate(blogId, {
+          $pull: { likes: { user: userId } }
+        },
+        { new: true }
+      );
+        res.status(200).json({message:"success"})
+
+      }
       
     } catch (error) {
       res.status(400).json({message:"Failed to update!"})
 
+      
     }
-
-
-
 
   }
   

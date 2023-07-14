@@ -54,7 +54,6 @@ const Editor = () => {
 
 
     const handleProcedureContentChange = (content, delta, source, editor) => {
-        console.log("content in editor", content)
         dispatch(setContent(content))
     };
 
