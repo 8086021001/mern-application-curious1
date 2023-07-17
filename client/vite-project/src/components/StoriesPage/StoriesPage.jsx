@@ -26,7 +26,7 @@ const StoriesPage = () => {
     console.log("traking blogstate", useAuthState)
 
     useEffect(() => {
-
+        getUserBlogs()
     }, [blogState.success, blogState.useBlogs, blogState.savedBlogs])
 
 

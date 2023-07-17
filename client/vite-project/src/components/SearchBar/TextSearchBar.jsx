@@ -40,7 +40,7 @@ const TextSearchBar = ({ handleSearchQuery }) => {
 
     return (
         <>
-            <Grid display={grid} xs={8} sm={7} md={6} lg={6} flexGrow={1} sx={{ margin: 2 }}>
+            <Grid display={grid} item xs={8} sm={7} md={6} lg={6} flexGrow={1} sx={{ margin: 2 }}>
                 <Box display={'flex'} justifyContent={'center'} alignItems={'center'}>
 
 

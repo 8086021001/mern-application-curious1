@@ -60,10 +60,8 @@ const EditEditor = () => {
 
 
     const handleProcedureContentChange = (content) => {
-        console.log("this is my content", content)
         setEditContent(content)
         dispatch(setContent(content))
-        console.log("in m state the blog conte t", BlogContState.content)
     };
 
 

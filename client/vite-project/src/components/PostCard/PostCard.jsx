@@ -97,8 +97,8 @@ const PostCard = () => {
                                             </Typography>
                                             <Box sx={{ display: 'flex', justifyContent: 'left', width: '30%', margin: '2rem ' }} >
 
-                                                <IconButton sx={{ '&:hover': { backgroundColor: 'transparent' } }}>
-                                                    {blog?._id?.likes?.some(like => like.user === userAuthstate.authState._id) ? <ThumbUpOffAltRoundedIcon onClick={() => handleLikeButton(userAuthstate?.authState?._id, blog?._id?._id)} sx={{ margin: '1 rem' }} /> : <ThumbUpOffAltOutlinedIcon onClick={() => handleLikeButton(userAuthstate?.authState?._id, blog?._id?._id)} sx={{ margin: '1rem' }} />}
+                                                <IconButton sx={{ '&:hover': { backgroundColor: 'transparent' } }} onClick={() => handleLikeButton(userAuthstate?.authState?._id, blog?._id?._id)}>
+                                                    {blog?._id?.likes?.some(like => like.user === userAuthstate.authState._id) ? <ThumbUpOffAltRoundedIcon sx={{ margin: '1 rem' }} /> : <ThumbUpOffAltOutlinedIcon sx={{ margin: '1rem' }} />}
                                                     <Typography>{blog?._id?.likes?.length} Likes</Typography>
                                                 </IconButton>
                                             </Box>

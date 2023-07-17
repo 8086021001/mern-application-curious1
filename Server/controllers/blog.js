@@ -9,6 +9,7 @@ const cloudinary = require('cloudinary').v2;
 const { Readable } = require('stream');
 const User = require('../models/userSchema')
 const InterestSchema = require('../models/interests')
+const {processAndSaveEditedBlogImages} = require('../utils/helperFunctions')
 
 
 
@@ -17,8 +18,6 @@ cloudinary.config({
   api_key: process.env.API_KEY, 
   api_secret: process.env.API_SECRET 
 });
-
-
 
 
 
@@ -378,18 +377,19 @@ async function processAndSaveImages(content) {
   }
   const MakeLikeSuccess = async(req,res)=>{
     try {
-      console.log(req.body.content)
       const {blogId} = req.body.content
       const userId = req.id
       const blogDetails = await BlogPost.findById(blogId)
-      // console.log("checking with the likes",blogDetails.likes.some(like=>like.user.equals(new ObjectId(userId))))
+      console.log("checking with the likes")
       if(!blogDetails.likes.some(like=>like.user.equals(new ObjectId(userId)))){
+        console.log("checking with the likes",blogDetails.likes.some(like=>like.user.equals(new ObjectId(userId))))
+
               const blogData = await BlogPost.findByIdAndUpdate(blogId, {
         $push: { likes: { user: userId } },
       },
       { new: true }
     );
-    res.status(200).json({message:"success"})
+        res.status(200).json({message:"success"})
       }else{
         const blogData = await BlogPost.findByIdAndUpdate(blogId, {
           $pull: { likes: { user: userId } }
@@ -407,12 +407,90 @@ async function processAndSaveImages(content) {
     }
 
   }
+
+  const deleteBlog = async (req,res)=>{
+    try {
+      const userId = req.id
+      const blogId =req.params.blogId
+      console.log(blogId,userId)
+
+      const userData = await User.findByIdAndUpdate(userId,{$pull:{blogsPublished:blogId}})
+      const blogData = await BlogPost.findByIdAndDelete(blogId)
+      res.status(200).json({message:"Blog deleted"})
+      
+    } catch (error) {
+      res.status(400).json({message:"Failed to delete!"})
+
+    }
+
+
+  }
+
+  const editMyBlog = async(req,res)=>{
+    try {
+      const userId= req.body
+      const {title,summary,blogId} = req.body
+      let paths = null
+      let filepath = null
+      if(req.file){
+        paths = req.file.path.slice(7)
+        filepath = `http://localhost:5000/${paths}`
+      }
+      const htmlContent = req.body.content
+
+      const processdContent = await processAndSaveEditedBlogImages(htmlContent)
+      // console.log("This is my processed content",processdContent)
+      const updatedFields = {};
+
+if (title) {
+  updatedFields.title = title;
+}
+if (summary) {
+  updatedFields.summary = summary;
+}
+if (filepath) {
+  updatedFields.coverImage = filepath;
+}
+if (processdContent) {
+  updatedFields.content = processdContent;
+}
+      const updatingBlog = await BlogPost.findByIdAndUpdate(blogId,updatedFields,{new:true})
+      if(!updatingBlog){
+        return res.status(404).json({ message: 'Blog not found.' });
+      }
+      
+      res.status(200).json({blogCont:updatingBlog,message:"Blog updated"})
+    } catch (error) {
+      
+    }
+
+  }
+
+  const getOtherUserBlogs = async(req,res)=>{
+    try {
+
+      const otherUserId = req.params.usersId
+      console.log("hiii",otherUserId)
+
+      const userBlogs = await User.find({_id:otherUserId}).populate('interests').populate('blogsPublished').populate('following').select('-password')
+    
+      console.log(userBlogs)
+      
+      res.status(200).json({usersBlogs:userBlogs,message:"Success"})
+    } catch (error) {
+
+      
+    }
+  
+
+  }
   
   
   
 
 
-  module.exports = {PostBlog,getBlog,getALLBlogs,getUserBlogs,MakeBlogComment,getBlogComment,getSearchContent,getSavedBlogs,MakeLikeSuccess}
+  module.exports = {PostBlog,getBlog,getALLBlogs,getUserBlogs,MakeBlogComment,getBlogComment,
+    getSearchContent,getSavedBlogs,MakeLikeSuccess,deleteBlog,editMyBlog,getOtherUserBlogs}
 
 
 

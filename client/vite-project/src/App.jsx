@@ -19,6 +19,8 @@ import YourStories from './pages/YourStories';
 import UserProfileView from './components/OtherUserprofile/UserProfileView';
 import FriendsListPage from './components/OtherUserprofile/FriendsListPage';
 import UserConnections from './pages/UserConnections';
+import EditMyPublishedBlogs from './pages/EditMyPublishedBlogs';
+import OtherUserProfileView from './pages/OtherUserProfileView';
 
 
 
@@ -49,6 +51,8 @@ function App() {
           <Route path='stories' element={<YourStories />} />
           <Route path='profileView' element={<UserProfileView />} />
           <Route path='connections' element={<UserConnections />} />
+          <Route path='editMyblogs' element={<EditMyPublishedBlogs />} />
+          <Route path='viewUsersProfile' element={<OtherUserProfileView />} />
         </Route >
 
         <Route path='*' element={<Notfound />} />

@@ -25,6 +25,8 @@ const initialState = {
     saveBlogSuccess:false,
     likeSuccess:false,
     likeLoading:false,
+    editSucess:false,
+
 }
 
 
@@ -131,6 +133,33 @@ export const MakeLikeSuccess = createAsyncThunk('/user/MakeLikeSuccess',async(co
     }
 })
 
+
+
+export const deleteBlog = createAsyncThunk('/user/deleteBlog',async(blogId,{rejectWithValue})=>{
+    try {
+        const response = await axiosInstance.delete(`/user/deleteBlog/${blogId=blogId}`)
+        const data = response.data
+        return data 
+    } catch (error) {
+        return rejectWithValue(error.response.data)
+    }
+})
+
+
+export const editMyBlog = createAsyncThunk('/user/editMyBlog',async(blogDat,{rejectWithValue})=>{
+    try {
+        const response = await axiosInstance.put('/user/editMyBlog', blogDat, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+        const data = response.data
+        return data
+        
+    } catch (error) {
+        return rejectWithValue(error.response.data);
+    }
+})
 
 
 const blogCreateSlice = createSlice({
@@ -314,6 +343,33 @@ const blogCreateSlice = createSlice({
         })
         builder.addCase(MakeLikeSuccess.rejected,(state,action)=>{
             state.likeLoading = false
+            state.error = action.error
+            state.message = action.payload?.message
+        })
+        builder.addCase(deleteBlog.pending,state=>{
+            state.loading = true
+        })
+        builder.addCase(deleteBlog.fulfilled,(state,action)=>{
+            state.loading = false;
+            state.success = true;
+            state.message = action.payload?.message
+        })
+        builder.addCase(deleteBlog.rejected,(state,action)=>{
+            state.loading = false
+            state.error = action.error
+            state.message = action.payload?.message
+        })
+        builder.addCase(editMyBlog.pending,state=>{
+            state.loading = true
+        })
+        builder.addCase(editMyBlog.fulfilled,(state,action)=>{
+            state.loading = false;
+            state.editSucess = true;
+            state.blog = action.payload?.blogCont;
+            state.message = action.payload?.message
+        })
+        builder.addCase(editMyBlog.rejected,(state,action)=>{
+            state.loading = false
             state.error = action.error
             state.message = action.payload?.message
         })

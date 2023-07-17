@@ -1,7 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const {PostBlog,getBlog,getALLBlogs,getUserBlogs
-    ,MakeBlogComment,getBlogComment,getSearchContent,getSavedBlogs,MakeLikeSuccess} = require('../controllers/blog')
+    ,MakeBlogComment,getBlogComment,getSearchContent,
+    getSavedBlogs,MakeLikeSuccess,deleteBlog,editMyBlog,getOtherUserBlogs} = require('../controllers/blog')
 const {upload} = require('../utils/multerConfig')
 const {verifyToken} = require('../controllers/verifyToken')
 
@@ -28,6 +29,17 @@ router.post('/MakeBlogComment',verifyToken,MakeBlogComment)
 
 router.post('/MakeLikeSuccess',verifyToken,MakeLikeSuccess)
 
+//deleting blogs
+router.delete('/deleteBlog/:blogId',verifyToken,deleteBlog)
+
+//editing my blog
+
+router.put('/editMyBlog',upload.single('coverImage'),verifyToken,editMyBlog)
+
+
+//get other users blog details to view in profile
+
+router.get('/getOtherUserBlogs/:usersId',verifyToken,getOtherUserBlogs)
 
 
 

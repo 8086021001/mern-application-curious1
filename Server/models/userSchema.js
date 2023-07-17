@@ -22,7 +22,8 @@ const userSchema = new mongoose.Schema({
       type: Number,
     },
     about: {
-      type: String
+      type: String,
+      default:"New here!",
     },
     isVerified:{
       type:Boolean,
@@ -54,7 +55,7 @@ const userSchema = new mongoose.Schema({
     }],
     blogsPublished: [{
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Blog'
+      ref: 'blogSchema'
     }],
     following: [{
       type: mongoose.Schema.Types.ObjectId,

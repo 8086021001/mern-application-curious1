@@ -13,6 +13,7 @@ const UserModal = ({ open, onClose }) => {
   const [imageFile, setImageFile] = useState(null)
   const [userName, setName] = useState(userState?.authState?.name)
   const [phone, setPhone] = useState(userState?.authState?.phone ?? null)
+  const [about, setAbout] = useState(userState?.authState?.about ?? null)
   const [password, setPassword] = useState(null)
   const dispatch = useDispatch()
   const updatingUserState = useSelector(state => state.user)
@@ -41,6 +42,10 @@ const UserModal = ({ open, onClose }) => {
     }
     if (password) {
       formData.append('password', password);
+      hasChanges = true;
+    }
+    if (about) {
+      formData.append('about', about);
       hasChanges = true;
     }
     if (imageFile) {
@@ -133,6 +138,13 @@ const UserModal = ({ open, onClose }) => {
                   onChange={(e) => { setPhone(e.target.value) }}
                 />
 
+              </Grid>
+              <Grid>
+                <label htmlFor="About " style={{ color: 'white' }}>About:</label>
+                <input
+                  placeholder={about}
+                  onChange={(e) => { setAbout(e.target.value) }}
+                />
               </Grid>
               {!userState?.authState?.googleId &&
                 <Grid>

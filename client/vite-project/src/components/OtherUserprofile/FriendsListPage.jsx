@@ -1,16 +1,24 @@
 import React, { useEffect } from 'react';
-import { Box, Typography, Button } from '@mui/material';
-import { wrap } from 'lodash';
-import { grid } from '@mui/system';
+import { Box, Typography, Button, Divider, CardActionArea, CardActions, Grid } from '@mui/material';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllConnections } from '../../features/user/userConnectionSlice';
+import { useNavigate } from 'react-router-dom';
 
 const FriendsListPage = () => {
 
     const friendsConnectionState = useSelector(state => state.connection)
+    const authUser = useSelector(state => state.authUser)
     const dispatch = useDispatch()
-    const handleFollowRequest = () => {
-
+    const navigate = useNavigate()
+    const handleFollowRequest = (userId) => {
+        console.log(userId)
+    }
+    const viewUserProfileData = (userProfileData) => {
+        console.log(userProfileData)
+        navigate('/user/viewUsersProfile', { state: { userProfileData } })
     }
 
 
@@ -21,46 +29,85 @@ const FriendsListPage = () => {
 
     return (
         <>
-            <Box display={'flex'} alignItems={'center'} justifyContent={'center'} sx={{ padding: 2 }}>
+            <Box display={'flex'} alignItems={'center'} justifyContent={'center'} sx={{ padding: 4 }}>
                 <Typography variant='h4'>People You may connect with</Typography>
             </Box>
-            <Box display="flex" flexDirection="row" flex={wrap} alignItems="center" gap={4} margin={4}>
-                {friendsConnectionState?.usersToconnect?.map((friend) => (
-                    <Box
-                        key={friend._id}
-                        display="flex"
-                        justifyContent="space-between"
-                        alignItems="center"
-                        width={200}
-                        p={2}
-                        my={2}
-                        sx={{
-                            '&:hover': {
-                                backgroundColor: '#f5f5f5',
-                            },
-                        }}
-                    >
-                        <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }} >
-                            <img
-                                src={friend.image}
-                                alt={friend.name}
-                                style={{
-                                    width: '70px',
-                                    height: '70px',
-                                    borderRadius: '50%',
-                                    marginRight: '10px',
-                                }}
-                            />
-                            <Box flex={1}>
-                                <Typography variant="body" flexGrow={1}>{friend.name}</Typography>
-                            </Box>
-                            <Button onClick={handleFollowRequest} variant="contained" color="primary" sx={{ '&:hover': { backgroundColor: '#1565c0' } }}>
-                                Follow
-                            </Button>
-                        </Box>
-                    </Box>
-                ))}
-            </Box>
+            <Grid container spacing={2} justifyContent="center">
+
+                {friendsConnectionState?.usersToconnect && friendsConnectionState?.usersToconnect.map((user) => {
+                    return (
+                        <Grid item key={user._id} xs={12} sm={6} md={4} lg={2} sx={{ margin: 2 }}>
+                            <Card sx={{
+                                maxWidth: 250, margin: 2, height: '100%',
+                                '&:hover': {
+                                    backgroundColor: 'transparent',
+                                    cursor: 'initial',
+                                },
+                            }}  >
+                                <CardActionArea
+                                    onClick={() => viewUserProfileData(user)}
+                                    sx={{
+                                        '&:hover': {
+                                            backgroundColor: 'transparent',
+                                            cursor: 'initial',
+                                        },
+                                    }}>
+                                    <CardMedia
+                                        component="img"
+                                        height="100"
+                                        image={user?.image}
+                                        alt={user.name}
+                                    />
+                                    <CardContent sx={{ height: '100%' }}>
+                                        <Typography gutterBottom variant="h5" component="div">
+                                            {user.name}
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                            {user.about}
+                                        </Typography>
+                                        <Typography variant="body1" color="text.secondary" sx={{ marginTop: 1 }}>
+                                            Blogs published: {user?.blogsPublished.length}
+                                        </Typography>
+
+                                    </CardContent>
+                                </CardActionArea>
+                                <CardActions sx={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    position: 'relative',
+                                    bottom: 0,
+                                    left: 0,
+                                    right: 0,
+                                    padding: 2,
+                                    '& button': {
+                                        color: 'Black',
+                                        backgroundColor: 'rgba(0, 0, 255, 0.1)',
+                                        '&:hover': {
+                                            color: 'white',
+                                            backgroundColor: 'black',
+                                            opacity: 0.6,
+                                        },
+                                    },
+                                }}>
+                                    {!authUser?.authState?.following.includes(user._id) ? (
+                                        <Button size="small" color="primary" onClick={() => handleFollowRequest(user._id)}>
+                                            Follow
+                                        </Button>) :
+                                        <Typography>
+                                            Following
+                                        </Typography>
+
+                                    }
+                                </CardActions>
+                            </Card>
+                        </Grid>
+
+                    )
+
+                })
+
+                }
+            </Grid >
         </>
     );
 };

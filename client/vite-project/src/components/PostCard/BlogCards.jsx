@@ -1,40 +1,49 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Card, CardActionArea, CardContent, CardMedia, Grid, IconButton, Menu, MenuItem, Typography } from '@mui/material'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useMatch } from 'react-router-dom'
 import { Box } from '@mui/system'
 import DeleteIcon from '@mui/icons-material/Delete';
 import MoreVertSharpIcon from '@mui/icons-material/MoreVertSharp';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setBlogAsDraft } from '../../features/user/userSlice';
 import EditIcon from '@mui/icons-material/Edit';
+import { deleteBlog, getAllBlog, resetSateAfterFetch } from '../../features/user/blogCreateSlice';
+import EditMyPublishedBlogs from '../../pages/EditMyPublishedBlogs';
 
 
 const BlogCards = ({ Blogs, savedBlogs, myBlogs }) => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const [anchorEl, setAnchorEl] = useState(null);
+    const [blogId, setBlogId] = useState(null)
+    const blogData = useSelector(state => state.blogCreateState)
+    // const { path, params } = useMatch('editMyblogs')
 
-    const handleOptionsClick = (event) => {
+    const handleOptionsClick = (blog_id) => (event) => {
         setAnchorEl(event.currentTarget);
+        console.log(blog_id)
+        setBlogId(blog_id)
     };
 
     const handleOptionsClose = () => {
+        setBlogId(null)
         setAnchorEl(null);
     };
-    const handleDelete = () => {
-        // Handle the delete action
-        // ...
+    const handleDelete = (blogId) => {
+        dispatch(deleteBlog(blogId))
         handleOptionsClose();
     };
 
-    const handleEdit = () => {
-        // Handle the edit action
-        // ...
+    const handleEdit = (blogId) => {
         handleOptionsClose();
+        const blog = Blogs.find((blog) => blog._id === blogId)
+        if (Object.keys(blog).length > 0) {
+            const myBlog = JSON.stringify(blog);
+            navigate("/user/editMyblogs", { state: { myBlog } })
+        }
     };
 
     const handleShowBlog = (blog) => {
-        console.log(blog)
         navigate('/user/myBlogs', { state: { blog } })
     }
     const removeSavedBlog = (BlogId) => {
@@ -43,11 +52,18 @@ const BlogCards = ({ Blogs, savedBlogs, myBlogs }) => {
         }
         dispatch(setBlogAsDraft(data))
     }
+    useEffect(() => {
+        dispatch(resetSateAfterFetch())
+        if (blogData.success) {
+            dispatch(getAllBlog())
+        }
+
+    }, [Blogs, savedBlogs, myBlogs, blogData.success])
 
     return (
         <>
 
-            <Grid item sx={12} md={6}>
+            <Grid item xs={12} md={6}>
                 {Blogs.map((blog) => {
                     const createdAt = new Date(blog.createdAt).toLocaleDateString("en-GB", {
                         day: "2-digit",
@@ -56,7 +72,7 @@ const BlogCards = ({ Blogs, savedBlogs, myBlogs }) => {
                     });
                     return (
 
-                        <CardActionArea sx={{ margin: 3 }}>
+                        <CardActionArea sx={{ margin: 3 }} key={blog._id}>
 
                             <Card sx={{ display: 'flex' }} >
                                 <CardContent sx={{ flex: 1 }} onClick={() => handleShowBlog(blog)} >
@@ -80,11 +96,11 @@ const BlogCards = ({ Blogs, savedBlogs, myBlogs }) => {
                                     alt='/coverImage'
                                     onClick={() => handleShowBlog(blog)}
                                 />
-                                <Box>
+                                <Box >
                                     {savedBlogs && <IconButton sx={{ '&:hover': { backgroundColor: 'transparent' } }}>
                                         <DeleteIcon onClick={() => removeSavedBlog(blog._id)} />
                                     </IconButton>}
-                                    {myBlogs && <Box> <IconButton sx={{ '&:hover': { backgroundColor: 'transparent' } }} onClick={handleOptionsClick}>
+                                    {myBlogs && <Box> <IconButton key={blog._id} sx={{ '&:hover': { backgroundColor: 'transparent' } }} onClick={handleOptionsClick(blog._id)}>
                                         <MoreVertSharpIcon />
                                     </IconButton>
                                         <Menu
@@ -92,11 +108,11 @@ const BlogCards = ({ Blogs, savedBlogs, myBlogs }) => {
                                             open={Boolean(anchorEl)}
                                             onClose={handleOptionsClose}
                                         >
-                                            <MenuItem onClick={handleDelete}>
+                                            <MenuItem onClick={() => handleDelete(blogId)}>
                                                 <DeleteIcon sx={{ marginRight: 1 }} />
                                                 Delete
                                             </MenuItem>
-                                            <MenuItem onClick={handleEdit}>
+                                            <MenuItem onClick={() => handleEdit(blogId)}>
                                                 <EditIcon sx={{ marginRight: 1 }} />
                                                 Edit
                                             </MenuItem>
