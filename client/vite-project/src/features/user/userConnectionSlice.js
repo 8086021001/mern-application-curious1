@@ -11,7 +11,9 @@ const initialState = {
     usersToconnect: [],
     message: "",
     error: '',
-    usersBlogs:[]
+    usersBlogs:[],
+    user:{},
+    followSuccess:false,
 }
 
 
@@ -36,6 +38,17 @@ export const getOtherUserBlogs = createAsyncThunk('/getOtherUserBlogs',async(use
     }
 })
 
+export const followUser = createAsyncThunk('/followUser',async(usersId,{rejectWithValue})=>{
+    try {
+        const response = await axiosInstance.post('/user/sendFollow',{usersID:usersId})
+        const data = response.data
+        return data
+    } catch (error) {
+        return rejectWithValue(error.response.data);
+
+    }
+})
+
 
 
 const userConnectionSlice = createSlice({
@@ -50,7 +63,12 @@ const userConnectionSlice = createSlice({
             state.message = ""
             state.error = '';
             state.usersBlogs = [];
-            state.getBlogSuccess = false
+            state.getBlogSuccess = false;
+            state.followSuccess = false;
+        },
+        resetFollow:(state)=>{
+            state.followSuccess = false;
+            state.user = {}
         }
     },
     extraReducers:builder =>{
@@ -83,13 +101,29 @@ const userConnectionSlice = createSlice({
             state.error = action.error.code
             state.message = action.payload?.message??""
         })
+        builder.addCase(followUser.pending,state=>{
+            state.loading = true
+        })
+        builder.addCase(followUser.fulfilled,(state,action)=>{
+            state.loading = false,
+            state.followSuccess = true,
+            state.error = "",
+            state.user = action.payload?.user,
+            state.message = action.payload?.message??""
+        })
+        builder.addCase(followUser.rejected,(state,action)=>{
+            state.loading = false
+            state.error = action.error.code
+            state.message = action.payload?.message??""
+        })
     }
     
 })
 
 
 export const{
-    resetUserConnection
+    resetUserConnection,
+    resetFollow
 } = userConnectionSlice.actions
 
 export default userConnectionSlice.reducer

@@ -363,7 +363,7 @@ const getUser = async (req, res, next) => {
 const getAllConnections = async(req,res)=>{
 try {
   const userId = req.id
-  console.log("user being requesting for friends",userId)
+  // console.log("user being requesting for friends",userId)
   const userData = await User.findById(userId)
   const interestsId = userData.interests
   const userWithsimilarInterests = await User.find({
@@ -374,7 +374,7 @@ try {
     password: 0, 
   }
   )
-  console.log(userWithsimilarInterests)
+  // console.log(userWithsimilarInterests)
 
   res.status(200).json({users:userWithsimilarInterests})
   
@@ -385,7 +385,45 @@ try {
   }
 
 
+  const sendFollowandUnfollow = async(req,res)=>{
+try {
+  const authUserId = req.id
+  const {usersID} = req.body
+  console.log("Hiiiiiiiiii",usersID)
+
+  const usertoUpdate = await User.findOne({ _id: authUserId, following: usersID });
+  let updateUser;
+  if (usertoUpdate) {
+    updateUser = await User.findByIdAndUpdate(
+      authUserId,
+      { $pull: { following: usersID } },
+      { new: true }
+    );
+  } else {
+    updateUser = await User.findByIdAndUpdate(
+      authUserId,
+      { $addToSet: { following: usersID } },
+      { new: true }
+    );
+  }
+  if(updateUser){
+    console.log("updated user to follow",updateUser)
+  res.status(200).json({user:updateUser})
+  }else{
+    res.status(404).json({message:"Failed to update"})
+  }
+  
+} catch (error) {
+  res.status(500).json({message:"failed"})
+
+}
+
+        
+
+  }
+
+
 module.exports = {Signup,verifyEmail,login,getUser,logout,setFields,googelSignup,updateProfile,
-  userFieldUpdate,setBlogAsDraft,getAllConnections}
+  userFieldUpdate,setBlogAsDraft,getAllConnections,sendFollowandUnfollow}
 
 

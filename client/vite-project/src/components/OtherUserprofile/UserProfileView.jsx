@@ -1,16 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import { Typography, Button, Grid, Chip } from '@mui/material';
+import { Typography, Button, Grid, Chip, List, ListItem, ListItemAvatar, ListItemText, Avatar, IconButton } from '@mui/material';
 import { Box, display, grid } from '@mui/system';
-import { Visibility } from '@mui/icons-material';
+import { Chat, VideoCall, Visibility } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
-import { getOtherUserBlogs, resetUserConnection } from '../../features/user/userConnectionSlice';
+import { followUser, getOtherUserBlogs, resetFollow, resetUserConnection } from '../../features/user/userConnectionSlice';
 import UserBlogDisplaycard from './UserBlogDisplaycard';
+import { setAuth } from '../../features/auth/userAuth';
+import { useNavigate } from 'react-router-dom';
 
 const UserProfileView = ({ usedData }) => {
     const [activeTab, setActiveTab] = useState("home")
     const dispatch = useDispatch()
     const usersBlogData = useSelector(state => state.connection)
-    console.log(usersBlogData?.usersBlogs[0]?.blogsPublished, "hererere")
+    const useAuth = useSelector(state => state.authUser)
+    const navigate = useNavigate()
+    // console.log(usersBlogData?.usersBlogs[0], "hererere")
+
+    const handleFollowFunction = (userIdtoFollow) => {
+        // console.log(userIdtoFollow)
+        dispatch(followUser(userIdtoFollow))
+    }
+    const handeChat = (chatuserId) => {
+        console.log(chatuserId)
+        navigate('/user/chat')
+
+    }
 
 
     const handleActiveTab = (tab) => {
@@ -25,11 +39,17 @@ const UserProfileView = ({ usedData }) => {
     useEffect(() => {
 
         if (usedData) {
+            console.log("my propdata", usedData)
             dispatch(getOtherUserBlogs(usedData._id))
 
         }
+        if (usersBlogData.followSuccess) {
+            localStorage.setItem('user', JSON.stringify(usersBlogData.user))
+            dispatch(setAuth())
+            dispatch(resetFollow())
+        }
 
-    }, [usedData, usersBlogData.getBlogSuccess])
+    }, [usedData, usersBlogData.getBlogSuccess, usersBlogData.followSuccess])
 
     return (
         <>
@@ -83,6 +103,7 @@ const UserProfileView = ({ usedData }) => {
                                 display: 'flex',
                                 justifyContent: 'center',
                                 alignItems: 'center',
+                                marginTop: 5,
                             }}
                         >
                             <Box
@@ -183,18 +204,95 @@ const UserProfileView = ({ usedData }) => {
                             display: 'flex',
                             justifyContent: 'center',
                             alignItems: 'center',
+                            backgroundColor: '#dfe6e0'
                         }}
                     >
                         {/* Profile Image and Details */}
-                        <Box p={2}>
+                        <Box p={2} display='flex' flexDirection='column' alignItems='center'>
                             <img src={usedData?.image} alt="Profile" style={{ width: '150px', height: '150px' }} />
-                            <Typography variant="h6">Profile Details</Typography>
+                            <Typography variant="h6">{usersBlogData?.usersBlogs[0]?.name}</Typography>
+                            <Typography variant="h6">Email: {usersBlogData?.usersBlogs[0]?.email}</Typography>
                         </Box>
 
                         {/* Follow Button */}
                         <Box p={2}>
-                            <button style={{ padding: '10px 20px' }}>Follow</button>
+                            {useAuth?.authState?.following.includes(usersBlogData?.usersBlogs[0]?._id) ? (
+                                <>
+                                    <Box display='flex' justifyContent='center'>
+                                        <button onClick={() => handleFollowFunction(usersBlogData?.usersBlogs[0]?._id)} style={{ width: "10rem", padding: '10px 20px' }}>Unfollow</button>
+                                    </Box>
+                                    <Box display='flex' justifyContent='space-around' margin={2} gap={2} >
+                                        <Button onClick={() => handeChat(usersBlogData?.usersBlogs[0]?._id)} variant='outlined' color='info' size='medium' sx={{
+                                            width: '15rem'
+                                        }}>
+                                            <Typography> Chat </Typography>
+
+                                            <Chat></Chat>
+                                        </Button>
+                                        <Button variant='outlined' color='info' size='medium' sx={{
+                                            width: '15rem'
+                                        }}>
+                                            <VideoCall></VideoCall>
+
+                                            <Typography> Book a meet </Typography>
+                                        </Button>
+
+                                    </Box>
+
+                                </>) :
+                                <button onClick={() => handleFollowFunction(usersBlogData?.usersBlogs[0]?._id)} style={{ padding: '10px 20px' }}>Follow</button>
+                            }
                         </Box>
+                    </Box>
+                    <Box
+                        display="flex"
+                        flexDirection="column"
+                        justifyContent="center"
+                        alignItems="center"
+                        border={1}
+                        marginTop={3}
+                        sx={{
+                            marginTop: 3,
+                            marginRight: 3,
+                            width: '90%',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: '#dfe6e0'
+
+                        }}
+                    >
+                        <Typography variant='h5'>Following</Typography>
+
+                        {usersBlogData?.usersBlogs[0]?.following.length > 0 &&
+                            usersBlogData?.usersBlogs[0]?.following.map((users) => (
+                                <List key={users._id} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+                                    <ListItem alignItems="flex-start">
+                                        <ListItemAvatar>
+                                            <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                                        </ListItemAvatar>
+                                        <ListItemText
+                                            primary="Brunch this weekend?"
+                                            secondary={
+                                                <React.Fragment>
+                                                    <Typography
+                                                        sx={{ display: 'inline' }}
+                                                        component="span"
+                                                        variant="body2"
+                                                        color="text.primary"
+                                                    >
+                                                        Ali Connors
+                                                    </Typography>
+                                                </React.Fragment>
+                                            }
+                                        />
+                                    </ListItem>
+                                </List>
+                            ))
+
+
+                        }
+
                     </Box>
                 </Grid>
 

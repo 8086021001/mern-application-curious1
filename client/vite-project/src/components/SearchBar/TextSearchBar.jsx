@@ -13,7 +13,6 @@ const TextSearchBar = ({ handleSearchQuery }) => {
     const dispatch = useDispatch()
 
     const debouncedSearch = debounce((value) => {
-
         handleSearchQuery(value)
     }, 300);
 

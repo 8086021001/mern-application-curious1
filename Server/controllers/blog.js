@@ -470,11 +470,9 @@ if (processdContent) {
     try {
 
       const otherUserId = req.params.usersId
-      console.log("hiii",otherUserId)
 
       const userBlogs = await User.find({_id:otherUserId}).populate('interests').populate('blogsPublished').populate('following').select('-password')
     
-      console.log(userBlogs)
       
       res.status(200).json({usersBlogs:userBlogs,message:"Success"})
     } catch (error) {

@@ -21,6 +21,7 @@ import FriendsListPage from './components/OtherUserprofile/FriendsListPage';
 import UserConnections from './pages/UserConnections';
 import EditMyPublishedBlogs from './pages/EditMyPublishedBlogs';
 import OtherUserProfileView from './pages/OtherUserProfileView';
+import UserChat from './pages/UserChat';
 
 
 
@@ -53,6 +54,7 @@ function App() {
           <Route path='connections' element={<UserConnections />} />
           <Route path='editMyblogs' element={<EditMyPublishedBlogs />} />
           <Route path='viewUsersProfile' element={<OtherUserProfileView />} />
+          <Route path='chat' element={<UserChat />} />
         </Route >
 
         <Route path='*' element={<Notfound />} />
