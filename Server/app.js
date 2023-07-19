@@ -8,6 +8,8 @@ const path = require('path');
 const userRoutes = require('./routes/userRoutes')
 const blogRoutes = require('./routes/blogRoutes')
 const fs = require('fs');
+const chatRoutes = require('./routes/chatRoutes')
+const io = require('./socket/socket')
 
 
 
@@ -35,14 +37,14 @@ app.use(cookieParser());
 
 app.use('/user',userRoutes)
 app.use('/user',blogRoutes)
-
+app.use('/user',chatRoutes)
 
 
 const appEndPoint = async(url)=>{
     try {
         await db.connectDb(url)
-        app.listen(port,()=>{console.log('App connected to db and listening at port  ')})
-        
+        const server =  app.listen(port,()=>{console.log('App connected to db and listening at port  ')})
+        io.attach(server)
     } catch (error) {
         
         console.log(error)

@@ -4,8 +4,9 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllConnections } from '../../features/user/userConnectionSlice';
+import { followUser, getAllConnections, resetFollow } from '../../features/user/userConnectionSlice';
 import { useNavigate } from 'react-router-dom';
+import { setAuth } from '../../features/auth/userAuth';
 
 const FriendsListPage = () => {
 
@@ -13,9 +14,12 @@ const FriendsListPage = () => {
     const authUser = useSelector(state => state.authUser)
     const dispatch = useDispatch()
     const navigate = useNavigate()
+
     const handleFollowRequest = (userId) => {
         console.log(userId)
+        dispatch(followUser(userId))
     }
+
     const viewUserProfileData = (userProfileData) => {
         console.log(userProfileData)
         navigate('/user/viewUsersProfile', { state: { userProfileData } })
@@ -24,8 +28,13 @@ const FriendsListPage = () => {
 
     useEffect(() => {
         dispatch(getAllConnections())
+        if (friendsConnectionState.followSuccess) {
+            localStorage.setItem('user', JSON.stringify(friendsConnectionState.user))
+            dispatch(setAuth())
+            dispatch(resetFollow())
+        }
 
-    }, [friendsConnectionState.success])
+    }, [friendsConnectionState.success, friendsConnectionState.followSuccess])
 
     return (
         <>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import './App.css'
 import { Route, Routes } from 'react-router-dom';
 
@@ -22,6 +22,7 @@ import UserConnections from './pages/UserConnections';
 import EditMyPublishedBlogs from './pages/EditMyPublishedBlogs';
 import OtherUserProfileView from './pages/OtherUserProfileView';
 import UserChat from './pages/UserChat';
+import { socket } from '../socket';
 
 
 
@@ -29,6 +30,12 @@ import.meta.env
 
 
 function App() {
+  useEffect(() => {
+    socket.connect()
+  }, [])
+
+
+
   return (
     <>
       <Routes>
