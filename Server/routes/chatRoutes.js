@@ -1,7 +1,7 @@
 
 const express = require('express')
 const router = express.Router()
-const {searchAllUsers,fetchChatData,fetchMessages} = require('../controllers/chat')
+const {searchAllUsers,fetchChatData,fetchMessages,fetchAllChatdat} = require('../controllers/chat')
 const {verifyToken} = require('../controllers/verifyToken')
 
 
@@ -17,6 +17,8 @@ router.get(`/fetchChatData/:chatId`,verifyToken,fetchChatData)
 //get userChat messages
 
 router.get(`/fetchMessages/:chatId`,verifyToken,fetchMessages)
+
+router.get('/fetchAllChatdat',verifyToken,fetchAllChatdat)
 
 
 

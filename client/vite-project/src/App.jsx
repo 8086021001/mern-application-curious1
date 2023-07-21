@@ -22,7 +22,7 @@ import UserConnections from './pages/UserConnections';
 import EditMyPublishedBlogs from './pages/EditMyPublishedBlogs';
 import OtherUserProfileView from './pages/OtherUserProfileView';
 import UserChat from './pages/UserChat';
-import { socket } from '../socket';
+import { socket } from './socket';
 
 
 
@@ -32,7 +32,7 @@ import.meta.env
 function App() {
   useEffect(() => {
     socket.connect()
-  }, [])
+  })
 
 
 

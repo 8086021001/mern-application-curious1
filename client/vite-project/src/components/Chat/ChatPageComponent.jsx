@@ -1,12 +1,43 @@
-import React, { useState } from 'react'
-import { Box, Button, Container, Grid, IconButton, Stack, TextField, Typography, Drawer } from '@mui/material';
+import React, { useEffect, useState } from 'react'
+import { Box, Button, Container, Grid, IconButton, Stack, TextField, Typography, Drawer, Card, CardContent, Avatar } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import MicIcon from '@mui/icons-material/Mic';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import MoodIcon from '@mui/icons-material/Mood';
+import ChatUserList from './ChatUserList';
+import { useSelector } from 'react-redux';
+import { socket } from '../../socket'
 
 const ChatPageComponent = () => {
     const messages = [
+        { text: 'Hello', sender: true },
+        { text: 'Hi there!', sender: false },
+        { text: 'How are you?', sender: true },
+        { text: 'I\'m good, thanks!', sender: false },
+        { text: 'What have you been up to?', sender: true },
+        { text: 'Just working on a new project.', sender: false },
+        { text: 'Hello', sender: true },
+        { text: 'Hi there!', sender: false },
+        { text: 'How are you?', sender: true },
+        { text: 'I\'m good, thanks!', sender: false },
+        { text: 'What have you been up to?', sender: true },
+        { text: 'Just working on a new project.', sender: false },
+        { text: 'Hello', sender: true },
+        { text: 'Hi there!', sender: false },
+        { text: 'How are you?', sender: true },
+        { text: 'I\'m good, thanks!', sender: false },
+        { text: 'What have you been up to?', sender: true },
+        { text: 'Just working on a new project.', sender: false },
+        { text: 'Hello', sender: true },
+        { text: 'Hi there!', sender: false },
+        { text: 'How are you?', sender: true },
+        { text: 'I\'m good, thanks!', sender: false },
+        { text: 'What have you been up to?', sender: true },
+        { text: 'Just working on a new project.', sender: false },
+        { text: 'How are you?', sender: true },
+        { text: 'I\'m good, thanks!', sender: false },
+        { text: 'What have you been up to?', sender: true },
+        { text: 'Just working on a new project.', sender: false },
         { text: 'Hello', sender: true },
         { text: 'Hi there!', sender: false },
         { text: 'How are you?', sender: true },
@@ -17,6 +48,12 @@ const ChatPageComponent = () => {
     ];
 
     const [inputValue, setInputValue] = useState('');
+    const [selectedChat, setselectedChat] = useState(false)
+    const [chatDataId, setchatDataId] = useState('')
+    const [mySocketId, setmySocketId] = useState(undefined)
+
+    const chatDataState = useSelector(state => state.connection)
+
 
     const handleInputChange = (event) => {
         setInputValue(event.target.value);
@@ -24,7 +61,11 @@ const ChatPageComponent = () => {
 
     const handleSendClick = () => {
         if (inputValue.trim() !== '') {
-            console.log('Sending message:', inputValue);
+            const chatData = {
+                chatDataId,
+                inputValue
+            }
+            socket.emit('send message', chatData)
             setInputValue('');
         }
     };
@@ -41,54 +82,110 @@ const ChatPageComponent = () => {
         console.log('Opening emoji picker...');
     };
 
+    useEffect(() => {
+        socket.on("connected", (arg) => {
+            console.log("this is my first return from socket and this isthe socket id", arg);
+            setmySocketId(arg)
+        })
+        socket.on("receive Message", (messageData, socketId) => {
+            // if (socketId !== mySocketId) {
+            //   console.log("Received message:", messageData);
+            // //   displayReceivedMessage(messageData);
+            // }
+            console.log("ddddddddddddd", socketId)
+            console.log("Received message:", messageData);
+
+        });
+
+    })
+
+    useEffect(() => {
+        if (chatDataState?.chatData) {
+
+            if (chatDataState.chatData.length === 0) {
+                console.log("Hey Chat data empty", chatDataState.chatData)
+                setselectedChat(true)
+            } else {
+                console.log("Hey Chat data is not empty", chatDataState?.chatData[0]?._id)
+                setselectedChat(false)
+
+                setchatDataId(chatDataState?.chatData[0]?._id)
+            }
+        }
+
+
+    }, [chatDataState.chatData])
+
+
 
     return (
         <>
 
-            <Grid container spacing={2}>
-                <Grid item xs={12} sm={12} md={3} lg={3} xl={3}>
+            <Grid container spacing={2} display='flex' justifyContent='center'>
+
+                <Grid item xs={11} sm={11} md={2} lg={2} xl={2} m={1} marginTop={2}  >
                     <Box
                         sx={{
-                            display: { xs: 'none', sm: 'none', md: 'block' },
-                            marginLeft: '40px',
-                            border: '2px solid black',
-                            height: '100%',
-                            padding: '10px',
-                        }}
-                    >
-                        <Typography variant="h6">Chat List</Typography>
-                        {/* Add chat list content here */}
-                    </Box>
-                    <Drawer
-                        variant="temporary"
-                        anchor="left"
-                        open={false}
-                        onClose={() => { }}
-                    >
-                        <Box sx={{ width: '200px' }}>
-                            <Typography variant="h6">Chat List</Typography>
-                        </Box>
-                    </Drawer>
-                </Grid>
-                <Grid container item xs={12} sm={12} md={9} lg={9} xl={9}>
-                    <Container
-                        sx={{
                             border: '1px solid red',
-                            height: '100%',
+                            height: '98%',
+                            width: '100%',
                             display: 'flex',
                             flexDirection: 'column',
                             justifyContent: 'space-between',
+                            boxShadow: "0px 0px 9px "
+
+                        }}
+                    >
+
+
+                        <ChatUserList />
+                    </Box>
+                </Grid>
+
+                <Grid container item xs={12} sm={12} md={8} lg={8} xl={8} m={1} marginTop={2}>
+
+                    <Box
+                        sx={{
+                            borderBottom: '1px solid red',
+                            height: '90%',
+                            width: '60%',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'space-between',
+                            boxShadow: "0px 0px 9px ",
+                            position: 'absolute'
+
                         }}
                     >
                         <Box
                             sx={{
-                                flex: '1',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                padding: '10px',
-                                overflowY: 'auto',
+                                margin: 2
+
                             }}
                         >
+                            <Avatar>
+
+                            </Avatar>
+
+                        </Box>
+
+
+
+                        <Box
+                            sx={{
+                                flex: '1',
+                                display: 'flex',
+                                borderBottom: '5px solid black',
+                                flexDirection: 'column',
+                                height: '100%',
+                                padding: '10px',
+                                position: 'relative',
+                                overflowY: 'auto',
+                                position: 'relative',
+                                backgroundColor: '#f0eee9'
+                            }}
+                        >
+
                             {messages.map((message, index) => (
                                 <Box
                                     key={index}
@@ -100,8 +197,8 @@ const ChatPageComponent = () => {
                                 >
                                     <Box
                                         sx={{
-                                            backgroundColor: message.sender ? '#333' : '#f5f5f5',
-                                            color: message.sender ? '#fff' : '#333',
+                                            backgroundColor: message.sender ? '#333' : '#FFFFFF',
+                                            color: message.sender ? '#FFFFFF' : '#333333',
                                             padding: '10px',
                                             borderRadius: '10px',
                                             maxWidth: '70%',
@@ -111,6 +208,14 @@ const ChatPageComponent = () => {
                                     </Box>
                                 </Box>
                             ))}
+                            {selectedChat &&
+                                <Box border={2}>
+                                    <Typography>
+                                        Chatttttttttt
+                                    </Typography>
+                                </Box>
+
+                            }
                         </Box>
                         <Grid container
                             sx={{
@@ -170,7 +275,9 @@ const ChatPageComponent = () => {
 
 
                         </Grid>
-                    </Container>
+
+
+                    </Box>
                 </Grid>
             </Grid>
         </>

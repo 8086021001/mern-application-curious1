@@ -205,6 +205,7 @@ async function processAndSaveImages(content) {
       res.status(400).json({message:"Failed to update"})
       
     } catch (error) {
+      res.status(500).json({message:"Failed!"})
 
 
     }

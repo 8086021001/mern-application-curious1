@@ -399,12 +399,19 @@ try {
       { $pull: { following: usersID } },
       { new: true }
     );
+    const otherUser = await User.findByIdAndUpdate(usersID,{$pull:{followers:authUserId}})
   } else {
     updateUser = await User.findByIdAndUpdate(
       authUserId,
       { $addToSet: { following: usersID } },
       { new: true }
     );
+    const otherUser = await User.findByIdAndUpdate(
+      usersID,
+      {$addToSet:{followers:authUserId}},
+      {new:true}
+      )
+
   }
   if(updateUser){
     console.log("updated user to follow",updateUser)

@@ -17,33 +17,32 @@ const searchAllUsers = async(req,res)=>{
             select: 'name email image',
           })
         .select('name email image');
-                console.log(searchUser)
-
         res.status(200).json({users:searchUser})
         
     } catch (error) {
-        
+        res.status(500).json({message:"Failed!"})
+
     }
 }
 
 const fetchChatData = async(req,res)=>{
-    try {
         const userId = req.id
-        const chatUserId = req.query.chatId
-        const fetchChat = await chatSchema.find({users:{$in:[userId,chatUserId]}}).populate('lastMessage')
+        const chatUserId = req.params.chatId
+        console.log("Hi am creating chat ",chatUserId)
+        const fetchChat = await chatSchema.find({users:{$all:[userId,chatUserId]}}).populate('lastMessage')
         if(fetchChat.length > 0){
-            res.json(fetchChat)
+            console.log("this is already avialble",fetchChat)
+            res.status(200).json({chat:fetchChat})
 
         }else{
             const data = {
                 users : [userId,chatUserId],
             }
             const newChatDat = await chatSchema.create(data)
-            res.json(newChatDat)
+            console.log("creating cgat data",newChatDat)
+            res.status(200).json({chat:newChatDat})
         }
-    } catch (error) {
-        
-    }
+ 
 }
 
 const fetchMessages = async(req,res)=>{
@@ -57,12 +56,35 @@ const fetchMessages = async(req,res)=>{
         console.log(messages)
         res.status(200).json({messages})
     } catch (error) {
-        
+        res.status(500).json({message:"Failed!"})
+
     }
+}
+
+const fetchAllChatdat = async(req,res)=>{
+    try {
+        
+        const authUserId = req.id
+        
+        const chatedUsers = await chatSchema.find({users:{$in:authUserId}})
+        .populate({
+            path: 'users',
+            select: 'name email image',
+        })
+        console.log("Available users to chat",chatedUsers)
+        res.status(200).json({chatUsers:chatedUsers})
+        
+    } catch (error) {
+        res.status(500).json({message:"Failed!"})
+
+    }
+
 }
 
 
 
 
 
-module.exports = {searchAllUsers,fetchChatData,fetchMessages}
+
+
+module.exports = {searchAllUsers,fetchChatData,fetchMessages,fetchAllChatdat}
