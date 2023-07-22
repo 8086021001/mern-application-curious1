@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Box, Button, Container, Grid, IconButton, Stack, TextField, Typography, Drawer, Card, CardContent, Avatar } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import MicIcon from '@mui/icons-material/Mic';
@@ -9,50 +9,20 @@ import { useSelector } from 'react-redux';
 import { socket } from '../../socket'
 
 const ChatPageComponent = () => {
-    const messages = [
-        { text: 'Hello', sender: true },
-        { text: 'Hi there!', sender: false },
-        { text: 'How are you?', sender: true },
-        { text: 'I\'m good, thanks!', sender: false },
-        { text: 'What have you been up to?', sender: true },
-        { text: 'Just working on a new project.', sender: false },
-        { text: 'Hello', sender: true },
-        { text: 'Hi there!', sender: false },
-        { text: 'How are you?', sender: true },
-        { text: 'I\'m good, thanks!', sender: false },
-        { text: 'What have you been up to?', sender: true },
-        { text: 'Just working on a new project.', sender: false },
-        { text: 'Hello', sender: true },
-        { text: 'Hi there!', sender: false },
-        { text: 'How are you?', sender: true },
-        { text: 'I\'m good, thanks!', sender: false },
-        { text: 'What have you been up to?', sender: true },
-        { text: 'Just working on a new project.', sender: false },
-        { text: 'Hello', sender: true },
-        { text: 'Hi there!', sender: false },
-        { text: 'How are you?', sender: true },
-        { text: 'I\'m good, thanks!', sender: false },
-        { text: 'What have you been up to?', sender: true },
-        { text: 'Just working on a new project.', sender: false },
-        { text: 'How are you?', sender: true },
-        { text: 'I\'m good, thanks!', sender: false },
-        { text: 'What have you been up to?', sender: true },
-        { text: 'Just working on a new project.', sender: false },
-        { text: 'Hello', sender: true },
-        { text: 'Hi there!', sender: false },
-        { text: 'How are you?', sender: true },
-        { text: 'I\'m good, thanks!', sender: false },
-        { text: 'What have you been up to?', sender: true },
-        { text: 'Just working on a new project.', sender: false },
-        // Add more test messages as needed
-    ];
+
 
     const [inputValue, setInputValue] = useState('');
     const [selectedChat, setselectedChat] = useState(false)
     const [chatDataId, setchatDataId] = useState('')
     const [mySocketId, setmySocketId] = useState(undefined)
-
+    const [messageLoading, setmessageLoading] = useState(false)
+    const [fetchedMessages, setfetchedMessages] = useState([])
     const chatDataState = useSelector(state => state.connection)
+    const authState = useSelector(state => state.authUser)
+    const authUserId = authState?.authState?._id
+    const messagesEndRef = useRef(null)
+    const userProfileData = useSelector(state => state.connection)
+
 
 
     const handleInputChange = (event) => {
@@ -63,10 +33,14 @@ const ChatPageComponent = () => {
         if (inputValue.trim() !== '') {
             const chatData = {
                 chatDataId,
-                inputValue
+                inputValue,
+                authUserId
             }
-            socket.emit('send message', chatData)
+            socket.emit('send message', chatData, (response) => {
+                setfetchedMessages(prevState => [...prevState, response])
+            })
             setInputValue('');
+
         }
     };
 
@@ -87,17 +61,22 @@ const ChatPageComponent = () => {
             console.log("this is my first return from socket and this isthe socket id", arg);
             setmySocketId(arg)
         })
-        socket.on("receive Message", (messageData, socketId) => {
+        socket.on("receive Message", (messageData) => {
             // if (socketId !== mySocketId) {
             //   console.log("Received message:", messageData);
             // //   displayReceivedMessage(messageData);
             // }
-            console.log("ddddddddddddd", socketId)
             console.log("Received message:", messageData);
+            setfetchedMessages(prevState => [...prevState, messageData])
 
         });
 
-    })
+
+        return () => {
+            socket.off("connected");
+            socket.off("receive Message");
+        };
+    }, [])
 
     useEffect(() => {
         if (chatDataState?.chatData) {
@@ -108,13 +87,20 @@ const ChatPageComponent = () => {
             } else {
                 console.log("Hey Chat data is not empty", chatDataState?.chatData[0]?._id)
                 setselectedChat(false)
-
                 setchatDataId(chatDataState?.chatData[0]?._id)
+                setmessageLoading(true)
+                socket.emit("fetch all messages", chatDataId, (response) => {
+                    console.log("hey response messages received", response)
+                    setfetchedMessages(response)
+                })
             }
         }
 
 
-    }, [chatDataState.chatData])
+    }, [chatDataState.chatData, chatDataId])
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [fetchedMessages]);
 
 
 
@@ -163,10 +149,7 @@ const ChatPageComponent = () => {
 
                             }}
                         >
-                            <Avatar>
-
-                            </Avatar>
-
+                            <Avatar alt="" />
                         </Box>
 
 
@@ -186,28 +169,39 @@ const ChatPageComponent = () => {
                             }}
                         >
 
-                            {messages.map((message, index) => (
+                            {fetchedMessages.map((message, index) => (
                                 <Box
                                     key={index}
                                     sx={{
                                         display: 'flex',
-                                        justifyContent: message.sender ? 'flex-end' : 'flex-start',
+                                        justifyContent: message.senderId == authUserId ? 'flex-end' : 'flex-start',
                                         marginBottom: '10px',
                                     }}
                                 >
-                                    <Box
-                                        sx={{
-                                            backgroundColor: message.sender ? '#333' : '#FFFFFF',
-                                            color: message.sender ? '#FFFFFF' : '#333333',
-                                            padding: '10px',
-                                            borderRadius: '10px',
-                                            maxWidth: '70%',
-                                        }}
-                                    >
-                                        <Typography variant="body1">{message.text}</Typography>
+                                    <Box>
+                                        <Box
+                                            sx={{
+                                                backgroundColor: message.senderId == authUserId ? '#333' : '#FFFFFF',
+                                                color: message.senderId === authUserId ? '#FFFFFF' : '#333333',
+                                                padding: '10px',
+                                                borderRadius: '10px',
+                                                maxWidth: '100%',
+                                            }}
+                                        >
+                                            <Typography variant="body1">{message.content}</Typography>
+
+                                        </Box>
+                                        <Typography variant="body2" color="textSecondary"
+                                            sx={{
+                                                textAlign: 'right'
+                                            }}
+                                        >{message.createdAt}</Typography>
+
                                     </Box>
                                 </Box>
                             ))}
+                            <div ref={messagesEndRef} />
+
                             {selectedChat &&
                                 <Box border={2}>
                                     <Typography>
