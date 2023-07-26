@@ -19,7 +19,9 @@ const initialState = {
     fetchChatSuccess:false,
     chatData:[],
     fetchAllChatSuccess:false,
-    allChatData:[]
+    allChatData:[],
+    sendAudio:{},
+    sendAudioSuccess:false,
 }
 
 
@@ -89,10 +91,24 @@ export const fetchAllChatdat = createAsyncThunk('/fetchAllChatdat',async(_,{reje
 
     }
 })
+export const sendAudio = createAsyncThunk('/user/sendAudio',async(audio,{rejectWithValue})=>{
+    try {
+        const response = await axiosInstance.post('/user/sendAudio', audio, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+        const data = response.data
+        return data
+        
+    } catch (error) {
+        return rejectWithValue(error.response.data);
+    }
+})
 
 
 const userConnectionSlice = createSlice({
-    name:"interests",
+    name:"connection",
     initialState,
     reducers:{
 
@@ -204,6 +220,21 @@ const userConnectionSlice = createSlice({
             state.error = action.error.code
             state.message = action.payload?.message??""
         })
+        builder.addCase(sendAudio.pending,state=>{
+            state.loading = true
+        })
+        builder.addCase(sendAudio.fulfilled,(state,action)=>{
+            state.loading = false,
+            state.sendAudioSuccess = true,
+            state.error = "",
+            state.sendAudio = action.payload?.audioMessage,
+            state.message = action.payload?.message??""
+        })
+        builder.addCase(sendAudio.rejected,(state,action)=>{
+            state.loading = false
+            state.error = action.error.code
+            state.message = action.payload?.message??""
+        })
     }
     
 })
@@ -216,3 +247,7 @@ export const{
 } = userConnectionSlice.actions
 
 export default userConnectionSlice.reducer
+
+
+
+

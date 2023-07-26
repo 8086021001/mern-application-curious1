@@ -5,8 +5,10 @@ import MicIcon from '@mui/icons-material/Mic';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import MoodIcon from '@mui/icons-material/Mood';
 import ChatUserList from './ChatUserList';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { socket } from '../../socket'
+import AudioButton from '../AudioButton/AudioButton';
+import { sendAudio } from '../../features/user/userConnectionSlice';
 
 const ChatPageComponent = () => {
 
@@ -17,11 +19,13 @@ const ChatPageComponent = () => {
     const [mySocketId, setmySocketId] = useState(undefined)
     const [messageLoading, setmessageLoading] = useState(false)
     const [fetchedMessages, setfetchedMessages] = useState([])
+    const [audio, setAudio] = useState(null);
+    const dipatch = useDispatch()
+
     const chatDataState = useSelector(state => state.connection)
     const authState = useSelector(state => state.authUser)
     const authUserId = authState?.authState?._id
     const messagesEndRef = useRef(null)
-    const userProfileData = useSelector(state => state.connection)
 
 
 
@@ -44,9 +48,7 @@ const ChatPageComponent = () => {
         }
     };
 
-    const handleAudioRecordClick = () => {
-        console.log('Recording audio...');
-    };
+
 
     const handleMediaUploadClick = () => {
         console.log('Uploading media...');
@@ -56,9 +58,18 @@ const ChatPageComponent = () => {
         console.log('Opening emoji picker...');
     };
 
+
+    const handleAudioFile = (audioFile) => {
+
+        if (audioFile) {
+            setAudio(audioFile)
+
+        }
+
+    }
+
     useEffect(() => {
         socket.on("connected", (arg) => {
-            console.log("this is my first return from socket and this isthe socket id", arg);
             setmySocketId(arg)
         })
         socket.on("receive Message", (messageData) => {
@@ -90,14 +101,27 @@ const ChatPageComponent = () => {
                 setchatDataId(chatDataState?.chatData[0]?._id)
                 setmessageLoading(true)
                 socket.emit("fetch all messages", chatDataId, (response) => {
-                    console.log("hey response messages received", response)
                     setfetchedMessages(response)
                 })
             }
         }
+        if (audio !== null && chatDataId) {
+            const formData = new FormData()
+            formData.append("chat", chatDataId)
+            formData.append('sender', authUserId)
+            formData.append('content', audio)
+            formData.append('isAudio', true)
+            for (const [key, value] of formData.entries()) {
+                console.log(key, value);
+            }
+            dipatch(sendAudio(formData))
+            setAudio(null)
+        }
 
 
-    }, [chatDataState.chatData, chatDataId])
+    }, [chatDataState.chatData, chatDataId, audio])
+
+
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [fetchedMessages]);
@@ -164,7 +188,6 @@ const ChatPageComponent = () => {
                                 padding: '10px',
                                 position: 'relative',
                                 overflowY: 'auto',
-                                position: 'relative',
                                 backgroundColor: '#f0eee9'
                             }}
                         >
@@ -188,7 +211,15 @@ const ChatPageComponent = () => {
                                                 maxWidth: '100%',
                                             }}
                                         >
-                                            <Typography variant="body1">{message.content}</Typography>
+                                            {message?.isAudio === true ? (
+                                                <div className="audio-container">
+                                                    <audio src={message.content} controls></audio>
+                                                    {/* <a download href={message.content}>
+                                                        Download Recording
+                                                    </a> */}
+                                                </div>
+                                            ) : <Typography variant="body1">{message?.content}</Typography>
+                                            }
 
                                         </Box>
                                         <Typography variant="body2" color="textSecondary"
@@ -245,17 +276,8 @@ const ChatPageComponent = () => {
                             </Grid>
                             <Grid item xs={1} >
                                 <Grid sx={{ display: 'flex' }}>
-                                    <Button sx={{
+                                    <AudioButton handleAudio={handleAudioFile} />
 
-                                        backgroundColor: 'transparent',
-                                        borderRadius: '2rem',
-                                        '&:hover': {
-                                            backgroundColor: 'black'
-                                        }
-                                    }}
-                                        onClick={handleAudioRecordClick}>
-                                        <MicIcon />
-                                    </Button>
                                     <Button onClick={handleMediaUploadClick}>
                                         <AttachFileIcon />
                                     </Button>
@@ -273,9 +295,11 @@ const ChatPageComponent = () => {
 
                     </Box>
                 </Grid>
+
             </Grid>
         </>
     )
 }
 
 export default ChatPageComponent
+

@@ -11,6 +11,16 @@ const storage = multer.diskStorage({
   }
 })
 
+const audioStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './public/audio')
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null, file.fieldname + '-' + uniqueSuffix + file.originalname)
+  }
+})
+
 const upload = multer({
   storage,
   fileFilter: (req, file, cb) => {
@@ -25,4 +35,10 @@ const upload = multer({
   }
 })
 
-module.exports = { upload }
+const uploadAudio = multer({audioStorage})
+
+module.exports = { upload,uploadAudio }
+
+
+
+

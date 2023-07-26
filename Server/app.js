@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser')
 const path = require('path');
 const userRoutes = require('./routes/userRoutes')
 const blogRoutes = require('./routes/blogRoutes')
+const paymentRoutes = require('./routes/paymentRoutes')
 const fs = require('fs');
 const chatRoutes = require('./routes/chatRoutes')
 const io = require('./socket/socket')
@@ -38,6 +39,7 @@ app.use(cookieParser());
 app.use('/user',userRoutes)
 app.use('/user',blogRoutes)
 app.use('/user',chatRoutes)
+app.use('/user',paymentRoutes)
 
 
 const appEndPoint = async(url)=>{

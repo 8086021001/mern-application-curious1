@@ -80,7 +80,44 @@ async function processAndSaveEditedBlogImages(content) {
   }
 
 
+  async function audioUplodertoCloudinary(originalname,buffer){
+    return new Promise((resolve, reject) => {
+      const cloudinaryUpload = cloudinary.uploader.upload_stream(
+        { resource_type: 'video', public_id: originalname, folder: 'audio' },
+        (error, result) => {
+          if (error) {
+            console.log("Error uploading:", error);
+            reject(error); 
+          } else {
+            const audioUrl = result.secure_url;
+
+            resolve(audioUrl); 
+          }
+        }
+      );
+    
+      // Pipe the audio buffer to Cloudinary
+      const readStream = require('stream').PassThrough();
+      readStream.end(buffer);
+      readStream.pipe(cloudinaryUpload);
+    });
+  }
+
+
+
+  function generateUniqueName(baseString) {
+    const timestamp = Date.now().toString(36);
+    const randomString = Math.random().toString(36).substr(2, 5); 
+    return `${baseString}-${timestamp}-${randomString}`;
+  }
+
+
+
+
+
 
   module.exports = {
-    processAndSaveEditedBlogImages
+    processAndSaveEditedBlogImages,
+    audioUplodertoCloudinary,
+    generateUniqueName
   }

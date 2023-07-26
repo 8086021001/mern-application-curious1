@@ -7,6 +7,7 @@ import { followUser, getOtherUserBlogs, resetFollow, resetUserConnection } from 
 import UserBlogDisplaycard from './UserBlogDisplaycard';
 import { setAuth } from '../../features/auth/userAuth';
 import { useNavigate } from 'react-router-dom';
+import { resetRequest, scheduleVideoCall } from '../../features/user/videoCallSlice';
 
 const UserProfileView = ({ usedData }) => {
     const [activeTab, setActiveTab] = useState("home")
@@ -16,12 +17,14 @@ const UserProfileView = ({ usedData }) => {
     const navigate = useNavigate()
     // console.log(usersBlogData?.usersBlogs[0], "hererere")
 
+    const videoCallReq = useSelector(state => state.videoCall)
+
     const handleFollowFunction = (userIdtoFollow) => {
         // console.log(userIdtoFollow)
         dispatch(followUser(userIdtoFollow))
     }
     const handeChat = (chatuserId) => {
-        console.log(chatuserId)
+        // console.log(chatuserId)
         navigate('/user/chat')
 
     }
@@ -36,10 +39,16 @@ const UserProfileView = ({ usedData }) => {
             console.log(activeTab)
         }
     }
+
+
+    const handleMeetRequest = (meetUserId) => {
+        console.log("userid of the meet", meetUserId)
+        dispatch(scheduleVideoCall(meetUserId))
+
+    }
     useEffect(() => {
 
         if (usedData) {
-            console.log("my propdata", usedData)
             dispatch(getOtherUserBlogs(usedData._id))
 
         }
@@ -49,7 +58,14 @@ const UserProfileView = ({ usedData }) => {
             dispatch(resetFollow())
         }
 
-    }, [usedData, usersBlogData.getBlogSuccess, usersBlogData.followSuccess])
+        if (videoCallReq?.reqCallSuccess) {
+            dispatch(resetRequest())
+            navigate('/user/meetReq')
+        } else if (videoCallReq?.error) {
+            console.log("Unable to create request")
+        }
+
+    }, [usedData, usersBlogData.getBlogSuccess, usersBlogData.followSuccess, videoCallReq?.reqCallSuccess])
 
     return (
         <>
@@ -157,7 +173,6 @@ const UserProfileView = ({ usedData }) => {
                         >
                             {activeTab === "home" &&
                                 <Box>
-                                    {console.log(usersBlogData?.usersBlogs[0]?.blogsPublished)}
                                     <UserBlogDisplaycard blogData={usersBlogData?.usersBlogs[0]?.blogsPublished}></UserBlogDisplaycard>
                                 </Box>
                             }
@@ -229,7 +244,7 @@ const UserProfileView = ({ usedData }) => {
 
                                             <Chat></Chat>
                                         </Button>
-                                        <Button variant='outlined' color='info' size='medium' sx={{
+                                        <Button variant='outlined' color='info' size='medium' onClick={() => handleMeetRequest(usersBlogData?.usersBlogs[0]?._id)} sx={{
                                             width: '15rem'
                                         }}>
                                             <VideoCall></VideoCall>

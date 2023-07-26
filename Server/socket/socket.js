@@ -17,6 +17,9 @@ const io = new Server({
 
   const activeRooms = {}
 
+  const userIdToSocketMapping = new Map();
+  const socketToUserIdMapping = new Map();
+
   io.on("connection", (socket) => {
     console.log("hellloo connected to socket.io")
     socket.on('setup',(chatData)=>{
@@ -69,9 +72,8 @@ const io = new Server({
 
     socket.on("fetch all messages", async(chatId,callBack)=>{
       try {
-        console.log("chat id in fetch messages",chatId)
+        console.log("hey can you see chat id",chatId)
         const fetchMsgData=await messageSchema.find({chat:chatId})
-        console.log(fetchMsgData)
         if(fetchMsgData){
         const fetchAllMessages = await messageSchema.find({chat:chatId})
         .populate({
@@ -79,9 +81,8 @@ const io = new Server({
           select:'name image'
         })
         .sort({createdAt:1})
-          console.log("Thia is the messagesssss", fetchAllMessages)
           const messagesTosend = fetchAllMessages.map((message)=>{
-            const { sender, content, createdAt } = message;
+            const { sender, content, createdAt,isAudio } = message;
             const formattedDate = new Date(createdAt).toLocaleString('en-US', {
               day: 'numeric',
               month: 'short',
@@ -94,6 +95,7 @@ const io = new Server({
               sender: sender.name,
               senderImage: sender.image,
               content,
+              isAudio,
               createdAt: formattedDate,
             };
           })
@@ -115,13 +117,44 @@ const io = new Server({
             callBack([]) 
                }
     })
+
+
+    socket.on('join-vc-room',(data)=>{
+      const {roomId,authUserId} = data
+      console.log("videocall lo",roomId,authUserId)
+      userIdToSocketMapping.set(authUserId,socket.id)
+      socketToUserIdMapping.set(socket.id,authUserId)
+      socket.join(roomId);
+      socket.emit('joined-room',{roomId})
+      socket.broadcast.to(roomId).emit("user-joined",{authUserId})
+    })
+
+    socket.on('call-user', (data)=>{
+      const{authUserId,offer} = data
+      const fromUser = socketToUserIdMapping.get(socket.id)
+      const socketId = userIdToSocketMapping.get(authUserId)
+      socket.to(socketId).emit('incoming-call',{from:fromUser,offer})
+    })
+
+    socket.on('call-accepted',(data)=>{
+      const{authUserId,ans}= data
+      console.log(data)
+      const socketId = userIdToSocketMapping.get(authUserId);
+      socket.to(socketId).emit('call-accepted',{ans})
+    })
     
   });
 
-
+  
 
 
 
 
 
   module.exports = io
+
+
+
+
+
+

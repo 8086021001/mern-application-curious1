@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose')
 
 
@@ -18,6 +17,10 @@ const messageSchema = new mongoose.Schema(
         type: String,
         required: true,
       },
+      isAudio: {
+        type: Boolean,
+        default: false,
+      },
     },
     {
       timestamps: true,
@@ -26,11 +29,4 @@ const messageSchema = new mongoose.Schema(
 
 
   module.exports = mongoose.model('messages',messageSchema)
-  
-
-  
-  
-  
-    
-  
   

@@ -6,11 +6,10 @@ import { CardActionArea } from '@mui/material';
 
 const UserBlogDisplaycard = ({ blogData }) => {
 
-    console.log("first", blogData)
 
     useEffect(() => {
         if (blogData) {
-            console.log(",,,,", blogData)
+            console.log("blogData,,,,",)
         }
 
     }, [blogData])
