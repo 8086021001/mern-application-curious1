@@ -21,6 +21,16 @@ const audioStorage = multer.diskStorage({
   }
 })
 
+const chatImageStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './public/chatImage')
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null, file.fieldname + '-' + uniqueSuffix + file.originalname)
+  }
+})
+
 const upload = multer({
   storage,
   fileFilter: (req, file, cb) => {
@@ -36,8 +46,9 @@ const upload = multer({
 })
 
 const uploadAudio = multer({audioStorage})
+const uploadImg =multer({chatImageStorage})
 
-module.exports = { upload,uploadAudio }
+module.exports = { upload,uploadAudio,uploadImg }
 
 
 

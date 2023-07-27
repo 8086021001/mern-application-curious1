@@ -2,13 +2,13 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Box, Button, Container, Grid, IconButton, Stack, TextField, Typography, Drawer, Card, CardContent, Avatar } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import MicIcon from '@mui/icons-material/Mic';
-import AttachFileIcon from '@mui/icons-material/AttachFile';
 import MoodIcon from '@mui/icons-material/Mood';
 import ChatUserList from './ChatUserList';
 import { useDispatch, useSelector } from 'react-redux';
 import { socket } from '../../socket'
 import AudioButton from '../AudioButton/AudioButton';
-import { sendAudio } from '../../features/user/userConnectionSlice';
+import { resetAudiState, resetImageState, sendAudio, sendImage } from '../../features/user/userConnectionSlice';
+import ImageButton from '../AudioButton/ImageButton';
 
 const ChatPageComponent = () => {
 
@@ -20,6 +20,8 @@ const ChatPageComponent = () => {
     const [messageLoading, setmessageLoading] = useState(false)
     const [fetchedMessages, setfetchedMessages] = useState([])
     const [audio, setAudio] = useState(null);
+    const [imageFile, setImageFile] = useState(null)
+    const [audioData, setAudioData] = useState(null)
     const dipatch = useDispatch()
 
     const chatDataState = useSelector(state => state.connection)
@@ -50,8 +52,13 @@ const ChatPageComponent = () => {
 
 
 
-    const handleMediaUploadClick = () => {
-        console.log('Uploading media...');
+    const handleMediaUploadClick = (mediaFile) => {
+        if (mediaFile) {
+            console.log('Uploading media...', mediaFile);
+            setImageFile(mediaFile)
+
+        }
+
     };
 
     const handleEmojiClick = () => {
@@ -60,12 +67,9 @@ const ChatPageComponent = () => {
 
 
     const handleAudioFile = (audioFile) => {
-
         if (audioFile) {
             setAudio(audioFile)
-
         }
-
     }
 
     useEffect(() => {
@@ -81,11 +85,21 @@ const ChatPageComponent = () => {
             setfetchedMessages(prevState => [...prevState, messageData])
 
         });
+        socket.on('receive-audio', (audioData) => {
+            setfetchedMessages(prevState => [...prevState, audioData])
+        })
+
+        socket.on('receive-image', (imgData) => {
+            setfetchedMessages(prevState => [...prevState, imgData])
+
+        })
 
 
         return () => {
             socket.off("connected");
             socket.off("receive Message");
+            socket.off("receive-audio")
+            socket.off('receive-image')
         };
     }, [])
 
@@ -105,7 +119,7 @@ const ChatPageComponent = () => {
                 })
             }
         }
-        if (audio !== null && chatDataId) {
+        if (audio && chatDataId && imageFile === null) {
             const formData = new FormData()
             formData.append("chat", chatDataId)
             formData.append('sender', authUserId)
@@ -115,15 +129,45 @@ const ChatPageComponent = () => {
                 console.log(key, value);
             }
             dipatch(sendAudio(formData))
+            setAudioData(formData)
             setAudio(null)
+        }
+        if (imageFile && chatDataId && audio === null) {
+            const imageForm = new FormData()
+            imageForm.append("chat", chatDataId)
+            imageForm.append('sender', authUserId)
+            imageForm.append('content', imageFile)
+            imageForm.append('isImage', true)
+            dipatch(sendImage(imageForm))
+
+        }
+
+        if (chatDataState?.sendAudioSuccess) {
+
+            setfetchedMessages(prevState => [...prevState, chatDataState?.sendAudio])
+            socket.emit("sent-audio", chatDataState?.sendAudio, chatDataId)
+            setAudioData(null)
+            dipatch(resetAudiState())
+        }
+
+        if (chatDataState?.sendImageSuccess) {
+            setfetchedMessages(prevState => [...prevState, chatDataState?.sendImage])
+            socket.emit("sent-image", chatDataState?.sendAudio, chatDataId)
+            dipatch(resetImageState())
+        }
+        return () => {
+
+            socket.off("sent-image")
         }
 
 
-    }, [chatDataState.chatData, chatDataId, audio])
+    }, [chatDataState.chatData, chatDataId, audio, imageFile, chatDataState?.sendAudioSuccess])
 
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+
+
     }, [fetchedMessages]);
 
 
@@ -211,14 +255,26 @@ const ChatPageComponent = () => {
                                                 maxWidth: '100%',
                                             }}
                                         >
-                                            {message?.isAudio === true ? (
+                                            {message?.isAudio === true && (
                                                 <div className="audio-container">
                                                     <audio src={message.content} controls></audio>
                                                     {/* <a download href={message.content}>
                                                         Download Recording
                                                     </a> */}
                                                 </div>
-                                            ) : <Typography variant="body1">{message?.content}</Typography>
+                                            )
+                                            }
+                                            {message?.isImage === true && (
+                                                <div>
+                                                    <img src={message.content} alt="Image" style={{ maxWidth: '100%', height: 'auto' }} />
+                                                </div>
+                                            )
+
+                                            }
+                                            {message?.isText === true && (
+                                                <Typography variant="body1">{message?.content}</Typography>
+                                            )
+
                                             }
 
                                         </Box>
@@ -277,10 +333,11 @@ const ChatPageComponent = () => {
                             <Grid item xs={1} >
                                 <Grid sx={{ display: 'flex' }}>
                                     <AudioButton handleAudio={handleAudioFile} />
+                                    <ImageButton handleImageUploading={handleMediaUploadClick} />
 
-                                    <Button onClick={handleMediaUploadClick}>
+                                    {/* <Button onClick={handleMediaUploadClick}>
                                         <AttachFileIcon />
-                                    </Button>
+                                    </Button> */}
 
                                     <Button variant="contained" onClick={handleSendClick} fullWidth endIcon={<SendIcon />} sx={{ height: '3rem', px: 8 }}>
                                         Send

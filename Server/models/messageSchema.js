@@ -17,10 +17,18 @@ const messageSchema = new mongoose.Schema(
         type: String,
         required: true,
       },
+      isText:{
+        type: Boolean,
+        default: false,
+      },
       isAudio: {
         type: Boolean,
         default: false,
       },
+      isImage:{
+        type: Boolean,
+        default: false,
+      }
     },
     {
       timestamps: true,

@@ -22,6 +22,8 @@ const initialState = {
     allChatData:[],
     sendAudio:{},
     sendAudioSuccess:false,
+    sendImage:{},
+    sendImageSuccess:false,
 }
 
 
@@ -106,6 +108,21 @@ export const sendAudio = createAsyncThunk('/user/sendAudio',async(audio,{rejectW
     }
 })
 
+export const sendImage = createAsyncThunk('/user/sendImage',async(image,{rejectWithValue})=>{
+    try {
+        const response = await axiosInstance.post('/user/sendImage', image, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+        const data = response.data
+        return data
+        
+    } catch (error) {
+        return rejectWithValue(error.response.data);
+    }
+})
+
 
 const userConnectionSlice = createSlice({
     name:"connection",
@@ -128,6 +145,14 @@ const userConnectionSlice = createSlice({
         },
         resetFetchChat:(state)=>{
             state.fetchChatSuccess = false;
+        },
+        resetAudiState:(state)=>{
+            state.sendAudio = {}
+            state.sendAudioSuccess = false
+        },
+        resetImageState:(state)=>{
+            state.sendImage = {}
+            state.sendImageSuccess = false
         }
     },
     extraReducers:builder =>{
@@ -235,6 +260,21 @@ const userConnectionSlice = createSlice({
             state.error = action.error.code
             state.message = action.payload?.message??""
         })
+        builder.addCase(sendImage.pending,state=>{
+            state.loading = true
+        })
+        builder.addCase(sendImage.fulfilled,(state,action)=>{
+            state.loading = false,
+            state.sendImageSuccess = true,
+            state.error = "",
+            state.sendImage = action.payload?.ImageMsg,
+            state.message = action.payload?.message??""
+        })
+        builder.addCase(sendImage.rejected,(state,action)=>{
+            state.loading = false
+            state.error = action.error.code
+            state.message = action.payload?.message??""
+        })
     }
     
 })
@@ -243,7 +283,9 @@ const userConnectionSlice = createSlice({
 export const{
     resetUserConnection,
     resetFollow,
-    resetFetchChat
+    resetFetchChat,
+    resetAudiState,
+    resetImageState
 } = userConnectionSlice.actions
 
 export default userConnectionSlice.reducer

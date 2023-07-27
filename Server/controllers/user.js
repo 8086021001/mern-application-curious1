@@ -84,7 +84,7 @@ const googelSignup = async (req,res)=>{
     const token = jwt.sign({
         id: checkgUser._id
     }, jwtSecretKey, {expiresIn: "30hr"})
-    return res.status(201).cookie(String(checkgUser._id), token, {
+    return res.status(201).cookie("token", token, {
         path: "/",
         expires: new Date(Date.now() + 1000 * 36 * 1000),
         httpOnly: true,
@@ -156,7 +156,7 @@ const login = async(req,res)=>{
                     const token = jwt.sign({
                         id: data.userId
                     }, jwtSecretKey, {expiresIn: "30hr"})
-                    return res.status(200).cookie(String(data.userId), token, {
+                    return res.status(200).cookie('token', token, {
                         path: "/",
                         expires: new Date(Date.now() + 1000 * 36 * 1000),
                         httpOnly: true,
@@ -194,22 +194,15 @@ const getUser = async (req, res, next) => {
     return res.status(200).json({ user });
   };
 
-  const logout = (req, res, next) => {
-    const cookies = req.headers.cookie;
-    const prevToken = cookies.split("=")[1];
-    if (!prevToken) {
-      return res.status(400).json({ message: "Couldn't find token" });
-    }
-    jwt.verify(String(prevToken), process.env.JWT_SECRET_KEY, (err, user) => {
-      if (err) {
-        console.log(err);
-        return res.status(403).json({ message: "Authentication failed" });
-      }
-      console.log('id in logout',user.id)
-      res.clearCookie(`${user.id}`);
-      req.cookies[`${user.id}`] = "";
-      return res.status(200).json({ message: "Successfully Logged Out" });
-    });
+
+
+  const logout = (req, res) => {
+try {
+  res.clearCookie('token').json({ message: 'Logged out successfully' });
+} catch (error) {
+  return res.status(500).json({ message: "Failed" });
+
+}
   };
 
 

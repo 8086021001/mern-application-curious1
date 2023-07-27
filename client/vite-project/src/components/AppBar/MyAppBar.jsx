@@ -15,6 +15,7 @@ import AdbIcon from '@mui/icons-material/Adb';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearAuth } from '../../features/auth/userAuth';
 import { useNavigate } from 'react-router-dom';
+import { logout } from '../../features/user/userSlice';
 
 const pages = ['Home', 'Top For You', 'My connections', 'Requests', 'create Blog'];
 const settings = ['Profile', 'Dashboard', 'Logout'];
@@ -53,6 +54,7 @@ function MyAppBar() {
   const handleCloseUserMenu = (setting) => {
     if (setting === 'Logout') {
       localStorage.removeItem('user');
+      dispatch(logout(userState?.authState))
       dispatch(clearAuth())
     }
     if (setting === 'Profile') {

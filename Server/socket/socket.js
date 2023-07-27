@@ -50,7 +50,8 @@ const io = new Server({
       const messageData = {
         senderId:senderId,
         content:message,
-        createdAt:formattedDate
+        createdAt:formattedDate,
+        isText:true,    
       }
       callBack(messageData)
       socket.in(chatroomId).emit("receive Message", messageData);
@@ -59,7 +60,9 @@ const io = new Server({
         const mssageData = {
       chat:chatroomId,
       sender:senderId,
-      content:message
+      content:message,
+      isText:true,    
+
     }
   
     const saveMessage = await  messageSchema.create(mssageData)
@@ -82,7 +85,7 @@ const io = new Server({
         })
         .sort({createdAt:1})
           const messagesTosend = fetchAllMessages.map((message)=>{
-            const { sender, content, createdAt,isAudio } = message;
+            const { sender, content, createdAt,isAudio,isText,isImage } = message;
             const formattedDate = new Date(createdAt).toLocaleString('en-US', {
               day: 'numeric',
               month: 'short',
@@ -96,6 +99,8 @@ const io = new Server({
               senderImage: sender.image,
               content,
               isAudio,
+              isText,
+              isImage,
               createdAt: formattedDate,
             };
           })
@@ -141,6 +146,20 @@ const io = new Server({
       console.log(data)
       const socketId = userIdToSocketMapping.get(authUserId);
       socket.to(socketId).emit('call-accepted',{ans})
+    })
+
+
+
+    socket.on('sent-audio',(audioData,chatDataId)=>{
+      console.log("audio data in server",audioData)
+      socket.in(chatDataId).emit("receive-audio", audioData);
+
+    })
+
+
+    socket.on("sent-image",(imgData,chatDataId)=>{
+      socket.in(chatDataId).emit("receive-image", imgData);
+
     })
     
   });

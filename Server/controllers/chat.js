@@ -1,7 +1,7 @@
 const chatSchema = require('../models/chatSchema')
 const userSchema = require('../models/userSchema')
 const messageSchema = require('../models/messageSchema')
-const {audioUplodertoCloudinary,generateUniqueName}= require('../utils/helperFunctions')
+const {audioUplodertoCloudinary,generateUniqueName,chatImageUploadertoCloudinary,testUploader}= require('../utils/helperFunctions')
 
 
 const searchAllUsers = async(req,res)=>{
@@ -77,11 +77,10 @@ const fetchAllChatdat = async(req,res)=>{
 
 }
 const audioMessage = async (req,res)=>{
+    
     try {
-        console.log("dont worrry request is herer")
              const {chat,sender} = req.body
              const{originalname,buffer} = req.file
-             console.log(req.file,"my req body",req.body)
              const filename = generateUniqueName(originalname)
      
              const audioUrl = await audioUplodertoCloudinary(filename,buffer)
@@ -92,7 +91,9 @@ const audioMessage = async (req,res)=>{
                      chat:chat,
                      sender:sender,
                      content:audioUrl,
-                     isAudio:true
+                     isAudio:true,
+                     isText:false,
+                     isImage:false,
                  })
      
                  await newAudioMessage.save()
@@ -109,6 +110,37 @@ const audioMessage = async (req,res)=>{
 }
 
 
+const sendImage = async(req,res)=>{
+    try {
+        const{chat,sender} = req.body;
+        const {buffer,originalname} = req.file
+        const imgName = "chatImages"
+        const filename = generateUniqueName(imgName)
+
+        const imgUrl = await chatImageUploadertoCloudinary(filename,buffer)
+             
+        if(imgUrl){
+            const newImgMsg = new messageSchema({
+                chat:chat,
+                sender:sender,
+                content:imgUrl,
+                isImage:true,
+                isAudio:false,
+                isText:false,
+            })
+
+            await newImgMsg.save()
+            res.status(200).json({ImageMsg:newImgMsg,message:"success"})
+        }else{
+           res.status(404).json({message:"unable to upload audio"})
+        }
+
+
+        
+    } catch (error) {
+        
+    }
+}
 
 
 
@@ -118,4 +150,6 @@ const audioMessage = async (req,res)=>{
 
 
 
-module.exports = {searchAllUsers,fetchChatData,fetchMessages,fetchAllChatdat,audioMessage}
+
+
+module.exports = {searchAllUsers,fetchChatData,fetchMessages,fetchAllChatdat,audioMessage,sendImage}

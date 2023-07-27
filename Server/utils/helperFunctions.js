@@ -1,7 +1,10 @@
 const cheerio  = require('cheerio')
 const { ObjectId } = require('mongodb');
+const { resolve } = require('path');
 const cloudinary = require('cloudinary').v2;
 const { Readable } = require('stream');
+const streamifier = require('streamifier');
+
 
 
 
@@ -105,6 +108,59 @@ async function processAndSaveEditedBlogImages(content) {
 
 
 
+
+
+  
+  async function chatImageUploadertoCloudinary(originalname, buffer) {
+    try {
+      console.log("here in img url", originalname, buffer);
+  
+      const uploadOptions = {
+        folder: 'chatImages',
+        public_id: originalname,
+      };
+  
+      // Convert buffer to a Readable stream
+      const readableStream = streamifier.createReadStream(buffer);
+  
+      // Upload the image stream to Cloudinary
+      const result = await new Promise((resolve, reject) => {
+        const cloudinaryUpload = cloudinary.uploader.upload_stream(uploadOptions, (error, result) => {
+          if (error) {
+            console.log("Error uploading:", error);
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        });
+  
+        readableStream.pipe(cloudinaryUpload);
+      });
+  
+      const imgUrl = result.secure_url;
+  
+      return imgUrl;
+    } catch (error) {
+      console.error("Error uploading:", error);
+      throw error; // Reject the Promise with the error
+    }
+  }
+  
+  
+  
+
+
+  async function testUploader(buffer){
+    let imageurl
+   await cloudinary.uploader.upload(buffer, function(error, result) {
+      console.log(result.secure_url, error);
+      imageurl =result.secure_url;
+    });
+    return imageurl
+  }
+
+
+
   function generateUniqueName(baseString) {
     const timestamp = Date.now().toString(36);
     const randomString = Math.random().toString(36).substr(2, 5); 
@@ -119,5 +175,7 @@ async function processAndSaveEditedBlogImages(content) {
   module.exports = {
     processAndSaveEditedBlogImages,
     audioUplodertoCloudinary,
-    generateUniqueName
+    generateUniqueName,
+    testUploader,
+    chatImageUploadertoCloudinary
   }

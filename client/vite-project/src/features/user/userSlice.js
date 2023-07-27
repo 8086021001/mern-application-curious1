@@ -32,6 +32,16 @@ export const loginUser = createAsyncThunk('user/login',async(user,{rejectWithVal
     }
    
 })
+export const logout = createAsyncThunk('user/logout',async(user,{rejectWithValue})=>{
+    try {
+        const response = await axiosInstance.post("/user/logout",user)
+        const data = response.data
+        return data
+    }catch(error){
+        return rejectWithValue(error.response.data);
+    }
+   
+})
 
 export const updateUserInterests = createAsyncThunk('user/fieldUpdate',async(fields,{rejectWithValue})=>{
     try {
@@ -235,6 +245,18 @@ const userSlice = createSlice({
             state.errorStatus = true
             state.error = action.error
             state.message = action.payload?.message
+        })
+        builder.addCase(logout.pending,(state)=>{
+            state.loading = true
+        })
+        builder.addCase(logout.fulfilled,(state,action)=>{
+            state.loading = false,
+            state.success = true
+        })
+        builder.addCase(logout.rejected,(state,action)=>{
+            state.loading = false
+            state.errorStatus = true
+
         })
     }
     
