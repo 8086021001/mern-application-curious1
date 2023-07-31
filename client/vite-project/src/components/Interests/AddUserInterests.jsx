@@ -5,8 +5,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getUserInterest } from '../../features/user/interestSlice'
 
 const AddUserInterests = ({ handleInterestchange }) => {
+
+    const [interestFields, setInterestFields] = useState([])
     const dispatch = useDispatch()
-    const interestsState = useSelector(state => state.interests)
+    const interestsState = useSelector(state => state?.interests)
 
 
 
@@ -14,10 +16,14 @@ const AddUserInterests = ({ handleInterestchange }) => {
 
     const handleChange = (event, value) => {
         setSelectedOptions(value);
-        if (selectedOptions) {
-            handleInterestchange(selectedOptions)
+        if (value.length > 0) {
+            handleInterestchange(value)
         }
     };
+    useEffect(() => {
+        // console.log("in auto complete", interestsState?.interests)
+        dispatch(getUserInterest())
+    }, [interestsState?.success])
 
     return (
         <>
@@ -25,8 +31,8 @@ const AddUserInterests = ({ handleInterestchange }) => {
                 <Autocomplete
                     multiple
                     id="tags-outlined"
-                    options={interestsState.interests}
-                    getOptionLabel={(option) => option.name}
+                    options={interestsState?.interests}
+                    getOptionLabel={(option) => option?.name}
                     value={selectedOptions}
                     onChange={handleChange}
                     defaultValue={[interestsState[1]]}

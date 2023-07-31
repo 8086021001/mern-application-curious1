@@ -48,6 +48,9 @@ function MyAppBar() {
     if (pages === 'My connections') {
       navigate('/user/connections')
     }
+    if (pages === 'Requests') {
+      navigate('/user/meetReq')
+    }
     setAnchorElNav(null);
   };
 

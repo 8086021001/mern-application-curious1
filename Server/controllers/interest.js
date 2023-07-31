@@ -16,9 +16,7 @@ const addNewInterests = async(req,res)=>{
     try {
         const userId = req.id
         const newinterest  = req.body.interests
-        console.log(newinterest)
         const InterestField = await InterestModal.findOne({name:newinterest})
-        console.log(InterestField)
         if(!InterestField){
             const newInterestField =await new InterestModal({
                 name:newinterest

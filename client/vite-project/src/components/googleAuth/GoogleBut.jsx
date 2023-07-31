@@ -26,13 +26,14 @@ const GoogleBut = () => {
                 shape: "pill",
                 width: 300,
             });
-            if (userState?.user) {
-                console.log("goog", userState)
+            if (userState?.user && userState?.user?.googleId) {
+                console.log("google id present  or", userState?.user?.googleId)
                 const interest = userState?.user?.interests
-                console.log("goog", interest)
+                // console.log("goog", interest)
 
 
                 if (interest?.length === 0) {
+                    console.log("i am in googles logic")
                     dispatch(logginUserReset())
                     navigate('/interests')
                 } else if (interest?.length > 0) {

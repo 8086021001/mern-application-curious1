@@ -136,7 +136,7 @@ const login = async(req,res)=>{
         
                 } catch (error) {
                     console.log(error.message)
-                    res.status(401).json("Please try again!")
+                    res.status(404).json("Please try again!")
                 }
         
                 if (comparePassword) {
@@ -163,7 +163,7 @@ const login = async(req,res)=>{
                         sameSite: 'lax'
                     }).json({message: "Logged in!", user: user, token})
                 } else {
-                    return res.status(401).json({message: "Invalid password!"})
+                    return res.status(404).json({message: "Invalid password!"})
                 }
             } else if(user && !user.isVerified) {
                     res.status(404).json({message:"Please verify your acount"})

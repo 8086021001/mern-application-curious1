@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, CardMedia, CardContent, Typography, Grid, IconButton, Box, TextField, Stack } from '@mui/material';
+import { Card, CardMedia, CardContent, Typography, Grid, IconButton, Box, TextField, Stack, Avatar } from '@mui/material';
 import './PostCard.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { MakeLikeSuccess, getAllBlog, getSearchContent, resetLikeState, resetSateAfterFetch } from '../../features/user/blogCreateSlice';
@@ -92,6 +92,10 @@ const PostCard = () => {
                                             <Typography variant="h6" onClick={() => handleViewBlog(blog._id._id)} component="h2" className="post-card-title" sx={{ fontWeight: 'bold', marginBottom: '8px' }}>
                                                 {blog._id.title}
                                             </Typography>
+                                            <Box margin={2}>
+                                                <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                                            </Box>
+
                                             <Typography variant="body2" onClick={() => handleViewBlog(blog._id._id)} color="textSecondary" className="post-card-summary" sx={{ color: 'rgba(0, 0, 0, 0.6)' }}>
                                                 {blog._id.summary}
                                             </Typography>

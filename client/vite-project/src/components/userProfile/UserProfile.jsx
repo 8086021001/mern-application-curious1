@@ -26,7 +26,7 @@ const UserProfile = () => {
     const dispatch = useDispatch()
     const interestState = useSelector(state => state.interests)
     const blogState = useSelector(state => state.blogCreateState)
-    console.log('getting all blog states', blogState)
+    // console.log('getting all blog states', blogState)
 
     // console.log(userState)
     const [userSelctedInterests, setUserInterests] = useState(null)
@@ -92,7 +92,7 @@ const UserProfile = () => {
                     <SnackBar message={interestState.message} severity={'warning'} />
 
                 }
-                <Box className='ProfileHeader' textAlign="center">
+                <Box className='ProfileHeader' textalign="center">
                     <Badge
                         overlap="circular"
                         anchorOrigin={{
@@ -140,40 +140,58 @@ const UserProfile = () => {
 
             <Grid item xs={12}>
                 <Grid container spacing={2} justifyContent="center" sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                    <Typography variant="h4" sx={{ margin: 3 }}>Your Blogs</Typography>
-                    {blogState?.useBlogs && blogState?.useBlogs.length > 0 ? <BlogCards Blogs={blogState?.useBlogs} savedBlogs={false} myBlogs={true} /> : <div>No posts</div>}
+                    <Typography borderBottom={3} boxShadow={1} variant="h4" sx={{ margin: 3 }}>Your Blogs</Typography>
+                    {blogState?.useBlogs && blogState?.useBlogs.length > 0 ? <BlogCards Blogs={blogState?.useBlogs} savedBlogs={false} myBlogs={true} /> : <div className='startWriting'>
+                        <Typography variant='h4'>No Blogs, lets Start writing!</Typography>
+                        <Grid  >
+
+                            <lord-icon
+                                className="lotiefile"
+                                src="https://cdn.lordicon.com/pqxdilfs.json"
+                                trigger="hover"
+                                colors="outline:#131432,primary:#606874,secondary:#08a88a,tertiary:#ebe6ef"
+                                stroke="100"
+                                style={{ width: "250px", height: "250px" }}
+                            >
+                            </lord-icon>
+                        </Grid>
+                    </div>}
 
 
                 </Grid>
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid item xs={12} className='ProfileHeader'>
                 <Grid container spacing={2} justifyContent="center">
-                    <Grid item xs={4}>
-                        <Box textAlign="center">
-                            <Typography variant="h6">Followers</Typography>
-                            <Typography variant="body1">{userState.authState?.followers?.length}</Typography>
-                        </Box>
+                    <Grid item xs={4} display={'flex'} justifyContent={'center'}>
+                        <Grid display={'flex'} flexDirection={'column'} justifyContent={'center'} alignItems={'center'} >
+                            <Typography borderBottom={1} variant="h6">Followers</Typography>
+                            <Typography variant="h6">{userState.authState?.followers?.length}</Typography>
+                        </Grid>
                     </Grid>
 
-                    <Grid item xs={4}>
-                        <Box textAlign="center">
-                            <Typography variant="h6">Blogs Published</Typography>
-                            <Typography variant="body1">{userState.authState?.blogsPublished?.length}</Typography>
-                        </Box>
+                    <Grid item xs={4} display={'flex'} justifyContent={'center'}>
+                        <Grid display={'flex'} flexDirection={'column'} justifyContent={'center'} alignItems={'center'}>
+                            <Typography borderBottom={1} textAlign={'center'} variant="h6">Blogs Published</Typography>
+                            <Typography variant="h6">{userState.authState?.blogsPublished?.length}</Typography>
+                        </Grid>
                     </Grid>
 
-                    <Grid item xs={4}>
-                        <Container textAlign="center" sx={{ alignItems: 'center' }}>
+                    <Grid item xs={4} display={'flex'} justifyContent={'center'}>
+                        {/* <Container sx={{ alignItems: 'center', minWidth: '60%' }} > */}
+                        <Grid display={'flex'} flexDirection={'column'} justifyContent={'center'} alignItems={'center'} minWidth={'60%'}>
 
                             <Typography variant="h6" sx={{ m: 1 }}>Interests: {userState?.authState?.interests?.length}</Typography>
+
                             <AddUserInterests handleInterestchange={handleInterestInput} />
                             <Box sx={{ m: 1, width: '20%' }}>
                                 <Button variant="contained" size="small" onClick={handleAddUserInterests}>
                                     Add
                                 </Button>
                             </Box>
-                        </Container>
+                        </Grid>
+
+                        {/* </Container> */}
                     </Grid>
                 </Grid>
             </Grid>
@@ -182,9 +200,16 @@ const UserProfile = () => {
                 <Grid container spacing={2}>
 
                     <Grid item xs={12} sm={6} md={4} >
-                        <Box textAlign="center" p={2}>
+                        {/* <Box textalign="center" p={2}> */}
+                        <Grid display={'flex'} flexDirection={'column'} justifyContent={'center'} alignItems={'center'} alignContent={'center'}>
+
                             <Typography variant="h6">Add Interest field </Typography>
-                            <Typography variant="body1">Create and start contibuting to the fields you are proficient</Typography>
+                            <Typography sx={{
+                                '&:hover': {
+                                    border: '5px solid white',
+                                    transform: 'Scale(1.2)',
+                                }
+                            }} variant="body1">Create and start contibuting to the fields you are proficient</Typography>
                             <Box
                                 component="form"
                                 sx={{
@@ -212,9 +237,10 @@ const UserProfile = () => {
                                         Add
                                     </Button>
                                 </Box>
-
                             </Box>
-                        </Box>
+                            {/* </Box> */}
+                        </Grid>
+
                     </Grid>
 
                 </Grid>

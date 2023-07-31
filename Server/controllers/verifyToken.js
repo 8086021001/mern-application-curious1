@@ -13,6 +13,10 @@ const verifyToken = (req, res, next) => {
     console.log('first cookie is here',cookies)
     let tokenMatch
     let tok = null;
+    if(cookies === undefined || cookies === null){
+      return res.status(401).clearCookie('token').json({ message: "Unauthorized. Please log out." });
+
+    }
 
     if (cookies.indexOf('g_state={"i_l":0};') !== -1) {
       console.log("The string 'g_state={\"i_l\":0};' is present in the token.");

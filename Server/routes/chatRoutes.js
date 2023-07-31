@@ -2,7 +2,7 @@
 const express = require('express')
 const router = express.Router()
 const {searchAllUsers,fetchChatData,fetchMessages,fetchAllChatdat,audioMessage,sendImage} = require('../controllers/chat')
-const {scheduleVideoCall, fetchAlRequests}  =require('../controllers/videoCall')
+const {scheduleVideoCall, fetchAlRequests,acceptAndRejReq}  =require('../controllers/videoCall')
 const {verifyToken} = require('../controllers/verifyToken')
 const {uploadAudio,uploadImg} =require('../utils/multerConfig')
 
@@ -38,6 +38,11 @@ router.get('/fetchAlRequests',verifyToken,fetchAlRequests)
 //image sending route
 
 router.post('/sendImage',uploadImg.single('content'),verifyToken,sendImage)
+
+
+//route for updating request
+
+router.post('/updateReq',verifyToken,acceptAndRejReq)
 
 
 

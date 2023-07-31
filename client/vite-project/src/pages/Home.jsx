@@ -10,6 +10,7 @@ import PostCard from '../components/PostCard/PostCard'
 import SearchBar from '../components/SearchBar/SearchBar'
 import { resetComments, resetSateAfterFetch } from '../features/user/blogCreateSlice'
 import TextSearchBar from '../components/SearchBar/TextSearchBar'
+import { resetReqSuccess } from '../features/user/videoCallSlice'
 
 const Home = () => {
 
@@ -23,6 +24,7 @@ const Home = () => {
     console.log(loginState)
     useEffect(() => {
         dispatch(resetComments())
+        dispatch(resetReqSuccess())
     }, [])
 
     return (

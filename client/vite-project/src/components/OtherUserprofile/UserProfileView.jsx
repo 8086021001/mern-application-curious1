@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Typography, Button, Grid, Chip, List, ListItem, ListItemAvatar, ListItemText, Avatar, IconButton } from '@mui/material';
-import { Box, display, grid } from '@mui/system';
+import { Typography, Button, Grid, Chip, List, ListItem, ListItemAvatar, ListItemText, Avatar, IconButton, Divider } from '@mui/material';
+import { Box, borderBottom, display, grid } from '@mui/system';
 import { Chat, VideoCall, Visibility } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
 import { followUser, getOtherUserBlogs, resetFollow, resetUserConnection } from '../../features/user/userConnectionSlice';
@@ -44,8 +44,9 @@ const UserProfileView = ({ usedData }) => {
     const handleMeetRequest = (meetUserId) => {
         console.log("userid of the meet", meetUserId)
         dispatch(scheduleVideoCall(meetUserId))
-
     }
+
+
     useEffect(() => {
 
         if (usedData) {
@@ -84,7 +85,7 @@ const UserProfileView = ({ usedData }) => {
                                 display: 'flex',
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                backgroundImage: `url(${usedData.image})`,
+                                backgroundImage: `url(${usedData?.image})`,
                                 backgroundSize: 'cover',
 
                             }}
@@ -104,8 +105,8 @@ const UserProfileView = ({ usedData }) => {
                                     },
                                 }}
                             >
-                                <img src={usedData.image} alt="User" style={{ width: '100px', height: '100px' }} />
-                                <Typography variant="h5">{usedData.name}</Typography>
+                                <img src={usedData?.image} alt="User" style={{ width: '100px', height: '100px' }} />
+                                <Typography variant="h5">{usedData?.name}</Typography>
                             </Box>
                         </Box>
                     </Box>
@@ -164,17 +165,17 @@ const UserProfileView = ({ usedData }) => {
 
                         <Box p={2}
                             sx={{
-                                width: '80%',
-                                margin: 3,
+                                width: '100%',
+                                margin: 1,
                                 display: 'flex',
                                 justifyContent: 'center',
                                 alignItems: 'center',
                             }}
                         >
                             {activeTab === "home" &&
-                                <Box>
+                                <Grid >
                                     <UserBlogDisplaycard blogData={usersBlogData?.usersBlogs[0]?.blogsPublished}></UserBlogDisplaycard>
-                                </Box>
+                                </Grid>
                             }
                             {activeTab === "about" &&
                                 <Box>
@@ -281,13 +282,21 @@ const UserProfileView = ({ usedData }) => {
 
                         {usersBlogData?.usersBlogs[0]?.following.length > 0 &&
                             usersBlogData?.usersBlogs[0]?.following.map((users) => (
-                                <List key={users._id} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-                                    <ListItem alignItems="flex-start">
+                                <List key={users?._id}
+                                    sx={{
+                                        width: '100%', maxWidth: 360, bgcolor: 'background.paper',
+                                        margin: 0.5,
+                                        borderBottom: '1px solid black',
+                                        '&:hover': { cursor: 'pointer', backgroundColor: '#ebebeb' }
+                                    }}
+
+                                >
+                                    <ListItem alignItems="flex-start" >
                                         <ListItemAvatar>
-                                            <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                                            <Avatar alt="Remy Sharp" src={users?.image} />
                                         </ListItemAvatar>
                                         <ListItemText
-                                            primary="Brunch this weekend?"
+                                            primary={users?.name}
                                             secondary={
                                                 <React.Fragment>
                                                     <Typography
@@ -296,12 +305,14 @@ const UserProfileView = ({ usedData }) => {
                                                         variant="body2"
                                                         color="text.primary"
                                                     >
-                                                        Ali Connors
+                                                        {users?.email}
                                                     </Typography>
                                                 </React.Fragment>
                                             }
                                         />
                                     </ListItem>
+                                    <Divider />
+
                                 </List>
                             ))
 

@@ -6,13 +6,13 @@ const UserSchema = require('../models/userSchema')
 const scheduleVideoCall = async(req,res)=>{
 
     try {
-        console.log("Heyyy in videocalll",req.body)
         const authUserId = req.id
         const {reqUserId} =  req.body
 
         const ifReqAvailable = await videoSchema.find({users:{$all:[authUserId,reqUserId]}})
+        console.log("founfff",ifReqAvailable)
 
-        if(!ifReqAvailable){
+        if(ifReqAvailable.length === 0){
             const reqDaTa = {
                 users:[authUserId,reqUserId],
                 sender:authUserId,
@@ -55,7 +55,40 @@ const fetchAlRequests = async(req,res)=>{
     }
 }
 
+const acceptAndRejReq = async (req, res)=>{
+    try {
+        const userId = req.id
+        const{update,reId,selectedDate} = req.body.reqDat
+        console.log(update,reId,selectedDate)
+
+        if(update==="accepted"){
+            console.log(update,reId,selectedDate)
+            const updateData = {
+                status:"accepted",
+                scheduledTime:selectedDate
+            }
+
+            const requpdt = await videoSchema.findByIdAndUpdate(reId,
+                updateData,
+                {new: true})
+            req.status(201).json({message:"success"})
+            
+        }else if(update === "rejected"){
+            console.log("in reject",update,reId,selectedDate)
+
+            const reqUpdate = await videoSchema.findByIdAndUpdate(reId,
+                {status: "rejected"},
+                { new: true }
+                )
+        }
+        req.status(201).json({message:"success"})
+
+    } catch (error) {
+        
+    }
+}
 
 
 
-module.exports = {scheduleVideoCall,fetchAlRequests}
+
+module.exports = {scheduleVideoCall,fetchAlRequests,acceptAndRejReq}

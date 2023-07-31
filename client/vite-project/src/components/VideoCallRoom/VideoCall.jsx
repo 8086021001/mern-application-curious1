@@ -64,24 +64,18 @@ const VideoCall = () => {
             setMyStream(null);
         }
 
-        // Stop receiving and displaying the remote video stream
         setRemoteStream(null);
 
-        // Close the WebRTC connection
         if (peer) {
             peer.close();
         }
 
-        // Reset the initial offer flag
         setIsInitialOfferCreated(false);
 
-        // Reset the added tracks
         setAddedTracks([]);
 
-        // Emit an event to inform the other user to stop the call as well
         socket.emit('call-ended', { authUserId: remoteUserId });
 
-        // Reset the remote user ID
         setRemoteUserId(null);
     }, [myStream, peer, remoteUserId]);
 

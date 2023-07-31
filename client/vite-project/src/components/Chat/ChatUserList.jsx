@@ -35,7 +35,7 @@ const ChatUserList = () => {
                 setChatedUsers(prevSatate => [...prevSatate, user])
             }
         }
-        console.log("id of user to chat", userId)
+        // console.log("id of user to chat", userId)
         dispatch(fetchChatData(userId))
     }
 
@@ -86,9 +86,9 @@ const ChatUserList = () => {
 
     useEffect(() => {
         if (chatStatus.fetchChatSuccess) {
-            console.log("this is the real id", chatStatus?.chatData[0]._id)
+            // console.log("this is the real id", chatStatus?.chatData[0]?._id)
             const authUserId = authUserStatus?.authState?._id
-            const chatroomId = chatStatus?.chatData[0]._id
+            const chatroomId = chatStatus?.chatData[0]?._id
             const chatData = {
                 authUserId,
                 chatroomId
