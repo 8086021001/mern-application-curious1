@@ -75,7 +75,6 @@ const acceptAndRejReq = async (req, res)=>{
             
         }else if(update === "rejected"){
             console.log("in reject",update,reId,selectedDate)
-
             const reqUpdate = await videoSchema.findByIdAndUpdate(reId,
                 {status: "rejected"},
                 { new: true }

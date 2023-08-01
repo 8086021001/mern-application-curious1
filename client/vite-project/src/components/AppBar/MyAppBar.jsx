@@ -87,7 +87,8 @@ function MyAppBar() {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            {/* <img src="https://www.logoai.com/logo/1436083" alt="Curious" /> */}
+            Curious
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>

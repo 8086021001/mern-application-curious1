@@ -195,11 +195,15 @@ const MeetRequests = () => {
                                         </div>
                                     ) : (
                                         <Box>
-                                            <Typography variant='h6'>{userReq?.status}</Typography>
+                                            <Typography>
+                                                .
+                                            </Typography>
                                         </Box>
                                     )
 
                                 }
+                                <Typography variant='h6'>{userReq?.status}</Typography>
+
                             </CardContent>
                         </Card>
                     </>

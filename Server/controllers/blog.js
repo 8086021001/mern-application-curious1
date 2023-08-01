@@ -121,33 +121,166 @@ async function processAndSaveImages(content) {
       const userDat = await User.findById(userId)
       const userIntersts = userDat.interests
   
-      const documents = await InterestSchema.find({ _id: { $in: userIntersts } }).exec()
-      const interestIds = documents.map(doc => doc._id);
-      const pipeline = [
+      // const documents = await InterestSchema.find({ _id: { $in: userIntersts } }).exec()
+      // const interestIds = documents.map(doc => doc._id);
+
+
+      // const myInterestBlogs  = await InterestSchema.aggregate([
+      //   {
+      //     $match:{
+      //       _id:{$in:interestIds}
+      //     }
+       
+      //   },
+      //   {
+      //     $lookup:{
+      //       from:'blogschemas',
+      //       localField: 'blogs',
+      //       foreignField: '_id',
+      //       as: 'blogsData',
+
+      //     }
+      //   },
+      //   {
+      //     $unwind: '$blogsData', 
+      //   } ,
+      //        {
+      //     $sort: {
+      //       'blogsData.createdAt': -1, 
+      //     },
+      //   },
+      //   {
+      //     $lookup:{
+      //       from:"users",
+      //       localField:"blogsData.author",
+      //       foreignField:"_id",
+      //       as:"blogsData.user"
+      //     }
+      //   },
+      //   {
+      //     $unwind:"$blogsData.user"
+      //   },
+      //   {
+      //     $group:{
+      //       _id:"$_id",
+      //       blogRes:{
+      //         $push:'$blogsData'
+      //       }
+      //     }
+      //   },
+      //   {
+      //     $project: {
+      //       _id: 1,
+      //       blogRes: {
+      //         _id: 1,
+      //         title: 1,
+      //         content: 1,
+      //         createdAt: 1,
+      //         user: {
+      //           _id:"$blogRes.user._id",
+      //           name: "$blogRes.user.name",
+      //           image: "$blogRes.user.image"
+      //         }
+      //       }
+      //     }
+      //   }
+
+      // ])
+      // // console.log("here its based on interests",myInterestBlogs)
+      // const resultant = myInterestBlogs.forEach((blog)=>{
+      //   console.log("helloo blogs",blog.user)
+      // })
+
+
+
+      // const pipeline = [
+      //   {
+      //     $lookup: {
+      //       from: 'blogschemas',
+      //       localField: 'blogs',
+      //       foreignField: '_id',
+      //       as: 'blogings'
+      //     }
+      //   },
+      //   {
+      //     $unwind: '$blogings'
+      //   },
+      //   {
+      //     $sort: {
+      //       'blogings.createdAt': -1
+      //     }
+      //   },
+      //   {
+      //     $group: {
+      //       _id: '$blogings'
+      //     }
+      //   }
+      // ];
+  
+
+
+      const pipeline = ([
         {
           $lookup: {
-            from: 'blogschemas',
-            localField: 'blogs',
+            from: 'interests',
+            localField: 'tags',
             foreignField: '_id',
-            as: 'blogings'
-          }
+            as: 'interestsData',
+          },
         },
         {
-          $unwind: '$blogings'
+          $project: {
+            _id: 1,
+            title: 1,
+            summary: 1,
+            coverImage: 1,
+            tags: 1,
+            content: 1,
+            createdAt: 1,
+            interestNames: '$interestsData.name',
+            author: 1, 
+            likes:1,
+          },
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'author',
+            foreignField: '_id',
+            as: 'authorData',
+          },
+        },
+        {
+          $unwind: '$authorData',
+        },
+        {
+          $project: {
+            title: 1,
+            summary: 1,
+            coverImage: 1,
+            tags: 1,
+            content: 1,
+            createdAt: 1,
+            interestNames: 1,
+            likes:1,
+            author: {
+              _id: '$authorData._id',
+              name: '$authorData.name',
+              image: '$authorData.image',
+            },
+          },
         },
         {
           $sort: {
-            'blogings.createdAt': -1
-          }
+            createdAt: -1, 
+          },
         },
-        {
-          $group: {
-            _id: '$blogings'
-          }
-        }
-      ];
+      ]);
+
   
-      const result = await InterestSchema.aggregate(pipeline);
+
+      const result = await BlogPost.aggregate(pipeline);
+
       res.status(200).json({blogs:result})
   
       
