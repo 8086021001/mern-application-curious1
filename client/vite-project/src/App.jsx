@@ -7,7 +7,6 @@ import Notfound from './pages/Notfound';
 import Home from './pages/Home';
 import Interests from './pages/Interests';
 import Signup from './pages/Signup.jsX';
-
 import Landing from './pages/Landing';
 import UserPublicRoutes from './utils/UserPublicRoutes';
 import UserProtected from './utils/UserProtected';
@@ -17,7 +16,6 @@ import BlogViePage from './pages/BlogViePage';
 import MyBlogViewPage from './pages/MyBlogViewPage';
 import YourStories from './pages/YourStories';
 import UserProfileView from './components/OtherUserprofile/UserProfileView';
-import FriendsListPage from './components/OtherUserprofile/FriendsListPage';
 import UserConnections from './pages/UserConnections';
 import EditMyPublishedBlogs from './pages/EditMyPublishedBlogs';
 import OtherUserProfileView from './pages/OtherUserProfileView';
