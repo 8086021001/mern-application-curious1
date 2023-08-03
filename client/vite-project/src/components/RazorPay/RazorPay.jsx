@@ -38,7 +38,7 @@ const RazorPay = () => {
         const { amount, id: order_id, currency } = result.data;
 
         const options = {
-            key: import.meta.env.VITE_RAZORPAY_KEY_ID, // Enter the Key ID generated from the Dashboard
+            // key: import.meta.env.VITE_RAZORPAY_KEY_ID,
             amount: amount.toString(),
             currency: currency,
             name: "Anooppppp .",

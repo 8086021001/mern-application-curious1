@@ -30,7 +30,6 @@ import UserWallet from './pages/UserWallet';
 
 
 
-import.meta.env
 
 
 function App() {
