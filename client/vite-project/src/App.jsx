@@ -6,7 +6,7 @@ import Login from './pages/Login'
 import Notfound from './pages/Notfound';
 import Home from './pages/Home';
 import Interests from './pages/Interests';
-import Signup from './pages/Signup.jsX';
+import Signup from './pages/Signup.jsx';
 import Landing from './pages/Landing';
 import UserPublicRoutes from './utils/UserPublicRoutes';
 import UserProtected from './utils/UserProtected';
