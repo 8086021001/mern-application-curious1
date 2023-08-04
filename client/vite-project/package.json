@@ -6,8 +6,8 @@
   "scripts": {
     "start": "vite",
     "build": "vite build",
-    "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "aws s3 sync dist s3://curious-one"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
