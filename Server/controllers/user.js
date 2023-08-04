@@ -124,7 +124,7 @@ const verifyEmail = async (req, res) => {
   };
 
 
-  //signin
+  //signin in
 const login = async(req,res)=>{
         try {
             const user = await User.findOne({email: req.body.email});
