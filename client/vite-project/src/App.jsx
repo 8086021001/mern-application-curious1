@@ -5,7 +5,7 @@ import { Route, Routes } from 'react-router-dom';
 import Login from './pages/Login'
 import Notfound from './pages/Notfound';
 import Home from './pages/Home';
-import Interests from './pages/Interests';
+import Interests from './pages/interests';
 import Signup from './pages/Signup.jsx';
 import Landing from './pages/Landing';
 import UserPublicRoutes from './utils/UserPublicRoutes';

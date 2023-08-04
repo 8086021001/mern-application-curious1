@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import InitInterests from '../components/interests/InitInterests'
+import InitInterests from '../components/interests/init-interests'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateUserInterests, logginUserReset } from "../features/user/userSlice"
 import { setAuth } from '../features/auth/userAuth'
