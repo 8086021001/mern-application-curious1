@@ -14,7 +14,7 @@ const GoogleBut = () => {
     useEffect(() => {
         if (window.google) {
             google.accounts.id.initialize({
-                // client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+                client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
                 callback: handleGoogle,
             });
 
