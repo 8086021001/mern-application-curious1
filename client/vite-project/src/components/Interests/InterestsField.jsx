@@ -4,7 +4,7 @@ import axiosInstance from '../../baseAPI/axiosBaseURL';
 import { Buttontheme } from '../Theme/ButtonTheme';
 
 
-const InterestsField = ({ handleInterestSubmit }) => {
+const Interestsfield = ({ handleInterestSubmit }) => {
     const [interests, setInterests] = useState([]);
     const [selectedInterest, setSelectedInterest] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
@@ -105,4 +105,4 @@ const InterestsField = ({ handleInterestSubmit }) => {
     );
 };
 
-export default InterestsField;
+export default Interestsfield;
