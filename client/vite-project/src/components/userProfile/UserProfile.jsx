@@ -6,7 +6,7 @@ import { Edit } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
 import TransModal from '../Modal/TransModal';
 import UserModal from '../userModal/UserModal';
-import AddUserInterests from '../interests/addUserInterests';
+import AddUserInterests from '../interestscomp/addUserInterests';
 import { getUserInterest, setNewUserInterests } from '../../features/user/interestSlice';
 import { logginUserReset, updateUserInterests, userMessgeReset } from '../../features/user/userSlice';
 import { setAuth } from '../../features/auth/userAuth';
