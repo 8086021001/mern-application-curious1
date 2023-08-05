@@ -6,13 +6,14 @@ import { Edit } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
 import TransModal from '../Modal/TransModal';
 import UserModal from '../userModal/UserModal';
-import Adduserinterests from '../interestscomp/Adduserinterests';
+// import Adduserinterests from '../interestscomp/Adduserinterests';
 import { getUserInterest, setNewUserInterests } from '../../features/user/interestSlice';
 import { logginUserReset, updateUserInterests, userMessgeReset } from '../../features/user/userSlice';
 import { setAuth } from '../../features/auth/userAuth';
 import SnackBar from '../SnackBar/SnackBar';
 import BlogCards from '../PostCard/BlogCards';
 import { getUserBlogs } from '../../features/user/blogCreateSlice';
+import Adduserinterests from '../interestscomp/addUserInterests';
 
 
 
