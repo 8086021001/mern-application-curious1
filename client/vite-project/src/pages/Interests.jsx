@@ -5,7 +5,7 @@ import { updateUserInterests, logginUserReset } from "../features/user/userSlice
 import { setAuth } from '../features/auth/userAuth'
 import { Typography } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
-import InterestsField from '../components/interests/Interestsfield'
+import Interestsfield from '../components/interests/Interestsfield'
 
 const Interests = () => {
 
@@ -39,7 +39,7 @@ const Interests = () => {
     return (
         <>
             {errMsg && <Typography component="h6">{errMsg}</Typography>}
-            <InterestsField handleInterestSubmit={submitInterest} />
+            <Interestsfield handleInterestSubmit={submitInterest} />
         </>
     )
 }
