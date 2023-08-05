@@ -6,7 +6,7 @@ import { Edit } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
 import TransModal from '../Modal/TransModal';
 import UserModal from '../userModal/UserModal';
-import AddUserInterests from '../interestscomp/Adduserinterests';
+import Adduserinterests from '../interestscomp/Adduserinterests';
 import { getUserInterest, setNewUserInterests } from '../../features/user/interestSlice';
 import { logginUserReset, updateUserInterests, userMessgeReset } from '../../features/user/userSlice';
 import { setAuth } from '../../features/auth/userAuth';
@@ -18,7 +18,7 @@ import { getUserBlogs } from '../../features/user/blogCreateSlice';
 
 
 
-const UserProfile = () => {
+const Userprofile = () => {
     const userState = useSelector(state => state.authUser)
     const userTempState = useSelector(state => state.user)
     // console.log('temporary state for user', userTempState)
@@ -183,7 +183,7 @@ const UserProfile = () => {
 
                             <Typography variant="h6" sx={{ m: 1 }}>Interests: {userState?.authState?.interests?.length}</Typography>
 
-                            <AddUserInterests handleInterestchange={handleInterestInput} />
+                            <Adduserinterests handleInterestchange={handleInterestInput} />
                             <Box sx={{ m: 1, width: '20%' }}>
                                 <Button variant="contained" size="small" onClick={handleAddUserInterests}>
                                     Add
@@ -250,4 +250,4 @@ const UserProfile = () => {
     );
 };
 
-export default UserProfile;
+export default Userprofile;
