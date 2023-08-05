@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 const db = require('./database/dbConnection')
 require('dotenv').config()
-const cors = require('cors')
+// const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const path = require('path');
 const userRoutes = require('./routes/userRoutes')
@@ -18,14 +18,14 @@ const port = process.env.PORT
 const url = process.env.MongoDB_URL
 
 
-const corsOptions = {
-    origin: "http://localhost:5173",
-    credentials: true,
-    methods: ['GET', 'POST', 'PATCH','DELETE'],
-    optionSuccessStatus: 200,
-    allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'x-access-token','Cookie']
-}
-app.use(cors(corsOptions));
+// const corsOptions = {
+//     origin: "http://localhost:5173",
+//     credentials: true,
+//     methods: ['GET', 'POST', 'PATCH','DELETE'],
+//     optionSuccessStatus: 200,
+//     allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'x-access-token','Cookie']
+// }
+// app.use(cors(corsOptions));
 
 app.use(express.urlencoded({extended: true}))
 
