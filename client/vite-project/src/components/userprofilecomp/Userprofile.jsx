@@ -13,7 +13,7 @@ import { setAuth } from '../../features/auth/userAuth';
 import SnackBar from '../SnackBar/SnackBar';
 import BlogCards from '../PostCard/BlogCards';
 import { getUserBlogs } from '../../features/user/blogCreateSlice';
-import Adduserinterests from '../interestscomp/addUserInterests';
+import Adduserinterests from '../interestscomp/Adduserinterests';
 
 
 
