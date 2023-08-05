@@ -1,5 +1,5 @@
 import React from 'react'
-import "./styles.css";
+import "./particlestyles.css";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
 import { Typography } from '@mui/material';
