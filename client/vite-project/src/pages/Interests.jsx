@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import InitInterests from '../components/interests/Init-interests'
+// import InterestsField from '../components/interests/InterestsField'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateUserInterests, logginUserReset } from "../features/user/userSlice"
 import { setAuth } from '../features/auth/userAuth'
 import { Typography } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
+import InterestsField from '../components/interests/InterestsField'
 
 const Interests = () => {
 
@@ -38,7 +39,7 @@ const Interests = () => {
     return (
         <>
             {errMsg && <Typography component="h6">{errMsg}</Typography>}
-            <InitInterests handleInterestSubmit={submitInterest} />
+            <InterestsField handleInterestSubmit={submitInterest} />
         </>
     )
 }
