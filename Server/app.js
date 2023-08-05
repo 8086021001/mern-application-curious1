@@ -17,7 +17,6 @@ const io = require('./socket/socket')
 const port = process.env.PORT
 const url = process.env.MongoDB_URL
 
-
 const corsOptions = {
     origin: "*",
     credentials: true,
