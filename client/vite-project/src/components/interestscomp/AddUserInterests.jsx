@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserInterest } from '../../features/user/interestSlice'
 
-const AddUserInterests = ({ handleInterestchange }) => {
+const Adduserinterests = ({ handleInterestchange }) => {
 
     const [interestFields, setInterestFields] = useState([])
     const dispatch = useDispatch()
@@ -54,4 +54,4 @@ const AddUserInterests = ({ handleInterestchange }) => {
     )
 }
 
-export default AddUserInterests
+export default Adduserinterests
