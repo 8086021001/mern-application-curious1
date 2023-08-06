@@ -6,7 +6,6 @@ import { setAuth } from '../features/auth/userAuth'
 import { Typography } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import Interestsfield from '../components/interestscomp/Interestsfield'
-// import Interestsfield from '../components/interests/Interestsfield'
 
 const Interests = () => {
 

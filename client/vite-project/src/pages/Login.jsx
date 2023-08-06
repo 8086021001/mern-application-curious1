@@ -33,13 +33,13 @@ const Login = () => {
         if (loginState.success) {
             setLoader(false)
             const interestfield = loginState.user?.interests
-            if (loginState.user?.isVerified && interestfield.length > 0) {
+            if (loginState?.user?.isVerified && interestfield.length > 0) {
                 localStorage.setItem('user', JSON.stringify(loginState.user))
                 dispatch(setAuth())
                 dispatch(logginUserReset());
                 navigate('/user/home')
-            } else if (loginState.user?.isVerified && interestfield.length === 0) {
-                // dispatch(logginUserReset());
+            } else if (loginState?.user?.isVerified && interestfield.length === 0) {
+                dispatch(logginUserReset());
                 navigate("/interests")
             }
         }
