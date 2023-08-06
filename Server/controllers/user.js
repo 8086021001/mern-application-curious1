@@ -20,6 +20,56 @@ cloudinary.config({
 });
 
 
+const htmlcontent =`<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body {
+        background-color: #F0E68C;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    h1 {
+        text-align: center;
+        color: #4B0082;
+        font-size: 36px;
+        margin-top: 50px;
+    }
+    p {
+        text-align: center;
+        color: #4B0082;
+        font-size: 24px;
+        margin-top: 30px;
+    }
+    .button {
+        display: block;
+        width: 200px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #4B0082;
+        color: white;
+        text-align: center;
+        border-radius: 10px;
+        text-decoration: none;
+        font-size: 18px;
+        transition: all 0.5s;
+    }
+    .button:hover {
+        background-color: #F0E68C;
+        color: #4B0082;
+    }
+</style>
+<body>
+        <h1>Mail Verified</h1>
+        <p>Welcome to my website! I'm glad you're here. Let's explore together.</p>
+        <a href="#" class="button">Explore</a>
+    
+</body>
+</html>`;
+
 //SIGNUP
 
 const Signup = async(req,res)=>{
@@ -117,8 +167,8 @@ const verifyEmail = async (req, res) => {
   
       await User.updateOne({ _id: user._id}, {isVerified: true });
       await Token.findByIdAndRemove(token._id);
-      // res.send('mailverified.html')
-      res.json({message:"email verified sucessfully"});
+      res.send(htmlcontent)
+      // res.json({message:"email verified sucessfully"});
     } catch (error) {
       res.status(400).send({message:"An error occured"});
     }
