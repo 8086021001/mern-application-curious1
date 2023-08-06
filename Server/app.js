@@ -11,6 +11,7 @@ const paymentRoutes = require('./routes/paymentRoutes')
 const fs = require('fs');
 const chatRoutes = require('./routes/chatRoutes')
 const io = require('./socket/socket')
+const path = require('path')
 
 
 
@@ -31,6 +32,13 @@ app.use(express.urlencoded({extended: true}))
 app.use(express.json());
 
 app.use(express.static(path.join(__dirname, ('./public'))))
+
+app.set('view', path.join(__dirname, 'view'));
+app.set('view engine', 'html');
+
+
+
+
 
 
 app.use(cookieParser());

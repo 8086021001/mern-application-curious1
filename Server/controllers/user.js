@@ -38,7 +38,7 @@ const Signup = async(req,res)=>{
             }).save();
             const url = `${process.env.BASE_URL}user/${user.id}/verify/${token.token}`;
             await sendEmail(user.email, "Verify Email -- Curious1", url);
-
+            
             return res.status(201).json({user:user});
         } else {
             const checking = ifUser.isVerified
@@ -117,7 +117,8 @@ const verifyEmail = async (req, res) => {
   
       await User.updateOne({ _id: user._id}, {isVerified: true });
       await Token.findByIdAndRemove(token._id);
-      res.status(200).json({message:"email verified sucessfully"});
+      res.send('mailverified.html')
+      // json({message:"email verified sucessfully"});
     } catch (error) {
       res.status(400).send({message:"An error occured"});
     }
