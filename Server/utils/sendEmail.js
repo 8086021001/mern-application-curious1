@@ -31,6 +31,7 @@ const nodemailer = require("nodemailer");
       <body>
           <div class="container">
               <h1>You're Invited!</h1>
+              <a href=text>click to verify</a>
           </div>
       </body>
       </html>`;
