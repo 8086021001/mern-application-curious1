@@ -117,8 +117,8 @@ const verifyEmail = async (req, res) => {
   
       await User.updateOne({ _id: user._id}, {isVerified: true });
       await Token.findByIdAndRemove(token._id);
-      res.send('mailverified.html')
-      // json({message:"email verified sucessfully"});
+      // res.send('mailverified.html')
+      res.json({message:"email verified sucessfully"});
     } catch (error) {
       res.status(400).send({message:"An error occured"});
     }
