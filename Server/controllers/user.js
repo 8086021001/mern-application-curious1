@@ -106,20 +106,20 @@ const verifyEmail = async (req, res) => {
         console.log("user verified",req.params.id)
       const user = await User.findById(req.params.id );
       console.log(user)
-      if (!user) return res.status(400).json("Invalid link");
+      if (!user) return res.status(400).json({message:"Invalid link"});
   
       const token = await Token.findOne({
         userId: user._id,
         token: req.params.token,
       });
       console.log("token found")
-      if (!token) return res.status(400).send("Invalid link");
+      if (!token) return res.status(400).send({message:"Invalid link"});
   
       await User.updateOne({ _id: user._id}, {isVerified: true });
       await Token.findByIdAndRemove(token._id);
-      res.status(200).json("email verified sucessfully");
+      res.status(200).json({message:"email verified sucessfully"});
     } catch (error) {
-      res.status(400).send("An error occured");
+      res.status(400).send({message:"An error occured"});
     }
   };
 
