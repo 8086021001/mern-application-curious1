@@ -39,7 +39,7 @@ const Login = () => {
                 dispatch(logginUserReset());
                 navigate('/user/home')
             } else if (loginState.user?.isVerified && interestfield.length === 0) {
-                dispatch(logginUserReset());
+                // dispatch(logginUserReset());
                 navigate("/interests")
             }
         }
