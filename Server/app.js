@@ -17,6 +17,11 @@ const io = require('./socket/socket')
 const port = process.env.PORT
 const url = process.env.MongoDB_URL
 
+const allowedOrigins = [
+    'https://curious-one-in.netlify.app',
+    'https://curious1.vercel.app/'
+  ];
+
 const corsOptions = {
     origin: "https://curious-one-in.netlify.app",
     credentials: true,
@@ -24,7 +29,7 @@ const corsOptions = {
     optionSuccessStatus: 200,
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'x-access-token','Cookie']
 }
-app.use(cors({credentials: true , origin:'https://curious-one-in.netlify.app'}));
+app.use(cors({credentials: true , origin:allowedOrigins}));
 
 app.use(express.urlencoded({extended: true}))
 

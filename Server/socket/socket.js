@@ -10,7 +10,7 @@ const { ObjectId } = require('mongodb');
 const io = new Server({
     pingTimeout: 60000,
     cors: {
-      origin: process.env.CLIENT_URL,
+      origin:[process.env.CLIENT_URL,process.env.CLIENT_URL_2]
     },
   })
 
