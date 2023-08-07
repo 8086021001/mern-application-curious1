@@ -210,7 +210,6 @@ const login = async(req,res)=>{
                     return res.status(200).cookie('token', token, {
                         path: "/",
                         expires: new Date(Date.now() + 1000 * 36 * 1000),
-                        // httpOnly: true,
                         sameSite: 'none',
                         secure: true,
                     }).json({message: "Logged in!", user: user, token})
