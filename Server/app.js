@@ -24,7 +24,7 @@ const corsOptions = {
     optionSuccessStatus: 200,
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'x-access-token','Cookie']
 }
-app.use(cors({credentials: true , origin:'*'}));
+app.use(cors({credentials: true , origin:'https://curious-one-in.netlify.app'}));
 
 app.use(express.urlencoded({extended: true}))
 
