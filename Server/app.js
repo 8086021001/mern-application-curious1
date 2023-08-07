@@ -18,7 +18,7 @@ const port = process.env.PORT
 const url = process.env.MongoDB_URL
 
 const corsOptions = {
-    origin: "*",
+    origin: "https://curious-one-in.netlify.app",
     credentials: true,
     methods: ['GET', 'POST', 'PATCH','DELETE'],
     optionSuccessStatus: 200,
