@@ -18,13 +18,13 @@ const port = process.env.PORT
 const url = process.env.MongoDB_URL
 
 const corsOptions = {
-    origin: "https://curious-one-in.netlify.app/",
+    origin: "https://curious-one-in.netlify.app",
     credentials: true,
     methods: ['GET', 'POST', 'PATCH','DELETE'],
     optionSuccessStatus: 200,
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'x-access-token','Cookie']
 }
-app.use(cors(corsOptions));
+app.use(cors({credentials: true , origin:'*'}));
 
 app.use(express.urlencoded({extended: true}))
 
