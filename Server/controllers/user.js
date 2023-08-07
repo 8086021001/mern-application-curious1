@@ -211,7 +211,7 @@ const login = async(req,res)=>{
                         path: "/",
                         expires: new Date(Date.now() + 1000 * 36 * 1000),
                         httpOnly: true,
-                        sameSite: 'lax'
+                        sameSite: 'none'
                     }).json({message: "Logged in!", user: user, token})
                 } else {
                     return res.status(404).json({message: "Invalid password!"})
