@@ -212,7 +212,7 @@ const login = async(req,res)=>{
                         expires: new Date(Date.now() + 1000 * 36 * 1000),
                         sameSite: 'none',
                         secure: true,
-                        domain: 'curious-one-in.netlify.app'
+                        domain: '.curious-one-in.netlify.app'
                     }).json({message: "Logged in!", user: user, token})
                 } else {
                     return res.status(404).json({message: "Invalid password!"})
