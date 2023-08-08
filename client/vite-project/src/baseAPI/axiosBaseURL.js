@@ -27,12 +27,8 @@ axiosInstance.interceptors.response.use(
       localStorage.clear('user');
       
 
-      // If using cookies, clear them as well
-      // document.cookie = "your_cookie_name=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-
-      // Redirect the user to the login page or perform any other logout actions
-      // For example, if using React Router:
-      // window.location.href = "/login";
+      window.location.href = "/login";
+ 
     }
     return Promise.reject(error);
   }

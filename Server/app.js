@@ -29,7 +29,7 @@ const corsOptions = {
     optionSuccessStatus: 200,
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'x-access-token','Cookie']
 }
-app.use(cors({credentials: true , origin:allowedOrigins}));
+app.use(cors(corsOptions));
 
 app.use(express.urlencoded({extended: true}))
 
