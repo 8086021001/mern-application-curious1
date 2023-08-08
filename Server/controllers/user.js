@@ -213,7 +213,6 @@ const login = async(req,res)=>{
                         sameSite: 'none',
                         httpOnly:false,
                         secure: true,
-                        domain: '.curious-one-in.netlify.app'
                     }).json({message: "Logged in!", user: user, token})
                 } else {
                     return res.status(404).json({message: "Invalid password!"})
