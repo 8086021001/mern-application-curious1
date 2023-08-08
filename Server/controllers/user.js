@@ -211,6 +211,7 @@ const login = async(req,res)=>{
                         path: "/",
                         expires: new Date(Date.now() + 1000 * 36 * 1000),
                         sameSite: 'none',
+                        httpOnly:false,
                         secure: true,
                         domain: '.curious-one-in.netlify.app'
                     }).json({message: "Logged in!", user: user, token})
