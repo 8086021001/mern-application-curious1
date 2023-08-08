@@ -25,7 +25,7 @@ const allowedOrigins = [
 const corsOptions = {
     origin: "https://curious-one-in.netlify.app",
     credentials: true,
-    methods: ['GET', 'POST', 'PATCH','DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     optionSuccessStatus: 200,
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'x-access-token','Cookie']
 }
