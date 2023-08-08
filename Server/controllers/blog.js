@@ -28,7 +28,7 @@ const PostBlog = async(req,res)=>{
       const userId = req.id
       console.log(userId)
       const paths = req.file.path.slice(7)
-      const filepath = `http://localhost:5000/${paths}`
+      const filepath = `https://curiousone.online/${paths}`
   
     const {title,summary,tags} = req.body
   
