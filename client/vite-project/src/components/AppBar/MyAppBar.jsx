@@ -33,7 +33,6 @@ function MyAppBar() {
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
-    console.log(anchorElUser)
 
   };
 

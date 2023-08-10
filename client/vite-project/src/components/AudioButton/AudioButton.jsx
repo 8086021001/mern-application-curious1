@@ -30,13 +30,11 @@ const AudioButton = ({ handleAudio }) => {
 
 
     const handleAudioRecStart = () => {
-        console.log("Start audio recording...By giving permission");
         startRecording()
         setRecording(true)
     };
 
     const handleAudioRecStop = () => {
-        console.log("Stop audio recording...");
         stopRecording()
         setRecording(false);
     };
@@ -66,7 +64,6 @@ const AudioButton = ({ handleAudio }) => {
                 //invokes the start method to start the recording process
                 mediaRecorder.current.start();
                 let localAudioChunks = [];
-                console.log("stream data", mediaRecorder)
 
                 mediaRecorder.current.ondataavailable = (event) => {
                     if (typeof event.data === "undefined") return;
@@ -85,7 +82,6 @@ const AudioButton = ({ handleAudio }) => {
     const stopRecording = () => {
         setRecordingStatus("inactive");
         //stops the recording instance
-        console.log("stream data", mediaRecorder)
         stream.getTracks().forEach((track) => track.stop());
 
 
@@ -100,7 +96,6 @@ const AudioButton = ({ handleAudio }) => {
 
     useEffect(() => {
         if (audio !== null) {
-            console.log("my first audio url", audio)
             handleAudio(audio)
         }
 

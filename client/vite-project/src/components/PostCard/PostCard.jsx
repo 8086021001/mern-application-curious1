@@ -27,7 +27,6 @@ const PostCard = () => {
     }
 
 
-    console.log("my blogs are here its state", BlogState?.blogData)
     let success
     const savedDrafts = userAuthstate?.authState?.savedBlogs
 
@@ -43,7 +42,6 @@ const PostCard = () => {
         dispatch(getSearchContent(value))
     }
     const handleLikeButton = (userId, blogId) => {
-        console.log(userId, blogId)
         const data = {
             userId: userId,
             blogId: blogId
@@ -82,7 +80,6 @@ const PostCard = () => {
                     {(Array.isArray(BlogState.blogData) && BlogState.blogData !== 0 && BlogState?.searchBlogs?.length === 0) && BlogState.blogData.map((blog) => {
                         return (
                             <div key={blog?._id}>
-                                {console.log("heyyyyyyyyyyyyyyyyyyyyyyhere ", blog)}
                                 <Card className="post-card" sx={{ display: 'flex', alignItems: 'center', marginBottom: '12px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1, 0.3)' }}>
                                     <CardMedia component="img" image={blog?.coverImage} title={blog?.title} className="post-card-media" onClick={() => handleViewBlog(blog?._id)} sx={{ width: '30%', minWidth: '200px', marginRight: '16px', borderRadius: '8px 0 0 8px', objectFit: 'cover', padding: 2 }} />
                                     <CardContent className="post-card-content" sx={{ flex: 1 }}>

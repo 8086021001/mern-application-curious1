@@ -20,7 +20,6 @@ axiosInstance.interceptors.response.use(
   (error) => {
     // Handle error responses
     if (error.response && error.response.status === 401) {
-      console.log("herea at logout")
       // If the response status is 401 (Unauthorized), log out the user
       document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 

@@ -16,10 +16,8 @@ const Interests = () => {
     })
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    console.log(userState)
 
     const submitInterest = (selectedInterest) => {
-        console.log(" in parent", selectedInterest)
         dispatch(updateUserInterests(selectedInterest))
     }
 

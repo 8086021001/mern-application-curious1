@@ -42,7 +42,6 @@ const UserProfileView = ({ usedData }) => {
 
 
     const handleMeetRequest = (meetUserId) => {
-        console.log("userid of the meet", meetUserId)
         dispatch(scheduleVideoCall(meetUserId))
     }
 

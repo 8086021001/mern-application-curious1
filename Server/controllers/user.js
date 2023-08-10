@@ -78,7 +78,6 @@ const Signup = async(req,res)=>{
         const ifUser = await User.findOne({
             email: req.body.email
         });
-        console.log("hellooo is user there",ifUser)
         if (! ifUser) {
             const user = new User(req.body);
             await user.save();
@@ -129,7 +128,6 @@ const googelSignup = async (req,res)=>{
         }).save()
         checkgUser = newuser
       }
-      console.log(checkgUser)
 
     const token = jwt.sign({
         id: checkgUser._id
@@ -153,16 +151,13 @@ const googelSignup = async (req,res)=>{
 
 const verifyEmail = async (req, res) => {
     try {
-        console.log("user verified",req.params.id)
       const user = await User.findById(req.params.id );
-      console.log(user)
       if (!user) return res.status(400).json({message:"Invalid link"});
   
       const token = await Token.findOne({
         userId: user._id,
         token: req.params.token,
       });
-      console.log("token found")
       if (!token) return res.status(400).send({message:"Invalid link"});
   
       await User.updateOne({ _id: user._id}, {isVerified: true });
@@ -180,7 +175,6 @@ const login = async(req,res)=>{
         try {
             const user = await User.findOne({email: req.body.email});
             if (user && user.isVerified) {
-                console.log("user available")
                 let comparePassword
                 try {
                     comparePassword = await bcrypt.compare(req.body.password, user.password)
@@ -356,7 +350,6 @@ try {
 
   const userFieldUpdate = async(req,res)=>{
     try {
-      console.log("just for form",req.body)
       const userId = req.id
       const userUpdate = await User.findByIdAndUpdate(userId,req.body, { new: true })
       if (req.body.password) {

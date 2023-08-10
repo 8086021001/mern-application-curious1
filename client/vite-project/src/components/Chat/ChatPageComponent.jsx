@@ -56,7 +56,6 @@ const ChatPageComponent = () => {
 
     const handleMediaUploadClick = (mediaFile) => {
         if (mediaFile) {
-            console.log('Uploading media...', mediaFile);
             setImageFile(mediaFile)
 
         }
@@ -64,7 +63,6 @@ const ChatPageComponent = () => {
     };
 
     const handleEmojiClick = () => {
-        console.log('Opening emoji picker...');
     };
 
 
@@ -83,7 +81,6 @@ const ChatPageComponent = () => {
             //   console.log("Received message:", messageData);
             // //   displayReceivedMessage(messageData);
             // }
-            console.log("Received message:", messageData);
             setfetchedMessages(prevState => [...prevState, messageData])
 
         });
@@ -128,7 +125,7 @@ const ChatPageComponent = () => {
             formData.append('content', audio)
             formData.append('isAudio', true)
             for (const [key, value] of formData.entries()) {
-                console.log(key, value);
+                // console.log(key, value);
             }
             dipatch(sendAudio(formData))
             setAudioData(formData)

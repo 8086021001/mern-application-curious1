@@ -16,12 +16,10 @@ const FriendsListPage = () => {
     const navigate = useNavigate()
 
     const handleFollowRequest = (userId) => {
-        console.log(userId)
         dispatch(followUser(userId))
     }
 
     const viewUserProfileData = (userProfileData) => {
-        console.log(userProfileData)
         navigate('/user/viewUsersProfile', { state: { userProfileData } })
     }
 

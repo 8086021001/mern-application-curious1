@@ -61,7 +61,6 @@ const EditMyBlog = ({ blog }) => {
     // }
 
     if (!isValid) {
-      console.log('Validation errors:', errors);
       Object.values(errors).forEach((errorMsg) => {
         toast.warning(errorMsg);
       });
@@ -81,7 +80,7 @@ const EditMyBlog = ({ blog }) => {
     }
 
     for (let [key, value] of EditblogData.entries()) {
-      console.log(key, value);
+      // console.log(key, value);
     }
     dispatch(editMyBlog(EditblogData))
   }

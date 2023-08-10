@@ -84,7 +84,6 @@ const audioMessage = async (req,res)=>{
              const filename = generateUniqueName(originalname)
      
              const audioUrl = await audioUplodertoCloudinary(filename,buffer)
-             console.log(audioUrl)
      
              if(audioUrl){
                  const newAudioMessage = new messageSchema({

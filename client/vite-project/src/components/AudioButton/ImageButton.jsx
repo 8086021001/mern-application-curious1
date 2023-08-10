@@ -17,7 +17,6 @@ const ImageButton = ({ handleImageUploading }) => {
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
         if (file) {
-            console.log('Selected image:', file);
             setFileState(fileState)
             handleImageUploading(file)
             setFileState(null)

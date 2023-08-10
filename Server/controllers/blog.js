@@ -26,7 +26,6 @@ const PostBlog = async(req,res)=>{
   try {
 
       const userId = req.id
-      console.log(userId)
       const paths = req.file.path.slice(7)
       const filepath = `https://curiousone.online/${paths}`
   
@@ -40,7 +39,6 @@ const PostBlog = async(req,res)=>{
         
         const tagArray = tags.split(',')
         const taggings = await InterestSchema.find({ name: { $in: tagArray } })
-        console.log("my taggings in blog",taggings)
 
         const interestIds = taggings.map(interest => interest._id);
 
@@ -346,7 +344,6 @@ async function processAndSaveImages(content) {
 
   const getBlogComment = async(req,res)=>{
    
-      console.log("here is the blog idddd",req.params)
       const blogID = req.params.blogId
       const pipeline = [
         {
@@ -397,13 +394,11 @@ async function processAndSaveImages(content) {
       
 
       const commentData = await BlogPost.aggregate(pipeline)
-      console.log("here is the comment dataa",commentData)
 
 
       if(commentData.length>0){
         const dataComments = commentData[0].comments
 
-        console.log("here is the comment data",dataComments)
         res.status(200).json({comments:dataComments})
       }else{
         res.status(400).json({message:"Failed! please refresh"})
@@ -514,9 +509,8 @@ async function processAndSaveImages(content) {
       const {blogId} = req.body.content
       const userId = req.id
       const blogDetails = await BlogPost.findById(blogId)
-      console.log("checking with the likes")
       if(!blogDetails.likes.some(like=>like.user.equals(new ObjectId(userId)))){
-        console.log("checking with the likes",blogDetails.likes.some(like=>like.user.equals(new ObjectId(userId))))
+        // console.log("checking with the likes",blogDetails.likes.some(like=>like.user.equals(new ObjectId(userId))))
 
               const blogData = await BlogPost.findByIdAndUpdate(blogId, {
         $push: { likes: { user: userId } },
