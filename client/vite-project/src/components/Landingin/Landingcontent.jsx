@@ -12,6 +12,7 @@ const Landingcontent = () => {
                     sx={{
                         fontWeight: 'bold',
                         fontSize: { xs: 'h4.fontSize', sm: 'h3.fontSize', md: 'h2.fontSize' },
+                        borderBottom: 2
                     }}
                 >
                     Stay curious.
