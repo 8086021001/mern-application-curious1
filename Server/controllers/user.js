@@ -65,7 +65,7 @@ const htmlcontent =`<!DOCTYPE html>
 <body>
         <h1>Mail Verified</h1>
         <p>Welcome to my website! I'm glad you're here. Let's explore together.</p>
-        <a href="#" class="button">Explore</a>
+        <a href="https://curious-one-in.netlify.app/" class="button">Explore</a>
     
 </body>
 </html>`;
