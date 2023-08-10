@@ -54,7 +54,7 @@ const CommentBox = ({ blog }) => {
                 <Typography variant="h4"> Comments</Typography>
                 <Box display="flex" flexDirection="row">
                     <Avatar alt="Remy Sharp" src="/" sx={{ margin: 2 }} />
-                    <button className='iconButton'
+                    {/* <button className='iconButton'
                         onClick={() => setShowEmojis(!showEmojis)}
                     >
                         <svg
@@ -71,7 +71,7 @@ const CommentBox = ({ blog }) => {
                                 d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                             />
                         </svg>
-                    </button>
+                    </button> */}
                     {showEmojis && (
                         <div>
                             {/* <Picker onSelect={addEmoji} /> */}
