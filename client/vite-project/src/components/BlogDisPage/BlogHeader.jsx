@@ -15,7 +15,7 @@ const BlogHeader = ({ blog }) => {
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center',
                     marginTop: 4,
-                    backgroundImage: `url(${blog?.coverImage.replace('\\', '/').replace(' ', '%20')})`
+                    backgroundImage: `url(${blog?.coverImage})`
                 }}
             >
                 {/* <img src={blog.coverImage} alt='/ser' /> */}
