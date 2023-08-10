@@ -30,7 +30,6 @@ const BlogPage = () => {
                         <div>
                             <BlogHeader blog={blogstate?.blog} />
                             <Box sx={{ m: 4 }}>
-                                {console.log("This is blog i m looking for", blogstate?.blog)}
                                 <Paper sx={{ marginTop: 2, marginRight: 3, marginBottom: 4, marginLeft: 5 }}>
                                     <Box sx={{ marginTop: 8, marginRight: 3, marginBottom: 4, marginLeft: 5 }}>
 

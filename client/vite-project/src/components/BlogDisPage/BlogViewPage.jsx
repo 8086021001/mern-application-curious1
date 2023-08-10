@@ -13,7 +13,6 @@ const BlogViewPage = () => {
     return (
         <>
             <Grid xs={12} md={8} lg={8}>
-                {console.log("blogs in this ", blog)}
                 <BlogHeader blog={blog} />
                 <Box sx={{ m: 5 }}>
                     <Paper sx={{ marginTop: 2, marginRight: 3, marginBottom: 4, marginLeft: 5 }}>
