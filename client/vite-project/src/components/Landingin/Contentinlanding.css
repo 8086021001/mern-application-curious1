@@ -1,0 +1,29 @@
+
+.content-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 90vh;
+    background: #ffffff;
+}
+
+.centered-content {
+    text-align: center;
+}
+
+.blinking-question-marks span,
+.blinking-question-marks2 span {
+    font-size: 48px;
+    font-weight: 800;
+    animation: blink-animation 1.5s infinite;
+    opacity: 0;
+}
+
+@keyframes blink-animation {
+    0%, 100% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+}

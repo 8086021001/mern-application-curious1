@@ -47,8 +47,7 @@ const CommentsDisplayBox = ({ comments }) => {
                                         </Box>
                                     </ListItem>
                                 ))}
-                                {/* {loading && <CircularProgress />} */}
-                                {/* {!loading && !hasMore && <p>No more comments</p>} */}
+
                             </List>
 
                         </Paper>

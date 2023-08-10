@@ -72,7 +72,7 @@ const BlogCards = ({ Blogs, savedBlogs, myBlogs }) => {
                     });
                     return (
 
-                        <CardActionArea sx={{ margin: 3 }} key={blog._id}>
+                        <CardActionArea sx={{ margin: 2 }} key={blog._id}>
 
                             <Card sx={{ display: 'flex' }} >
                                 <CardContent sx={{ flex: 1 }} onClick={() => handleShowBlog(blog)} >
