@@ -186,7 +186,6 @@ function CreateBlog() {
             return Object.keys(userObject).length > 0;
         }
         const isuserObjectEmpty = isObjectNotEmpty(userObject)
-        console.log("is it empty", isuserObjectEmpty)
 
         if (BlogState.success && isuserObjectEmpty) {
             localStorage.setItem('user', JSON.stringify(BlogState.user))
@@ -224,7 +223,7 @@ function CreateBlog() {
                                 </Box>
                                 <Box display={'flex'} alignItems={'flex-end'} >
                                     <Box >
-                                        <Button onClick={savingBlogAsDraft} sx={{ border: '1px solid black' }}>Save Chnages</Button>
+                                        <Button onClick={savingBlogAsDraft} sx={{ border: '1px solid black' }}>Save Changes</Button>
                                     </Box>
                                 </Box>
                             </Box>
@@ -289,11 +288,11 @@ function CreateBlog() {
                                         </FormControl>
 
 
-                                        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                            <Button type="button" variant="contained" color="primary" onClick={handlePreview} sx={{ ml: 2 }}>
+                                        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                                            {/* <Button type="button" variant="contained" color="primary" onClick={handlePreview} sx={{ ml: 2 }}>
                                                 Preview
-                                            </Button>
-                                            <Button type="submit" variant="contained" color="primary" sx={{ ml: 2 }}>
+                                            </Button> */}
+                                            <Button type="submit" variant="contained" color="primary" sx={{ ml: 2, width: '30%' }}>
                                                 Submit
                                             </Button>
                                         </Box>

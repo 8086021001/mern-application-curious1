@@ -122,7 +122,7 @@ const ChatUserList = () => {
                 <Box>
 
 
-                    <List sx={{ width: '100%', maxWidth: 300, }}>
+                    <List sx={{ width: '100%', maxWidth: 250, }}>
                         {searchUsers && searchUsers.length > 0 &&
                             searchUsers.map((users) => (
 
@@ -141,19 +141,19 @@ const ChatUserList = () => {
                                     </ListItemAvatar>
                                     <ListItemText
                                         primary={users.name}
-                                        secondary={
-                                            <>
-                                                <Typography
-                                                    sx={{ display: 'inline' }}
-                                                    component="span"
-                                                    variant="body2"
-                                                    color="text.primary"
-                                                >
-                                                    online
-                                                </Typography>
+                                    // secondary={
+                                    //     <>
+                                    //         <Typography
+                                    //             sx={{ display: 'inline' }}
+                                    //             component="span"
+                                    //             variant="body2"
+                                    //             color="text.primary"
+                                    //         >
+                                    //             online
+                                    //         </Typography>
 
-                                            </>
-                                        }
+                                    //     </>
+                                    // }
                                     />
 
                                 </ListItem>
@@ -178,19 +178,19 @@ const ChatUserList = () => {
                                     </ListItemAvatar>
                                     <ListItemText
                                         primary={users.name}
-                                        secondary={
-                                            <>
-                                                <Typography
-                                                    sx={{ display: 'inline' }}
-                                                    component="span"
-                                                    variant="body2"
-                                                    color="text.primary"
-                                                >
-                                                    online
-                                                </Typography>
+                                    // secondary={
+                                    //     <>
+                                    //         <Typography
+                                    //             sx={{ display: 'inline' }}
+                                    //             component="span"
+                                    //             variant="body2"
+                                    //             color="text.primary"
+                                    //         >
+                                    //             online
+                                    //         </Typography>
 
-                                            </>
-                                        }
+                                    //     </>
+                                    // }
                                     />
 
                                 </ListItem>
