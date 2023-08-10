@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import MailIcon from '@mui/icons-material/Mail';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -13,9 +15,9 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 const items = [
-  { text: 'Dashboard', icon: <DashboardIcon /> },
-  { text: 'Inbox', icon: <MailIcon /> },
-  { text: 'Settings', icon: <SettingsIcon /> },
+  { text: 'Your requests', icon: <DashboardIcon />, path: '/user/meetReq' },
+  { text: 'chats', icon: <MailIcon />, path: '/user/chat' },
+  { text: 'Settings', icon: <SettingsIcon />, path: '/user/stories' },
 ];
 
 const Sidebar = ({ sidebarWidth, appBarHeight, sidebarColor, textColor }) => {
@@ -42,7 +44,7 @@ const Sidebar = ({ sidebarWidth, appBarHeight, sidebarColor, textColor }) => {
       >
         <List style={{ backgroundColor: sidebarColor, height: `calc(100% - ${appBarHeight}px)` }}>
           {items.map((item, index) => (
-            <ListItem button key={index}>
+            <ListItem button component={Link} to={item.path} key={index}>
               <ListItemIcon style={{ color: textColor }}>{item.icon}</ListItemIcon>
               <ListItemText primary={item.text} style={{ color: textColor }} />
             </ListItem>
