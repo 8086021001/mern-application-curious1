@@ -9,7 +9,7 @@ const BlogHeader = ({ blog }) => {
                 sx={{
                     position: 'relative',
                     backgroundColor: 'grey.800',
-                    color: '#fff',
+                    // color: '#fff',
                     mb: 4,
                     backgroundSize: 'cover',
                     backgroundRepeat: 'no-repeat',
