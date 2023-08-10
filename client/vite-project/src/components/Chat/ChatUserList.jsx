@@ -122,7 +122,7 @@ const ChatUserList = () => {
                 <Box>
 
 
-                    <List sx={{ width: '90%', maxWidth: 250, }}>
+                    <List sx={{ width: '90%' }}>
                         {searchUsers && searchUsers.length > 0 &&
                             searchUsers.map((users) => (
 
