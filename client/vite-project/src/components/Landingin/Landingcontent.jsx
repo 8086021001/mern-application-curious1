@@ -4,7 +4,7 @@ import './Contentinlanding.css';
 
 const Landingcontent = () => {
     return (
-        <Box className="content-container">
+        <Box className="content-container" sx={{ backgroundColor: '#fcba03' }}>
             {/* Centered Content */}
             <div className="centered-content">
                 <Typography

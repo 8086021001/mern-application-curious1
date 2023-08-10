@@ -16,7 +16,7 @@ const Landingnav = () => {
 
     return (
         <AppBar position="static" style={{ backgroundColor: '#fcba03', height: '80px', borderBottom: 3 }}>
-            <Toolbar>
+            <Toolbar sx={{ borderBottom: 5 }}>
                 <Grid sx={{ flexGrow: 1 }}>
                     <Typography variant="h3" style={{ color: 'black' }}>
                         ? Curious
