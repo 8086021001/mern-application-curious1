@@ -128,7 +128,7 @@ function MyAppBar() {
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          {/* <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} /> */}
           <Typography
             variant="h5"
             noWrap
@@ -145,7 +145,7 @@ function MyAppBar() {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            ? Curious
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, mx: 20 }}>
             {pages.map((page) => (
