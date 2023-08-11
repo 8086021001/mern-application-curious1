@@ -68,7 +68,6 @@ function App() {
             <Route path='meetReq' element={<MeetRequestPage />} />
             <Route path='vc/:id' element={<VideoCallRoom />} />
             <Route path='wallet' element={<UserWallet />} />
-
           </Route >
 
           <Route path='*' element={<Notfound />} />

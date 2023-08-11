@@ -46,8 +46,6 @@ const Adduserinterests = ({ handleInterestchange }) => {
                         />
                     )}
                 >
-
-
                 </Autocomplete>
             </Stack>
         </>

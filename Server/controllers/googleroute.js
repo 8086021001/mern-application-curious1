@@ -7,7 +7,6 @@ const User = require('../models/userSchema')
 const googleAuth = async (req,res)=>{
     try {
         console.log('in google auth route')
-        
         const { token }  = req.body
         console.log(token)
         const ticket = await client.verifyIdToken({

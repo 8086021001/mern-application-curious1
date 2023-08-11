@@ -133,10 +133,11 @@ const googelSignup = async (req,res)=>{
         id: checkgUser._id
     }, jwtSecretKey, {expiresIn: "30hr"})
     return res.status(201).cookie("token", token, {
-        path: "/",
-        expires: new Date(Date.now() + 1000 * 36 * 1000),
-        httpOnly: true,
-        sameSite: 'lax'
+      path: "/",
+      expires: new Date(Date.now() + 1000 * 36 * 1000),
+      sameSite: 'none',
+      httpOnly:false,
+      secure: true,
     }).json({message: "Signup was successful", user: checkgUser, token})
     }
     
