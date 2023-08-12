@@ -5,6 +5,7 @@ import ImageResize from 'quill-image-resize';
 import Quill from 'quill';
 import { useDispatch, useSelector } from 'react-redux';
 import { setContent } from '../../features/user/blogCreateSlice';
+import { Grid } from '@mui/material';
 
 
 Quill.register('modules/imageResize', ImageResize);
