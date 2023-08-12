@@ -13,37 +13,32 @@ Quill.register('modules/imageResize', ImageResize);
 
 const modules = {
     toolbar: [
+        [{ font: [] }],
         [{ header: [1, 2, 3, 4, 5, 6, false] }],
-        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-        ['image', 'code-block'],
-        [
-            { list: 'ordered' },
-            { list: 'bullet' },
-            { indent: '-1' },
-            { indent: '+1' },
-        ],
-        ['link', 'image', 'video'],
-        ['clean'],
-        [{ 'align': [] }],
-        [{ 'color': [] }, { 'background': [] }],
-        [{ 'font': [] }],
-        [{ 'size': [] }],
-        ['width', 'height', 'float'],
+        ["bold", "italic", "underline", "strike"],
+        [{ color: [] }, { background: [] }],
+        [{ script: "sub" }, { script: "super" }],
+        ["blockquote", "code-block"],
+        [{ list: "ordered" }, { list: "bullet" }],
+        [{ indent: "-1" }, { indent: "+1" }, { align: [] }],
+        ["link", "image", "video"],
+        ["clean"],
     ],
+    imageResize: {
+        modules: ['Resize', 'DisplaySize', 'Toolbar'],
+        displayStyles: {
+            backgroundColor: 'black',
+            border: 'none',
+            color: 'white',
+        },
+        toolbarStyles: {
+            backgroundColor: 'black',
+            border: 'none',
+            color: 'white',
+        },
+    },
+
 }
-const formats = [
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "blockquote",
-    "list",
-    "bullet",
-    "indent",
-    "link",
-    "image"
-];
 
 
 const Editor = () => {
@@ -58,15 +53,14 @@ const Editor = () => {
     };
 
     return (
-        <div>
+        <Grid sx={{ maxWidth: '100%', padding: '0 15px' }}>
             <ReactQuill
                 value={BlogContState?.content}
-                modules={{ ...modules, imageResize: {} }}
-                formats={formats}
+                modules={modules}
                 onChange={(e) => { handleProcedureContentChange(e) }}
             >
             </ReactQuill>
-        </div>
+        </Grid>
     )
 }
 
