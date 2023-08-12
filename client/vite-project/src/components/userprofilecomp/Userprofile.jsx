@@ -51,6 +51,8 @@ const UserProfile = () => {
         if (addNewInterestValue) {
 
             dispatch(setNewUserInterests(addNewInterestValue))
+            setaddInterestValue('')
+
         }
     }
     useEffect(() => {
