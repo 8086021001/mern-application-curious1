@@ -31,7 +31,7 @@ const Adduserinterests = ({ handleInterestchange }) => {
                 <Autocomplete
                     multiple
                     id="tags-outlined"
-                    options={interestsState?.interests}
+                    options={interestsState?.interests ?? []}
                     getOptionLabel={(option) => option?.name}
                     value={selectedOptions}
                     onChange={handleChange}

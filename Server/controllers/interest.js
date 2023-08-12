@@ -27,7 +27,9 @@ const addNewInterests = async(req,res)=>{
             //     { $push: { interests: newInterestField._id } },
             //     { new: true }
             //   ); 
-               return res.status(200).json({message:'Fields Added succesfully'})
+            const allInterestFields = await InterestModal.find({})
+
+               return res.status(200).json({fileds:allInterestFields,message:'Fields Added succesfully'})
             }
            return res.status(409).json({message:"Field already available"})
 

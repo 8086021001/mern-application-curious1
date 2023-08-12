@@ -6,7 +6,8 @@ import { Edit } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
 import TransModal from '../Modal/TransModal';
 import UserModal from '../userModal/UserModal';
-// import Adduserinterests from '../interestscomp/Adduserinterests';
+import Adduserinterests from '../interestscomp/addUserInterests';
+
 import { getUserInterest, setNewUserInterests } from '../../features/user/interestSlice';
 import { logginUserReset, updateUserInterests, userMessgeReset } from '../../features/user/userSlice';
 import { setAuth } from '../../features/auth/userAuth';
@@ -89,7 +90,7 @@ const UserProfile = () => {
                 }
                 {
                     interestState.message &&
-                    <SnackBar message={interestState.message} severity={'warning'} />
+                    <SnackBar message={interestState.message} severity={'success'} />
 
                 }
                 <Box className='ProfileHeader' textalign="center">
@@ -178,20 +179,20 @@ const UserProfile = () => {
                     </Grid>
 
                     <Grid item xs={4} display={'flex'} justifyContent={'center'}>
-                        {/* <Container sx={{ alignItems: 'center', minWidth: '60%' }} > */}
-                        <Grid display={'flex'} flexDirection={'column'} justifyContent={'center'} alignItems={'center'} minWidth={'60%'}>
+                        <Container sx={{ alignItems: 'center', minWidth: '60%' }} >
+                            <Grid display={'flex'} flexDirection={'column'} justifyContent={'center'} alignItems={'center'} minWidth={'60%'}>
 
-                            <Typography variant="h6" sx={{ m: 1 }}>Interests: {userState?.authState?.interests?.length}</Typography>
+                                <Typography variant="h6" sx={{ m: 1 }}>Interests: {userState?.authState?.interests?.length}</Typography>
 
-                            {/* <Adduserinterests handleInterestchange={handleInterestInput} /> */}
-                            <Box sx={{ m: 1, width: '20%' }}>
-                                <Button variant="contained" size="small" onClick={handleAddUserInterests}>
-                                    Add
-                                </Button>
-                            </Box>
-                        </Grid>
+                                <Adduserinterests handleInterestchange={handleInterestInput} />
+                                <Box sx={{ m: 1, width: '20%' }}>
+                                    <Button variant="contained" size="small" onClick={handleAddUserInterests}>
+                                        Add
+                                    </Button>
+                                </Box>
+                            </Grid>
 
-                        {/* </Container> */}
+                        </Container>
                     </Grid>
                 </Grid>
             </Grid>
