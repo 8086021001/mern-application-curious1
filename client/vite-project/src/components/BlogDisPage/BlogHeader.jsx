@@ -26,7 +26,7 @@ const BlogHeader = ({ blog }) => {
                         bottom: 0,
                         right: 0,
                         left: 0,
-                        backgroundColor: 'rgba(0,0,0,.3)',
+                        // backgroundColor: 'rgba(0,0,0,.3)',
                     }}
                 />
                 <Grid container>
@@ -36,10 +36,10 @@ const BlogHeader = ({ blog }) => {
                             p: { xs: 3, md: 6 },
                             pr: { md: 0 },
                         }}>
-                            <Typography component="h1" variant="h3" color="inherit" gutterBottom>
+                            <Typography className='TitleBlock' component="h1" variant="h3" color="inherit" gutterBottom>
                                 {blog.title}
                             </Typography>
-                            <Typography variant="h5" color="inherit" paragraph>
+                            <Typography className='SummaryBlock' variant="h5" color="inherit" paragraph>
                                 {blog.summary}
                             </Typography>
                         </Box>

@@ -2,3 +2,11 @@
     max-width: 100%;
     height: auto;
   }
+
+  .TitleBlock{
+    filter: drop-shadow(10px 8px 6px #f2fb76);
+  }
+  .SummaryBlock{
+    filter: drop-shadow(10px 8px 6px #f2fb76);
+
+  }
