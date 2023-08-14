@@ -30,7 +30,7 @@ const BlogHeader = ({ blog }) => {
                     }}
                 />
                 <Grid container>
-                    <Grid item md={6}>
+                    <Grid item md={8}>
                         <Box sx={{
                             position: 'relative',
                             p: { xs: 3, md: 6 },
