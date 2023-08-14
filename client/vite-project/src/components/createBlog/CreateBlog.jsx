@@ -195,7 +195,9 @@ function CreateBlog() {
             localStorage.setItem('user', JSON.stringify(BlogState.user))
             dispatch(resetBlogState())
             toast.success('Hurray!Blog published!')
-            navigate('/user/home')
+            setTimeout(() => {
+                navigate('/user/home')
+            }, 1000)
         }
 
     }, [BlogState.createSuccess])
@@ -289,7 +291,6 @@ function CreateBlog() {
                                         </FormControl>
                                         <FormControl fullWidth sx={{ m: 2 }}>
                                             {!EditDraftblog ? <Editor /> : <EditEditor />}
-
                                         </FormControl>
 
 
