@@ -1,11 +1,11 @@
 import { Grid, Paper, Typography } from '@mui/material'
-import { Box } from '@mui/system'
+import { Box, Container } from '@mui/system'
 import React from 'react'
 
 const BlogHeader = ({ blog }) => {
     return (
         <>
-            <Paper
+            <Container
                 sx={{
                     position: 'relative',
                     backgroundColor: 'grey.800',
@@ -18,7 +18,7 @@ const BlogHeader = ({ blog }) => {
                     backgroundImage: `url(${blog?.coverImage})`
                 }}
             >
-                {/* <img src={blog.coverImage} alt='/ser' /> */}
+                {/* <img src={blog?.coverImage} alt='/ser' /> */}
                 <Box
                     sx={{
                         position: 'absolute',
@@ -47,7 +47,7 @@ const BlogHeader = ({ blog }) => {
 
                 </Grid>
 
-            </Paper >
+            </Container >
         </>
     )
 }

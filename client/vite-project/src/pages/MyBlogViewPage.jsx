@@ -10,7 +10,7 @@ const MyBlogViewPage = ({ blog }) => {
                 <BlogViewPage blog={blog} />
             </div>
         </>
-    )
+)
 }
 
 export default MyBlogViewPage
