@@ -13,7 +13,7 @@ const BlogHeader = ({ blog }) => {
                     mb: 4,
                     backgroundSize: 'contain',
                     backgroundRepeat: 'no-repeat',
-                    backgroundPosition: 'center',
+                    backgroundPosition: 'center center',
                     marginTop: 4,
                     backgroundImage: `url(${blog?.coverImage})`
                 }}
