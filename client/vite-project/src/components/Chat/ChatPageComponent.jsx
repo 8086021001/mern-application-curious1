@@ -274,7 +274,7 @@ const ChatPageComponent = () => {
                                                 }
                                                 {message?.isImage === true && (
                                                     <div>
-                                                        <img src={message.content} alt="Image" style={{ maxWidth: '100%', height: 'auto' }} />
+                                                        <img src={message.content} alt="Image" style={{ width: '200px', height: '150px' }} />
                                                     </div>
                                                 )
 
