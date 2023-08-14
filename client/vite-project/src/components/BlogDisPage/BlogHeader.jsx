@@ -11,7 +11,7 @@ const BlogHeader = ({ blog }) => {
                     backgroundColor: 'grey.800',
                     // color: '#fff',
                     mb: 4,
-                    backgroundSize: 'contain',
+                    backgroundSize: 'cover',
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center',
                     marginTop: 4,
