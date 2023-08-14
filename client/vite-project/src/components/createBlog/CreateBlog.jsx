@@ -135,8 +135,11 @@ function CreateBlog() {
         blogData.append('tags', BlogState.tags)
 
         const file = fileInput.current.files[0];
-        if (file) {
+        if (file && file.type.startsWith('image/')) {
             blogData.append('coverImage', file, file?.name);
+        } else {
+            toast.error("Ivalid image format!");
+
         }
 
         dispatch(createBlog(blogData))
