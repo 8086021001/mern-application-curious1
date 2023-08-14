@@ -10,6 +10,7 @@ const initialState = {
     content: '',
     tags: [],
     loading:false,
+    createSuccess:false,
     success:false,
     user:{},
     message:'',
@@ -229,7 +230,7 @@ const blogCreateSlice = createSlice({
         })
         builder.addCase(createBlog.fulfilled,(state,action)=>{
             state.loading = false;
-            state.success = true;
+            state.createSuccess = true;
             state.user = action.payload?.user;
             state.message = action.payload?.message
         })

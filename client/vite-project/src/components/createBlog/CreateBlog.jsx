@@ -13,6 +13,7 @@ import BlogDraftPages from './BlogDraftPages';
 import ChevronRightOutlinedIcon from '@mui/icons-material/ChevronRightOutlined';
 import { useNavigate } from 'react-router-dom';
 import EditEditor from '../ReactQuill/EditEditor';
+import BlogCreateLoader from '../BlogLoaders/BlogCreateLoader';
 
 
 
@@ -187,13 +188,14 @@ function CreateBlog() {
         }
         const isuserObjectEmpty = isObjectNotEmpty(userObject)
 
-        if (BlogState.success && isuserObjectEmpty) {
+        if (BlogState.createSuccess && isuserObjectEmpty) {
             localStorage.setItem('user', JSON.stringify(BlogState.user))
             dispatch(resetBlogState())
             toast.success('Hurray!Blog published!')
+            navigate('/user/home')
         }
 
-    }, [BlogState.success])
+    }, [BlogState.createSuccess])
 
 
 
@@ -292,8 +294,8 @@ function CreateBlog() {
                                             {/* <Button type="button" variant="contained" color="primary" onClick={handlePreview} sx={{ ml: 2 }}>
                                                 Preview
                                             </Button> */}
-                                            <Button type="submit" variant="contained" color="primary" sx={{ ml: 2, width: '30%' }}>
-                                                Submit
+                                            <Button type="submit" variant="contained" color="primary" disabled={BlogState?.createSuccess} sx={{ ml: 2, width: '30%' }}>
+                                                {BlogState?.loading ? <BlogCreateLoader loading={BlogState?.loading} /> : "Submit"}
                                             </Button>
                                         </Box>
 
