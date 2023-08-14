@@ -274,7 +274,15 @@ const ChatPageComponent = () => {
                                                 }
                                                 {message?.isImage === true && (
                                                     <div>
-                                                        <img src={message.content} alt="Image" style={{ width: '200px', height: '150px' }} />
+                                                        <img src={message.content} alt="Image"
+                                                            style={{ width: '200px', height: '150px' }}
+                                                            onMouseOver={(e) => {
+                                                                e.target.style.transform = 'scale(1.2)';
+                                                            }}
+                                                            onMouseOut={(e) => {
+                                                                e.target.style.transform = 'scale(1)';
+                                                            }}
+                                                        />
                                                     </div>
                                                 )
 
