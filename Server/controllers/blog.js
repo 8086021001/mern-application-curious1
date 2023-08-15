@@ -333,7 +333,6 @@ async function processAndSaveImages(content) {
         console.log(blogData)
         res.status(200).json({comments:blogData.comments})
       }else{
-
         res.status(400).json({message:"Failed to update"})
       }
       
