@@ -200,6 +200,7 @@ const blogCreateSlice = createSlice({
             state.content = ''
             state.tags = []
             state.loading = false
+            state.createSuccess = false
             state.success = false
             state.message = ''
             state.error = ''
