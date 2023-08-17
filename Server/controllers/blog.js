@@ -10,6 +10,7 @@ const { Readable } = require('stream');
 const User = require('../models/userSchema')
 const InterestSchema = require('../models/interests')
 const {processAndSaveEditedBlogImages} = require('../utils/helperFunctions')
+const savedblogSchema = require('../models/savedBlogSchema')
 
 
 
@@ -26,8 +27,19 @@ const PostBlog = async(req,res)=>{
   try {
 
       const userId = req.id
-      const paths = req.file.path.slice(7)
-      const filepath = `https://curiousone.online/${paths}`
+      let paths
+      let filepath
+
+      if(req.file){
+
+         paths = req.file.path.slice(7)
+         filepath = `https://curiousone.online/${paths}`
+      }
+
+
+      if(req.body?.coverImage){
+        filepath = req.body?.coverImage
+      }
   
     const {title,summary,tags} = req.body
   
@@ -68,6 +80,64 @@ const PostBlog = async(req,res)=>{
     res.status(400).json({message:"Failed to create Blog, please try again!"})
   }
 
+}
+
+const saveBlogAsDraft = async(req,res)=>{
+  try {
+
+    console.log("printing all dreaft bodies",req.body)
+    console.log("file present",req.file)
+    const userId = req.id
+    let filepath
+    if(req?.file){
+          const paths = req.file.path.slice(7)
+           filepath = `http://localhost:5000/${paths}`
+    }
+
+  const {title,summary,tags} = req.body
+
+    const  htmlContent = req.body.content
+
+
+    const processedContent = await processAndSaveImages(htmlContent);
+
+
+    const draftBlogpots =  new savedblogSchema({
+      title:title,
+      summary:summary,
+      tags:tags,
+      coverImage:filepath,
+      content: processedContent,
+      author:userId
+    });
+    const savedDradt = await draftBlogpots.save()
+
+    const getallSavedBlogs = await savedblogSchema.find({author:userId})
+
+    if(getallSavedBlogs){
+      res.status(200).json({savedBlogs:getallSavedBlogs})
+    }else{
+      res.status(200).json({savedBlogs:[]})
+    }
+  } catch (error) {
+    res.status(500)
+  }
+}
+
+const getAllDraftedBlogs = async(req,res)=>{
+  try {
+    const userId = req.id
+    const getallSavedBlogs = await savedblogSchema.find({author:userId})
+    if(getallSavedBlogs){
+      res.status(200).json({savedBlogs:getallSavedBlogs})
+    }else{
+      res.status(200).json({savedBlogs:[]})
+    }
+
+  } catch (error) {
+    res.status(500)
+
+  }
 }
 
 
@@ -555,6 +625,21 @@ async function processAndSaveImages(content) {
 
   }
 
+  const deleteSavedDrafts = async(req,res)=>{
+    try {
+      console.log("hello in delte saved drafts")
+      const userId = req.id
+      const blogId =req.params.blogId
+      const blogData = await savedblogSchema.findByIdAndDelete(blogId)
+      const savedBlogData = await savedblogSchema.find({author:userId})
+      res.status(200).json({savedBlogs:savedBlogData})
+
+    } catch (error) {
+      res.status(400).json({message:"Failed to delete!"})
+
+    }
+  }
+
   const editMyBlog = async(req,res)=>{
     try {
       const userId= req.body
@@ -617,7 +702,8 @@ if (processdContent) {
 
 
   module.exports = {PostBlog,getBlog,getALLBlogs,getUserBlogs,MakeBlogComment,getBlogComment,
-    getSearchContent,getSavedBlogs,MakeLikeSuccess,deleteBlog,editMyBlog,getOtherUserBlogs}
+    getSearchContent,getSavedBlogs,MakeLikeSuccess,deleteBlog,editMyBlog,getOtherUserBlogs,
+    saveBlogAsDraft,getAllDraftedBlogs,deleteSavedDrafts}
 
 
 
