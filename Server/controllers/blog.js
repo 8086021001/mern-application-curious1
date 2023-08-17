@@ -91,7 +91,7 @@ const saveBlogAsDraft = async(req,res)=>{
     let filepath
     if(req?.file){
           const paths = req.file.path.slice(7)
-           filepath = `http://localhost:5000/${paths}`
+           filepath = `https://curiousone.online/${paths}`
     }
 
   const {title,summary,tags} = req.body
@@ -648,7 +648,7 @@ async function processAndSaveImages(content) {
       let filepath = null
       if(req.file){
         paths = req.file.path.slice(7)
-        filepath = `http://localhost:5000/${paths}`
+        filepath = `https://curiousone.online/${paths}`
       }
       const htmlContent = req.body.content
 
