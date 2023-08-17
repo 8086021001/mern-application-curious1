@@ -62,8 +62,7 @@ const MeetRequests = () => {
     }, [])
 
     const handleReqbut = async (reId, update) => {
-        console.log(reId, update, selectedDate)
-        if (update === "accepted" && selectedDate === "") {
+                if (update === "accepted" && selectedDate === "") {
             return alert("please select a date")
         }
         const reqDat = {

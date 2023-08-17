@@ -71,7 +71,7 @@ const acceptAndRejReq = async (req, res)=>{
             const requpdt = await videoSchema.findByIdAndUpdate(reId,
                 updateData,
                 {new: true})
-            req.status(201).json({message:"success"})
+            res.status(201).json({message:"success"})
             
         }else if(update === "rejected"){
             console.log("in reject",update,reId,selectedDate)
@@ -80,7 +80,7 @@ const acceptAndRejReq = async (req, res)=>{
                 { new: true }
                 )
         }
-        req.status(201).json({message:"success"})
+        res.status(201).json({message:"success"})
 
     } catch (error) {
         

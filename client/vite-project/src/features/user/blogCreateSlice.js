@@ -3,7 +3,7 @@ import axiosInstance from "../../baseAPI/axiosBaseURL";
 
 
 const initialState = {
-    creatingBlog: JSON.parse(localStorage.getItem('blog')) ? JSON.parse(localStorage.getItem('blog')) : null,
+    creatingBlog: [],
     Title: '',
     summary: '',
     coverImage:{},
@@ -12,6 +12,8 @@ const initialState = {
     loading:false,
     createSuccess:false,
     success:false,
+    draftSuccess:false,
+    draftDeleteSuccess:false,
     user:{},
     message:'',
     error:'',
@@ -44,6 +46,23 @@ export const createBlog = createAsyncThunk('/user/createBlog',async(blogDat,{rej
         const data = response.data
         return data
         
+    } catch (error) {
+        return rejectWithValue(error.response.data);
+    }
+})
+
+
+export const saveBlogAsDraft = createAsyncThunk('/user/saveblogasdraft',async(blogDat,{rejectWithValue})=>{
+    try {
+        const headers = {};
+              if (blogDat?.image) {
+          headers['Content-Type'] = 'multipart/form-data';
+        }
+        const response = await axiosInstance.post('/user/saveBlogAsDraft', blogDat, {
+          headers,
+        });
+        const data = response.data;
+        return data;
     } catch (error) {
         return rejectWithValue(error.response.data);
     }
@@ -123,6 +142,18 @@ export const getSavedBlogs = createAsyncThunk('/getSavedBlogs',async(_,{rejectWi
     }
 })
 
+export const getAllDraftedBlogs= createAsyncThunk('/getAllDraftedBlogs',async(_,{rejectWithValue})=>{
+    try {
+        const response = await axiosInstance.get('/user/getAllDraftedBlogs')
+        const data = response.data
+        return data
+
+    } catch (error) {
+        return rejectWithValue(error.response.data);
+
+    }
+})
+
 
 
 
@@ -142,6 +173,16 @@ export const MakeLikeSuccess = createAsyncThunk('/user/MakeLikeSuccess',async(co
 export const deleteBlog = createAsyncThunk('/user/deleteBlog',async(blogId,{rejectWithValue})=>{
     try {
         const response = await axiosInstance.delete(`/user/deleteBlog/${blogId=blogId}`)
+        const data = response.data
+        return data 
+    } catch (error) {
+        return rejectWithValue(error.response.data)
+    }
+})
+
+export const deleteSavedDrafts = createAsyncThunk('/user/deleteSavedDrafts',async(blogId,{rejectWithValue})=>{
+    try {
+        const response = await axiosInstance.delete(`/user/deleteSavedDrafts/${blogId=blogId}`)
         const data = response.data
         return data 
     } catch (error) {
@@ -193,7 +234,6 @@ const blogCreateSlice = createSlice({
             localStorage.removeItem('blog')
         },
         resetBlogState:(state)=>{
-            state.creatingBlog = null
             state.Title = ''
             state.summary = ''
             state.coverImage = {}
@@ -374,6 +414,48 @@ const blogCreateSlice = createSlice({
             state.message = action.payload?.message
         })
         builder.addCase(editMyBlog.rejected,(state,action)=>{
+            state.loading = false
+            state.error = action.error
+            state.message = action.payload?.message
+        })
+        builder.addCase(saveBlogAsDraft.pending,state=>{
+            state.loading = true
+        })
+        builder.addCase(saveBlogAsDraft.fulfilled,(state,action)=>{
+            state.loading = false;
+            state.draftSuccess = true;
+            state.creatingBlog = action.payload?.savedBlogs;
+            state.message = action.payload?.message
+        })
+        builder.addCase(saveBlogAsDraft.rejected,(state,action)=>{
+            state.loading = false
+            state.error = action.error
+            state.message = action.payload?.message
+        })   
+         builder.addCase(getAllDraftedBlogs.pending,state=>{
+            state.loading = true
+        })
+        builder.addCase(getAllDraftedBlogs.fulfilled,(state,action)=>{
+            state.loading = false;
+            state.draftSuccess = true;
+            state.creatingBlog = action.payload?.savedBlogs;
+            state.message = action.payload?.message
+        })
+        builder.addCase(getAllDraftedBlogs.rejected,(state,action)=>{
+            state.loading = false
+            state.error = action.error
+            state.message = action.payload?.message
+        }) 
+        builder.addCase(deleteSavedDrafts.pending,state=>{
+            state.loading = true
+        })
+        builder.addCase(deleteSavedDrafts.fulfilled,(state,action)=>{
+            state.loading = false;
+            state.draftSuccess = true;
+            state.creatingBlog = action.payload?.savedBlogs;
+            state.message = action.payload?.message
+        })
+        builder.addCase(deleteSavedDrafts.rejected,(state,action)=>{
             state.loading = false
             state.error = action.error
             state.message = action.payload?.message

@@ -4,7 +4,7 @@ import { Box, Button, Divider, FormControl, Grid, Icon, IconButton, InputLabel, 
 import Editor from '../ReactQuill/Editor';
 import SearchBar from '../SearchBar/SearchBar';
 import { useDispatch, useSelector } from 'react-redux';
-import { setSummary, setTags, setTitle, setBlog, resetBlogState, createBlog, resetSateAfterFetch } from '../../features/user/blogCreateSlice';
+import { setSummary, setTags, setTitle, setBlog, resetBlogState, createBlog, resetSateAfterFetch, saveBlogAsDraft, getAllDraftedBlogs, setCoverImage, deleteSavedDrafts } from '../../features/user/blogCreateSlice';
 import { toast } from 'react-toastify'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -14,6 +14,8 @@ import ChevronRightOutlinedIcon from '@mui/icons-material/ChevronRightOutlined';
 import { useNavigate } from 'react-router-dom';
 import EditEditor from '../ReactQuill/EditEditor';
 import BlogCreateLoader from '../BlogLoaders/BlogCreateLoader';
+import ImagePreview from '../ImagePreview/ImagePreview';
+
 
 
 
@@ -45,37 +47,39 @@ function CreateBlog() {
         dispatch(setTags(values))
     }
 
-    const handlePreview = () => {
-        if (BlogState.Title || BlogState.summary || BlogState.content && BlogState.creatingBlog === null) {
-            const blogDat = {
-                title: BlogState?.Title,
-                summary: BlogState?.summary,
-                content: BlogState?.content,
-                tags: BlogState?.tags,
-                covImg: BlogState?.coverImage
-            }
-            localStorage.setItem('blog', JSON.stringify(blogDat))
-            dispatch(setBlog())
-        }
-        dispatch(resetBlogState())
-        SetPrevState(true)
-        setHtmlContent(BlogState?.creatingBlog?.content)
 
-    }
 
 
     const savingBlogAsDraft = () => {
-        if (BlogState.Title || BlogState.summary || BlogState.content && BlogState.creatingBlog === null) {
-            const blogDat = {
-                title: BlogState?.Title,
-                summary: BlogState?.summary,
-                content: BlogState?.content,
-                tags: BlogState?.tags,
-                covImg: BlogState?.coverImage
+
+        if (BlogState?.Title || BlogState?.summary || BlogState?.content) {
+            if (fileInput.current.files.length !== 0) {
+                const blogData = new FormData();
+                blogData.append('title', BlogState.Title);
+                blogData.append('summary', BlogState.summary);
+                blogData.append('content', BlogState.content);
+                blogData.append('tags', BlogState?.tags)
+
+                const file = fileInput.current.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    blogData.append('coverImage', file, file?.name);
+                } else {
+                    return toast.error("Ivalid image format!");
+                }
+                dispatch(saveBlogAsDraft(blogData))
+
+
+            } else {
+                const blogData = new FormData();
+
+                blogData.append('title', BlogState?.Title);
+                blogData.append('summary', BlogState?.summary);
+                blogData.append('content', BlogState?.content);
+                blogData.append('tags', BlogState?.tags)
+                dispatch(saveBlogAsDraft(blogData))
             }
-            localStorage.setItem('blog', JSON.stringify(blogDat))
-            dispatch(setBlog())
-            toast.success('Saved to drafts!')
+        } else {
+            toast.error("Enter some more informations")
 
         }
         dispatch(resetBlogState())
@@ -112,7 +116,7 @@ function CreateBlog() {
             errors.content = 'Content is required';
         }
 
-        if (fileInput.current.files.length === 0) {
+        if (fileInput.current.files.length === 0 && !BlogState?.coverImage) {
             isValid = false;
             errors.file = 'File is required';
         }
@@ -125,9 +129,7 @@ function CreateBlog() {
 
             return;
         }
-        if (EditDraftblog) {
-            localStorage.removeItem('blog')
-        }
+
         const blogData = new FormData();
         blogData.append('title', BlogState.Title);
         blogData.append('summary', BlogState.summary);
@@ -135,25 +137,41 @@ function CreateBlog() {
         blogData.append('tags', BlogState.tags)
 
         const file = fileInput.current.files[0];
-        if (file && file.type.startsWith('image/')) {
+        if (BlogState?.coverImage) {
+            blogData.append('coverImage', BlogState?.coverImage);
+        } else if (file && file.type.startsWith('image/')) {
             blogData.append('coverImage', file, file?.name);
         } else {
             toast.error("Ivalid image format!");
 
         }
 
+        if (EditDraftblog) {
+            dispatch(deleteSavedDrafts(BlogState?.creatingBlog[0]?._id))
+            setEDitDraftState(false)
+        }
+
         dispatch(createBlog(blogData))
     }
 
     const handleResumeEditingDraft = () => {
-        console.log(BlogState.creatingBlog)
-        if (BlogState.creatingBlog) {
+        if (BlogState?.creatingBlog.length > 0) {
             setEDitDraftState(true)
-            if (BlogState.creatingBlog?.title) {
-                dispatch(setTitle(BlogState.creatingBlog?.title))
+            if (BlogState.creatingBlog[0]?.title) {
+                dispatch(setTitle(BlogState.creatingBlog[0]?.title))
             }
-            if (BlogState.creatingBlog?.summary) {
-                dispatch(setSummary(BlogState.creatingBlog?.summary))
+            if (BlogState.creatingBlog[0]?.summary) {
+                dispatch(setSummary(BlogState.creatingBlog[0]?.summary))
+            }
+            if (BlogState.creatingBlog[0]?.tags) {
+                const savedTags = BlogState.creatingBlog[0]?.tags
+                console.log(" tagings", savedTags)
+                const tagings = savedTags[0].split(",").map(tag => tag.trim())
+                console.log("my previous tagings", tagings)
+                dispatch(setTags(tagings))
+            }
+            if (BlogState.creatingBlog[0]?.coverImage) {
+                dispatch(setCoverImage(BlogState.creatingBlog[0]?.coverImage))
             }
         } else {
             toast.warning('No Drafts!!')
@@ -185,6 +203,9 @@ function CreateBlog() {
         };
 
         fetchInterests();
+
+        dispatch(getAllDraftedBlogs())
+
         const userObject = BlogState?.user
         function isObjectNotEmpty(userObject) {
             return Object.keys(userObject).length > 0;
@@ -200,7 +221,7 @@ function CreateBlog() {
             }, 1000)
         }
 
-    }, [BlogState.createSuccess])
+    }, [BlogState.createSuccess,BlogState?.draftSuccess])
 
 
 
@@ -285,6 +306,12 @@ function CreateBlog() {
                                             <InputLabel htmlFor="file" shrink>
                                                 Cover Image
                                             </InputLabel>
+                                            {EditDraftblog &&
+                                                <Box sx={{ marginLeft: '1rem' }}>
+                                                    <ImagePreview image={BlogState?.coverImage} />
+                                                </Box>
+
+                                            }
 
                                             <SearchBar tags={tags} handleTagValues={HandleTags} ></SearchBar>
 
@@ -310,7 +337,7 @@ function CreateBlog() {
                     }
                 </Grid>
                 <ToastContainer toastStyle={toastStyle} />
-                {BlogState?.creatingBlog &&
+                {BlogState?.creatingBlog.length > 0 &&
                     <Box onClick={handleResumeEditingDraft}>
                         <BlogDraftPages blogDraft={BlogState?.creatingBlog} />
 
