@@ -34,12 +34,11 @@ const PostBlog = async(req,res)=>{
 
          paths = req.file.path.slice(7)
          filepath = `https://curiousone.online/${paths}`
-      }
-
-
-      if(req.body?.coverImage){
+      }else if(req.body?.coverImage){
         filepath = req.body?.coverImage
+
       }
+
   
     const {title,summary,tags} = req.body
   
