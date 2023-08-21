@@ -69,7 +69,6 @@ function App() {
             <Route path='vc/:id' element={<VideoCallRoom />} />
             <Route path='wallet' element={<UserWallet />} />
           </Route >
-
           <Route path='*' element={<Notfound />} />
         </Routes >
       </PeerProvider>
