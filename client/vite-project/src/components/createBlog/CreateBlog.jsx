@@ -137,7 +137,7 @@ function CreateBlog() {
         blogData.append('tags', BlogState.tags)
 
         const file = fileInput.current.files[0];
-        if (BlogState?.coverImage) {
+        if (Object.keys(BlogState?.coverImage).length > 0) {
             blogData.append('coverImage', BlogState?.coverImage);
         } else if (file && file.type.startsWith('image/')) {
             blogData.append('coverImage', file, file?.name);
@@ -221,7 +221,7 @@ function CreateBlog() {
             }, 1000)
         }
 
-    }, [BlogState.createSuccess,BlogState?.draftSuccess])
+    }, [BlogState.createSuccess, BlogState?.draftSuccess])
 
 
 
