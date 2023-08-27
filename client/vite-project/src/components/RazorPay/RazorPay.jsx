@@ -1,7 +1,7 @@
 import React from 'react'
 import axiosInstance from '../../baseAPI/axiosBaseURL';
 
-const RazorPay = () => {
+const RazorPay = ({ details, handleWallet }) => {
     function loadScript(src) {
         return new Promise((resolve) => {
             const script = document.createElement("script");
@@ -27,7 +27,7 @@ const RazorPay = () => {
         }
 
         // creating a new order
-        const result = await axiosInstance.post("http://localhost:5000/user/makePaymentUsingRazorPay");
+        const result = await axiosInstance.post("/user/makePaymentUsingRazorPay", { details }, { withCredentials: true });
 
         if (!result) {
             alert("Server error. Are you online?");
@@ -35,14 +35,15 @@ const RazorPay = () => {
         }
 
         // Getting the order details back
-        const { amount, id: order_id, currency } = result.data;
+        const { amount, id: order_id, currency } = result.data?.order;
+        const { usrName, usrPhone, usrEmail } = result.data?.useData
 
         const options = {
             key: import.meta.env.VITE_RAZORPAY_KEY_ID,
             amount: amount.toString(),
             currency: currency,
-            name: "Anooppppp .",
-            description: "Test Transaction",
+            name: usrName,
+            description: "Transaction",
             // image: { logo },
             order_id: order_id,
             handler: async function (response) {
@@ -51,19 +52,22 @@ const RazorPay = () => {
                     razorpayPaymentId: response.razorpay_payment_id,
                     razorpayOrderId: response.razorpay_order_id,
                     razorpaySignature: response.razorpay_signature,
+                    amount: amount / 100
+
                 };
 
-                const result = await axiosInstance.post("http://localhost:5000/user/RazorPaySuccess", data);
+                const result = await axiosInstance.post("/user/RazorPaySuccess", { data }, { withCredentials: true });
+                handleWallet()
 
                 alert(result.data.msg);
             },
             prefill: {
-                name: " Anooppp",
-                email: "Bot@example.com",
-                contact: "9999999999",
+                name: usrName,
+                email: usrEmail,
+                contact: usrPhone,
             },
             notes: {
-                address: " Corporate Office",
+                address: " Curious Office",
             },
             theme: {
                 color: "#61dafb",

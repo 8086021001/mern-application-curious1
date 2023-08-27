@@ -9,10 +9,10 @@ const {verifyToken} = require('../controllers/verifyToken')
 router .post('/makePayment',makePayment)
 
 
-router.post('/makePaymentUsingRazorPay',makePaymentUsingRazorPay)
+router.post('/makePaymentUsingRazorPay',verifyToken,makePaymentUsingRazorPay)
 
 
-router.post('/RazorPaySuccess',RazorPaySuccess)
+router.post('/RazorPaySuccess',verifyToken,RazorPaySuccess)
 
 
 

@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import "./wallet.css"
 import { Card, CardContent } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
 
 
 
@@ -73,6 +74,46 @@ const StyledButton = styled(Button)({
 
 
 const Wallet = () => {
+    const [isVisible, setisVisible] = useState(false)
+    const [amount, setAmount] = useState(null)
+    const [usersData, setuserDataState] = useState(null)
+    const [userState, setuserState] = useState(false)
+
+    const authUser = useSelector(state => state?.authUser)
+
+    const dispatch = useDispatch()
+    const handleClickvissible = () => {
+        if (!isVisible) {
+            setisVisible(true)
+        } else {
+            setisVisible(false)
+
+        }
+    }
+
+    const handleWalletAmount = async () => {
+        setAmount(null)
+        setisVisible(false)
+        setuserState(true)
+    }
+
+    const handleusersState = async () => {
+        const userdatas = await axiosInstance.get('/user/userdata', { withCredentials: true })
+        setuserDataState(userdatas?.data?.user)
+    }
+
+    useEffect(() => {
+        if (userState) {
+            handleusersState()
+            if (usersData) {
+                localStorage.setItem('user', JSON.stringify(usersData))
+                dispatch(setAuth())
+                setuserState(null)
+            }
+        }
+
+
+    }, [userState, usersData])
 
     return (
         <>
@@ -91,17 +132,25 @@ const Wallet = () => {
                     </StyledCardContent>
 
                     <StyledCardContent sx={{ width: '100%' }}>
-                        <WalletBalance className="card__balance">$1,550.56</WalletBalance>
+                        <WalletBalance className="card__balance">₹</WalletBalance>
 
                         <Typography variant="h6" gutterBottom className="card__title">
                             Wallet
                         </Typography>
-                        <StyledButton variant="contained" color="primary" className="card__button">
+                        {/* <StyledButton variant="contained" color="primary" className="card__button">
                             Withdraw
-                        </StyledButton>
-                        <StyledButton variant="contained" color="primary" className="card__button">
+                        </StyledButton> */}
+                        <StyledButton variant="contained" color="primary" className="card__button" onClick={handleClickvissible}>
                             Add Money
                         </StyledButton>
+                        {isVisible && (
+                            <>
+                                <Box m={1} display='flex' flexDirection='column' justifyContent='center' style={{ width: '20%' }}>
+                                    <TextField value={amount} onChange={(e) => setAmount(e.target.value)} style={{ borderBottomColor: 'black', backgroundColor: 'whitesmoke', margin: 10 }} type="number" placeholder="Enter amount" />
+                                    <RazorPay details={amount} handleWallet={handleWalletAmount} />
+                                </Box>
+                            </>
+                        )}
                     </StyledCardContent>
                 </StyledCard>
 

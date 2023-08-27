@@ -1,6 +1,8 @@
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const crypto = require('crypto');
+const UserSchema = require('../models/userSchema')
+
 
 
 
@@ -40,22 +42,32 @@ const makePayment = async(req,res)=>{
 
 const makePaymentUsingRazorPay = async (req, res) => {
     try {
+        let amt = req?.body?.details
+        let userId = req?.id
+        let amountPaid = amt * 100
+
         const instance = new Razorpay({
             key_id: process.env.RAZORPAY_KEY_ID,
             key_secret: process.env.RAZORPAY_SECRET,
         });
 
-        const options = {
-            amount: 50000,
+       const options = {
+            amount: amountPaid,
             currency: "INR",
-            receipt: "receipt_order_74394",
+            receipt: "receipt_order_7439"
         };
+        const usrDetails = await UserSchema.findById(userId)
 
+        const useData = {
+            usrName:usrDetails?.name,
+            usrPhone:usrDetails?.phone,
+            usrEmail:usrDetails?.email
+        }
         const order = await instance.orders.create(options);
 
         if (!order) return res.status(500).send("Some error occured");
 
-        res.json(order);
+        res.status(200).json({order,useData});
     } catch (error) {
         res.status(500).send(error);
     }
@@ -64,14 +76,19 @@ const makePaymentUsingRazorPay = async (req, res) => {
 
 const RazorPaySuccess = async(req,res)=>{
     try {
+        const userId = req.id
 
-        console.log("Heyyyyy got success response here",req.body)
+        
         const {
             orderCreationId,
             razorpayPaymentId,
             razorpayOrderId,
             razorpaySignature,
-        } = req.body;
+            amount
+        } = req?.body?.data;
+
+        const usrDetails = await UserSchema.findByIdAndUpdate(userId,{ $inc: { wallet: amount } },{ new: true } )
+
 
         // const shasum = crypto.createHmac("sha256", "w2lBtgmeuDUfnJVp43UpcaiT");
         // console.log("shaaaaaasum",shasum)
