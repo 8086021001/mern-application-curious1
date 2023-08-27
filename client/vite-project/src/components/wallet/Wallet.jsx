@@ -132,7 +132,7 @@ const Wallet = () => {
                     </StyledCardContent>
 
                     <StyledCardContent sx={{ width: '100%' }}>
-                        <WalletBalance className="card__balance">₹</WalletBalance>
+                        <WalletBalance className="card__balance">₹ {authUser?.authState?.wallet}</WalletBalance>
 
                         <Typography variant="h6" gutterBottom className="card__title">
                             Wallet
