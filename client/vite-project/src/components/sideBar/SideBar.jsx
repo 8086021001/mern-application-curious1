@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import MailIcon from '@mui/icons-material/Mail';
 import SettingsIcon from '@mui/icons-material/Settings';
+import AccountBalanceWalletRoundedIcon from '@mui/icons-material/AccountBalanceWalletRounded';
+
 import {
   Drawer,
   IconButton,
@@ -17,6 +19,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 const items = [
   { text: 'Your requests', icon: <DashboardIcon />, path: '/user/meetReq' },
   { text: 'chats', icon: <MailIcon />, path: '/user/chat' },
+  { text: 'wallet', icon: <AccountBalanceWalletRoundedIcon />, path: '/user/wallet' },
+
   { text: 'Settings', icon: <SettingsIcon />, path: '/user/stories' },
 ];
 
