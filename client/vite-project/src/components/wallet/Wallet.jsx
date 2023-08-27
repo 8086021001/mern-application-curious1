@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import "./wallet.css"
-import { Card, CardContent } from '@mui/material';
+import { Card, CardContent, TextField } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 
 
@@ -154,7 +154,7 @@ const Wallet = () => {
                     </StyledCardContent>
                 </StyledCard>
 
-                <Box sx={{ mt: 2 }}>
+                {/* <Box sx={{ mt: 2 }}>
                     <TransactionDetails>
                         <TransactionItem>
                             <TransactionDate>Jul 25, 2023</TransactionDate>
@@ -172,7 +172,7 @@ const Wallet = () => {
                             <TransactionStatus>Successful</TransactionStatus>
                         </TransactionItem>
                     </TransactionDetails>
-                </Box>
+                </Box> */}
             </Box>
         </>
     )
