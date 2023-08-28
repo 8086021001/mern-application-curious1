@@ -109,7 +109,6 @@ const Wallet = () => {
         if (userState) {
             handleusersState()
             if (usersData) {
-                console.log("here is updated data", usersData)
                 localStorage.setItem('user', JSON.stringify(usersData))
                 dispatch(setAuth())
                 setuserState(false)
