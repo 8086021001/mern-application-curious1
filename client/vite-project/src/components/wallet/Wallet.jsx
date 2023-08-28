@@ -7,6 +7,7 @@ import "./wallet.css"
 import { Card, CardContent, TextField } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import RazorPay from '../RazorPay/RazorPay';
+import { setAuth } from '../../features/auth/userAuth';
 
 
 
