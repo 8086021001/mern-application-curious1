@@ -8,6 +8,7 @@ import { Card, CardContent, TextField } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import RazorPay from '../RazorPay/RazorPay';
 import { setAuth } from '../../features/auth/userAuth';
+import axiosInstance from '../../baseAPI/axiosBaseURL';
 
 
 
@@ -110,7 +111,7 @@ const Wallet = () => {
             if (usersData) {
                 localStorage.setItem('user', JSON.stringify(usersData))
                 dispatch(setAuth())
-                setuserState(null)
+                setuserState(false)
             }
         }
 
