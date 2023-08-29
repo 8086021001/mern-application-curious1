@@ -464,12 +464,36 @@ try {
 
 }
 
-        
-
   }
 
 
+  const userPremium = async(req,res)=>{
+    try {
+      const userId = req.id
+      // const userData = await User.findByIdAndUpdate(userId,{isPremium:true},{new:true})
+      const user = await User.findById(userId);
+        
+      if (user.wallet >= 20) {
+          user.wallet -= 20;
+          user.isPremium = true; 
+          
+          await user.save(); 
+        res.status(200).json({msg:"Subscribed!"})
+      }else{
+        res.status(204).json({msg:"Insufficient funds to upgrade to premium."})
+      }
+
+ 
+      
+    } catch (error) {
+      res.status(500).json({message:"failed"})
+
+    }
+  }
+
+
+
 module.exports = {Signup,verifyEmail,login,getUser,logout,setFields,googelSignup,updateProfile,
-  userFieldUpdate,setBlogAsDraft,getAllConnections,sendFollowandUnfollow}
+  userFieldUpdate,setBlogAsDraft,getAllConnections,sendFollowandUnfollow,userPremium}
 
 

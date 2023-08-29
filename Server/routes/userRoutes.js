@@ -2,7 +2,7 @@ const express = require("express")
 const router = express.Router()
 const {googleAuth} = require('../controllers/googleroute')
 const {Signup,verifyEmail,login,getUser,logout,setFields,googelSignup,
-    updateProfile,userFieldUpdate,setBlogAsDraft,getAllConnections,sendFollowandUnfollow}= require('../controllers/user')
+    updateProfile,userFieldUpdate,setBlogAsDraft,getAllConnections,sendFollowandUnfollow,userPremium}= require('../controllers/user')
 const {verifyToken,refreshToken} = require("../controllers/verifyToken")
 const {getInterests,addNewInterests} = require('../controllers/interest')
 const {upload}= require('../utils/multerConfig')
@@ -46,6 +46,10 @@ router.get('/getAllConnections',verifyToken,getAllConnections)
 router.post('/sendFollow',verifyToken,sendFollowandUnfollow)
 
 
+
+//premium 
+
+router.post('/userPremium',verifyToken,userPremium)
 
 
 
