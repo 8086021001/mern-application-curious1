@@ -66,6 +66,10 @@ const userSchema = new mongoose.Schema({
       default: 0,
       required: true
     },
+    isPremium:{
+      type:Boolean,
+      default:false,
+    },
     googleId: {
       type: String
     },

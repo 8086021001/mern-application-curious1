@@ -82,6 +82,8 @@ const Wallet = () => {
     const [usersData, setuserDataState] = useState(null)
     const [userState, setuserState] = useState(false)
 
+    const [premiumUpdate, setPremiumUpdate] = useState(false)
+
     const authUser = useSelector(state => state?.authUser)
 
     const dispatch = useDispatch()
@@ -105,8 +107,19 @@ const Wallet = () => {
         setuserDataState(userdatas?.data?.user)
     }
 
+    const handleSubscribe = async () => {
+        if (authUser?.authState?.wallet === 0 || authUser?.authState?.wallet < 20) {
+            alert("Add sufficient amount to wallet")
+        } else if (authUser?.authState?.wallet >= 20) {
+            const updatePremium = await axiosInstance.post('/user/userPremium', { withCredentials: true })
+            setPremiumUpdate(true)
+
+        }
+
+    }
+
     useEffect(() => {
-        if (userState) {
+        if (userState || premiumUpdate) {
             handleusersState()
             if (usersData) {
                 localStorage.setItem('user', JSON.stringify(usersData))
@@ -116,7 +129,7 @@ const Wallet = () => {
         }
 
 
-    }, [userState, usersData])
+    }, [userState, usersData, premiumUpdate])
 
     return (
         <>
@@ -177,6 +190,54 @@ const Wallet = () => {
                     </TransactionDetails>
                 </Box> */}
             </Box>
+            <Paper
+                elevation={3}
+                style={{
+                    padding: '1.5rem',
+                    textAlign: 'center',
+                    backgroundColor: '#f7f7f7',
+                    borderRadius: '10px',
+                    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+                    transition: 'transform 0.3s ease-in-out',
+                    '&:hover': {
+                        transform: 'scale(1.02)',
+                    },
+                    '@media (max-width: 600px)': {
+                        padding: '1rem',
+                    },
+                }}
+            >
+                <Typography
+                    variant="h5"
+                    style={{
+                        marginBottom: '1rem',
+                    }}
+                >
+                    Subscribe to Our Premium Blogs
+                </Typography>
+                <Typography variant="body1">
+                    {authUser?.authState?.isPremium
+                        ? 'Thank you for subscribing!'
+                        : 'Get the latest updates by subscribing to our premium Blogs.'}
+                </Typography>
+                {!authUser?.authState?.isPremium && (
+                    <Button
+                        variant="contained"
+                        style={{
+                            width: '15%',
+                            marginTop: '0.5rem',
+                            backgroundColor: '#FF5722',
+                            color: 'white',
+                            '&:hover': {
+                                backgroundColor: '#E64A19',
+                            },
+                        }}
+                        onClick={handleSubscribe}
+                    >
+                        Subscribe Now
+                    </Button>
+                )}
+            </Paper>
         </>
     )
 }
