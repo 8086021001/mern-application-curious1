@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import MyAppBar from '../AppBar/MyAppBar'
-import { Box, Button, Divider, FormControl, Grid, Icon, IconButton, InputLabel, Paper, TextField, Typography } from '@mui/material'
+import { Box, Button, Divider, FormControl, FormControlLabel, Grid, Icon, IconButton, InputLabel, Paper, TextField, Typography } from '@mui/material'
 import Editor from '../ReactQuill/Editor';
 import SearchBar from '../SearchBar/SearchBar';
 import { useDispatch, useSelector } from 'react-redux';
@@ -276,7 +276,7 @@ function CreateBlog() {
 
                                 <form onSubmit={handleSubmit}>
                                     <Box sx={{ m: 5 }}>
-                                        <FormControl
+                                        <FormControlLabel
                                             control={<Checkbox checked={isChecked} onChange={handleCheckboxChange} />}
                                             label="Publish as premium"
                                         />
