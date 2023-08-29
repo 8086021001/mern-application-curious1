@@ -60,6 +60,10 @@ const blogSchema = new mongoose.Schema({
         type:Boolean,
         default:false
       },
+      issubscription:{
+        type:Boolean,
+        default:false
+      },
       isDeleted:{
         type:Boolean,
         default:false
