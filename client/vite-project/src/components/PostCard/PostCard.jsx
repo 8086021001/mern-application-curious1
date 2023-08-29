@@ -13,6 +13,8 @@ import TextSearchBar from '../SearchBar/TextSearchBar';
 import ThumbUpOffAltOutlinedIcon from '@mui/icons-material/ThumbUpOffAltOutlined';
 import ThumbUpOffAltRoundedIcon from '@mui/icons-material/ThumbUpOffAltRounded';
 import { grid } from '@mui/system';
+import LockPersonIcon from '@mui/icons-material/LockPerson';
+
 
 const PostCard = () => {
 
@@ -22,8 +24,18 @@ const PostCard = () => {
     const userAuthstate = useSelector(state => state.authUser)
     const userState = useSelector(state => state.user)
     const navigate = useNavigate()
-    const handleViewBlog = (_id) => {
-        navigate(`/user/viewBlog/${_id}`)
+    const handleViewBlog = (_id, subscription) => {
+        if (!subscription || subscription === undefined) {
+
+            navigate(`/user/viewBlog/${_id}`)
+        } else if (subscription && userAuthstate?.authState?.isPremium) {
+            navigate(`/user/viewBlog/${_id}`)
+
+        } else if (userAuthstate?.authState?.blogsPublished.includes(_id)) {
+            navigate(`/user/viewBlog/${_id}`)
+        } else {
+            navigate(`/user/wallet`)
+        }
     }
 
 
@@ -81,15 +93,20 @@ const PostCard = () => {
                         return (
                             <div key={blog?._id}>
                                 <Card className="post-card" sx={{ display: 'flex', alignItems: 'center', marginBottom: '12px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1, 0.3)' }}>
-                                    <CardMedia component="img" image={blog?.coverImage} title={blog?.title} className="post-card-media" onClick={() => handleViewBlog(blog?._id)} sx={{ width: '30%', minWidth: '200px', marginRight: '16px', borderRadius: '8px 0 0 8px', objectFit: 'cover', padding: 2 }} />
+                                    <CardMedia component="img" image={blog?.coverImage} title={blog?.title} className="post-card-media" onClick={() => handleViewBlog(blog?._id, blog?.issubscription)} sx={{ width: '30%', minWidth: '200px', marginRight: '16px', borderRadius: '8px 0 0 8px', objectFit: 'cover', padding: 2 }} />
                                     <CardContent className="post-card-content" sx={{ flex: 1 }}>
                                         <Box sx={{ position: 'relative', display: 'flex', justifyContent: 'flex-end', top: 0, right: 0 }}>
+                                            <IconButton disableRipple sx={{ position: 'relative', display: 'flex', justifyContent: 'flex-end', top: 0, right: 0, '&:hover': { backgroundColor: 'transparent' } }} >
+                                                {blog?.issubscription && <LockPersonIcon>
+                                                    <span style={{ fontSize: '12px', marginLeft: '4px' }}>Hello</span>
+                                                </LockPersonIcon>}
+                                            </IconButton>
                                             <IconButton disableRipple onClick={() => handleBookmarkSave(blog?._id)} sx={{ position: 'relative', display: 'flex', justifyContent: 'flex-end', top: 0, right: 0, '&:hover': { backgroundColor: 'transparent' } }}>
                                                 {savedDrafts?.length > 0 && savedDrafts.includes(blog?._id) ? <BookmarkOutlinedIcon /> : <BookmarkBorderOutlinedIcon />}
                                             </IconButton>
                                         </Box>
                                         <Box>
-                                            <Typography onClick={() => handleViewBlog(blog?._id)} variant="h6" component="h2" className="post-card-title" sx={{ fontWeight: 'bold', marginBottom: '8px' }}>
+                                            <Typography onClick={() => handleViewBlog(blog?._id, blog?.issubscription)} variant="h6" component="h2" className="post-card-title" sx={{ fontWeight: 'bold', marginBottom: '8px' }}>
                                                 {blog?.title}
                                             </Typography>
                                             <Grid display={'flex'} margin={2} spacing={5} justifyContent={'left'} alignItems={'center'} >
@@ -103,7 +120,7 @@ const PostCard = () => {
                                                 ))}
                                             </Grid>
 
-                                            <Typography onClick={() => handleViewBlog(blog?._id)} marginTop={2} variant="body2" color="textSecondary" className="post-card-summary" sx={{ color: 'rgba(0, 0, 0, 0.6)' }}>
+                                            <Typography onClick={() => handleViewBlog(blog?._id, blog?.issubscription)} marginTop={2} variant="body2" color="textSecondary" className="post-card-summary" sx={{ color: 'rgba(0, 0, 0, 0.6)' }}>
                                                 {blog?.summary}
                                             </Typography>
                                             <Box sx={{ display: 'flex', justifyContent: 'left', width: '30%', margin: '0.5rem ' }} >
@@ -124,7 +141,7 @@ const PostCard = () => {
                         return (
                             <div key={blog._id}>
                                 <Card className="post-card" sx={{ display: 'flex', alignItems: 'center', marginBottom: '16px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1, 0.3)' }}>
-                                    <CardMedia component="img" image={blog.coverImage} title={blog.title} className="post-card-media" onClick={() => handleViewBlog(blog._id)} sx={{ width: '30%', minWidth: '200px', marginRight: '16px', borderRadius: '8px 0 0 8px', objectFit: 'cover', padding: 2 }} />
+                                    <CardMedia component="img" image={blog.coverImage} title={blog.title} className="post-card-media" onClick={() => handleViewBlog(blog._id, blog?.issubscription)} sx={{ width: '30%', minWidth: '200px', marginRight: '16px', borderRadius: '8px 0 0 8px', objectFit: 'cover', padding: 2 }} />
                                     <CardContent className="post-card-content" sx={{ flex: 1 }}>
                                         <Box sx={{ position: 'relative', display: 'flex', justifyContent: 'flex-end', top: 0, right: 0 }}>
                                             <IconButton disableRipple onClick={() => handleBookmarkSave(blog._id)} sx={{ position: 'relative', display: 'flex', justifyContent: 'flex-end', top: 0, right: 0, '&:hover': { backgroundColor: 'transparent' } }}>
@@ -132,10 +149,10 @@ const PostCard = () => {
                                             </IconButton>
                                         </Box>
                                         <Box>
-                                            <Typography variant="h6" onClick={() => handleViewBlog(blog._id)} component="h2" className="post-card-title" sx={{ fontWeight: 'bold', marginBottom: '8px' }}>
+                                            <Typography variant="h6" onClick={() => handleViewBlog(blog._id, blog?.issubscription)} component="h2" className="post-card-title" sx={{ fontWeight: 'bold', marginBottom: '8px' }}>
                                                 {blog.title}
                                             </Typography>
-                                            <Typography variant="body2" onClick={() => handleViewBlog(blog._id)} color="textSecondary" className="post-card-summary" sx={{ color: 'rgba(0, 0, 0, 0.6)' }}>
+                                            <Typography variant="body2" onClick={() => handleViewBlog(blog._id, blog?.issubscription)} color="textSecondary" className="post-card-summary" sx={{ color: 'rgba(0, 0, 0, 0.6)' }}>
                                                 {blog.summary}
                                             </Typography>
                                         </Box>

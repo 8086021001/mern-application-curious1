@@ -16,6 +16,7 @@ import EditEditor from '../ReactQuill/EditEditor';
 import BlogCreateLoader from '../BlogLoaders/BlogCreateLoader';
 import ImagePreview from '../ImagePreview/ImagePreview';
 
+import Checkbox from '@mui/material/Checkbox';
 
 
 
@@ -31,6 +32,13 @@ function CreateBlog() {
     const [tags, setTagings] = useState([]);
     const navigate = useNavigate()
     const [EditDraftblog, setEDitDraftState] = useState(false)
+
+    const [isChecked, setIsChecked] = useState(false);
+
+    const handleCheckboxChange = (event) => {
+
+        setIsChecked(event.target.checked);
+    };
 
 
     const toastStyle = {
@@ -135,6 +143,8 @@ function CreateBlog() {
         blogData.append('summary', BlogState.summary);
         blogData.append('content', BlogState.content);
         blogData.append('tags', BlogState.tags)
+        blogData.append('subscription', isChecked)
+
 
         const file = fileInput.current.files[0];
         if (Object.keys(BlogState?.coverImage).length > 0) {
@@ -221,7 +231,7 @@ function CreateBlog() {
             }, 1000)
         }
 
-    }, [BlogState.createSuccess, BlogState?.draftSuccess])
+    }, [BlogState.createSuccess, BlogState?.draftSuccess, isChecked])
 
 
 
@@ -266,6 +276,10 @@ function CreateBlog() {
 
                                 <form onSubmit={handleSubmit}>
                                     <Box sx={{ m: 5 }}>
+                                        <FormControl
+                                            control={<Checkbox checked={isChecked} onChange={handleCheckboxChange} />}
+                                            label="Publish as premium"
+                                        />
                                         <FormControl fullWidth>
                                             <TextField
                                                 fullWidth
